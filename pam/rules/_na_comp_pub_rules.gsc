@@ -47,6 +47,11 @@ Rules()
 	maps\mp\uox\_uox_vars::updateCvar("scr","forcerank", "0");
 	maps\mp\uox\_uox_vars::updateCvar("scr","rank_ppr" , "10"); //Sets the Points Per Rank
 
+    //After Action Report
+    maps\mp\uox\_uox_vars::updateCvar("pam","afteractionreport" , true);
+    //Black Out Spectators
+    maps\mp\uox\_uox_vars::updateCvar("pam","blackoutspectators", false);
+
     //*****************************************************
 	// *********** Gametype Config Cvars ****************
 	// *****************************************************
