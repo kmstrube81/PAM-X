@@ -1,26 +1,8 @@
 onConnected()
 {
-	self endon("disconnect");
-
 	self.round_report_array = [];
 	self.round_report_myKill = undefined;
 
-	/*
-	self.round_report_debug = [];
-
-	// Set default value
-	if (!isDefined(self.pers["round_report_debug_init"]))
-	{
-		logprint("_round_report::onConnected set round_report_debug_init before\n");
-		wait 1 * 5;
-		self setClientCvarIfChanged("pam_damage_debug", "");
-		self setClientCvarIfChanged("pam_damage_debug2", "");
-		self setClientCvarIfChanged("pam_damage_debug3", "");
-		self setClientCvarIfChanged("pam_damage_debug4", "");
-		self.pers["round_report_debug_init"] = true;
-		logprint("_round_report::onConnected set round_report_debug_init after\n");
-	}
-	*/
 }
 
 /*
@@ -29,7 +11,6 @@ self is the player that took damage.
 */
 onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc)
 {
-	//logprint("_round_report::onPlayerDamaged ingress\n");
 	
 	if(iDamage < 1) {
 		iDamage = 1;
@@ -37,7 +18,6 @@ onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 	
 	if (isDefined(eAttacker) && isPlayer(eAttacker) && eAttacker != self && level.roundstarted && !level.roundended)
 	{
-		//logprint("_round_report::onPlayerDamaged eAttacker is defined and round in progress\n");
 		updateIndex = -1;
 		for (i = eAttacker.round_report_array.size-1; i >= 0; i--)
 		{
@@ -50,50 +30,18 @@ onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 			// Find record with the same guy
 			if (isDefined(lastRecord.enemy) && lastRecord.enemy == self)
 			{
-				// Shotgun hits (with different time) save as separated records
-				//if (lastRecord.sWeapon == "shotgun_mp" && lastRecord.firstTime != gettime())
-					//continue;
-
 				// Grenade hits save as separated records
-				if (lastRecord.sMeansOfDeath == "MOD_GRENADE_SPLASH") {
-					logprint("Grenade hit found\n");
+				if (lastRecord.sMeansOfDeath == "MOD_GRENADE_SPLASH")
 					continue;
-				}
 
 				updateIndex = i;
 				break;
 			}
 		}
 
-		/*
-		// Debug information
-		if (sMeansOfDeath == "MOD_RIFLE_BULLET" || sWeapon == "shotgun_mp" || sMeansOfDeath == "MOD_GRENADE_SPLASH")
-		{
-			xyz_hit = "?";
-			if (isDefined(vPoint)) xyz_hit = vPoint;
-
-			damageDebug = getTimeString(gettime(), level.bombplanted) +
-				"|" + gettime() +
-				"|dmg:" + (int)((iDamage*10)/10) +
-				"|health:" + self.health +
-				"|xyz_my:" + eAttacker.origin +
-				"|xyz_enemy:" + self.origin +
-				//"|dist:" + distance(eAttacker.origin, self.origin) +
-				"|" + sWeapon +
-				"|" + sHitLoc +
-				"|xyz_hit:" + xyz_hit //+
-				//"|head:" + self.headTag getOrigin() +
-				//"|pelvis:" + self.pelvisTag getOrigin()
-				;
-
-			eAttacker.round_report_debug[eAttacker.round_report_debug.size] = damageDebug;
-		}
-		*/
-
 		// Update previus record
 		if (updateIndex != -1)
 		{
-			//eAttacker iprintln("update damage " + updateIndex);
 			eAttacker.round_report_array[updateIndex].hitLoc = sHitLoc;
 			eAttacker.round_report_array[updateIndex].sMeansOfDeath = sMeansOfDeath;
 			eAttacker.round_report_array[updateIndex].sWeapon = sWeapon;
@@ -104,7 +52,6 @@ onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 			if (eAttacker.round_report_array[updateIndex].firstTime == gettime())
 			{
 				eAttacker.round_report_array[updateIndex].firstDamageValue += iDamage;
-				//eAttacker.round_report_array[updateIndex].pellets++;
 			}
 			else
 			{
@@ -115,7 +62,7 @@ onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 		// Add new record
 		else
 		{
-			//eAttacker iprintln("add new damage to " + eAttacker.round_report_array.size);
+			
 			lastDamage = spawnstruct();
 			lastDamage.enemy = self;
 			lastDamage.hitLoc = sHitLoc;
@@ -126,26 +73,19 @@ onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 			lastDamage.sFirstWeapon = sWeapon;
 			lastDamage.firstDamageValue = iDamage;
 			lastDamage.multipleDamage = false;
-			//lastDamage.pellets = 1;
 			lastDamage.wasKilled = false;
 			lastDamage.teamkill = (self != eAttacker) && (self.pers["team"] == eAttacker.pers["team"]);
 			lastDamage.bombPlanted = level.bombplanted;
-			//lastDamage.adjustedBy = eAttacker.hitData[self getEntityNumber()].adjustedBy;
-			//lastDamage.shotgun_distance = eAttacker.hitData[self getEntityNumber()].shotgun_distance;
 			lastDamage.time = gettime();
 			lastDamage.firstTime = gettime();
 
 			eAttacker.round_report_array[eAttacker.round_report_array.size] = lastDamage;
 		}
-
-		//eAttacker printDebug();
-		//logprint("_round_report::onPlayerDamaged egress\n");
 	}
 }
 
 onPlayerKilled(eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc)
 {
-	//logprint("_round_report::onPlayerKilled ingress\n");
 	if (isDefined(eAttacker) && isPlayer(eAttacker) && eAttacker != self && level.roundstarted && !level.roundended)
 	{
 		// Remove this player if was hited 5 sec before
@@ -159,8 +99,6 @@ onPlayerKilled(eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHi
 				break;
 			}
 		}
-
-		//eAttacker printDebug();
 	}
 
 	// If there was some hits/kills in this round, add also my death info
@@ -177,7 +115,6 @@ onPlayerKilled(eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHi
 
 		self.round_report_myKill = myKill;
 	}
-	//logprint("_round_report::onPlayerKilled egress\n");
 }
 
 printToAll()
@@ -414,20 +351,16 @@ getWeapon(sMeansOfDeath, sWeapon)
 	if (sMeansOfDeath == "MOD_GRENADE_SPLASH")
 		return "Grenade";
 
-	weaponsTexts["m1carbine_mp"] = "Carabine";
+	weaponsTexts["m1carbine_mp"] = "M1 Carbine";
 	weaponsTexts["m1garand_mp"] = "M1 Garand";
 	weaponsTexts["thompson_mp"] = "Thompson";
 	weaponsTexts["bar_mp"] = "Bar";
 	weaponsTexts["springfield_mp"] = "Springfield";
-	weaponsTexts["greasegun_mp"] = "Greasegun";
-	weaponsTexts["shotgun_mp"] = "Shotgun";
 	weaponsTexts["enfield_mp"] = "Enfield";
 	weaponsTexts["sten_mp"] = "Sten";
 	weaponsTexts["bren_mp"] = "Bren";
-	weaponsTexts["enfield_scope_mp"] = "Enfield Scoped";
 	weaponsTexts["mosin_nagant_mp"] = "Mosin Nagant";
 	weaponsTexts["SVT40_mp"] = "SVT40";
-	weaponsTexts["PPS42_mp"] = "PPS42";
 	weaponsTexts["ppsh_mp"] = "PPSH";
 	weaponsTexts["mosin_nagant_sniper_mp"] = "Mosin Nagant Scoped";
 	weaponsTexts["kar98k_mp"] = "Kar98k";
@@ -446,79 +379,3 @@ getWeapon(sMeansOfDeath, sWeapon)
 		return weaponsTexts[sWeapon];
 	return "";
 }
-
-/*
-sendDebugInfo()
-{
-	self endon("disconnect");
-
-	// offset thread a litle bit
-	wait 0.05 * (self getEntityNumber());
-
-	buffer = "Hits from round " + game["roundsplayed"] + " (only rifle, scope and grenade hits are saved)\n";
-	debugIndex = 1;
-	for(i = 0; i < self.round_report_debug.size; i++)
-	{
-		buffer += self.round_report_debug[i] + "\n";
-
-		if (buffer.size > 400)
-		{
-			self sendDebugInfoCvar(debugIndex, buffer);
-			buffer = "";
-			debugIndex++;
-			wait 0.05;
-		}
-	}
-	if (buffer != "")
-		self sendDebugInfoCvar(debugIndex, buffer);
-
-	// Empty other cvars
-	for(i = debugIndex + 1; i <= 4; i++)
-	{
-		self sendDebugInfoCvar(i, "");
-	}
-
-}
-sendDebugInfoCvar(debugIndex, buffer)
-{
-	if (debugIndex == 1)
-		self setClientCvarIfChanged("pam_damage_debug", buffer);
-	else
-		self setClientCvarIfChanged("pam_damage_debug"+debugIndex, buffer);
-}
-
-// This function will remember the last value sended to client, so if the same value is used, nothing will be send to client
-setClientCvarIfChanged(cvar, value)
-{
-	if (!isDefined(value)) // just safety
-	{
-		value = "";
-	}
-
-	valueStr = value + "";	// Convert value to string (to avoid wierd unmatching variable types errors)
-
-	// Limit max size of cvar or server would crash "Attempted to overrun string in call to va"
-	// Max len of overall command: 1024
-	if (valueStr.size > 1000)
-	{
-		//value = getsubstr(value, 0, 1000);
-	}
-
-
-	//cvar = toLower(cvar);	// Convert to lower to match same cvars
-	lastValue = self.pers["cvar_" + cvar]; // Get last value, may be undefined for first time
-
-	// If value changed from last
-	if (!isDefined(lastValue) || valueStr != lastValue)
-	{
-		self setClientCvar2(cvar, valueStr);
-	}
-
-	self.pers["cvar_" + cvar] = valueStr;
-}
-
-setClientCvar2(cvar, value, aaa, bbb, ccc)
-{
-	self setClientCvar(cvar, value, aaa, bbb, ccc);
-}
-*/

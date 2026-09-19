@@ -300,28 +300,27 @@ PAM_StartGameType()
     game["headerL"] = game["leaguestring"];
 
     thread PAM_CheckPK3Files();
-
+    if([[level.getVars("pam_afteractionreport")]])
+    {
+        thread PAM_AfterActionReport();
+    }
 }
 
 PAM_AfterActionReport()
 {
-
-
-
     level waittill("postround");
 
-
-
+    pam\_pam_afteractionreport::printToAll();
 }
 
 PAM_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc)
 {
-
+   self thread pam\_pam_afteractionreport::onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc);
 }
 
 PAM_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc)
 {
-
+    self thread pam\_pam_afteractionreport::onPlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc);
 }
 
 PAM_PlayerConnect()
@@ -329,15 +328,7 @@ PAM_PlayerConnect()
 
     self maps\mp\uox\_uox_loops::addToLoop(self, ::PAM_BlackoutSpectator, "PAM_BlackoutSpectator");
 
-}
-
-PAM_AAR_OnDamage()
-{
-
-}
-
-PAM_AAR_OnKilled()
-{
+    pam\_pam_afteractionreport::onConnected();
 
 }
 
