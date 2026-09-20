@@ -205,7 +205,9 @@ PAM_Rules()
     case "lan":
         thread pam\rules\_lan_rules::Rules();
         break;
-
+    case "dev":
+        thread pam\rules\_dev_rules::Rules();
+        break;
     default:
         thread pam\rules\_public_rules::Rules();
         setCvar("pam_mode", "pub");
