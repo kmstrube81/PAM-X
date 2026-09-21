@@ -21,7 +21,7 @@ PAM_Vars()
     //set up PAM version string
     game["headerR"] = &"PAM-X 20260901";
     maps\mp\uox\_uox_vars::varDef("pam", "mode", "string", true, "pub", "", "", "PAM Mode", ::PAM_Restart);
-    maps\mp\uox\_uox_vars::varDef("pam", "blackoutspectator", "bool", true, false, "", "", "Black Out Spectators");
+    maps\mp\uox\_uox_vars::varDef("pam", "blackoutspectators", "bool", true, false, "", "", "Black Out Spectators");
     maps\mp\uox\_uox_vars::varDef("pam", "custom_maps", "string", true, "", "", "", "Server Custom Maps");
     maps\mp\uox\_uox_vars::varDef("pam", "afteractionreport", "bool", true, false, "", "", "After Action Report");
 }
