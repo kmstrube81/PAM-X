@@ -329,7 +329,7 @@ PAM_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sH
 PAM_PlayerConnect()
 {
 
-    self maps\mp\uox\_uox_loops::addToLoop(self, ::PAM_BlackoutSpectator, "PAM_BlackoutSpectator");
+    self maps\mp\uox\_uox_loops::addToLoop(self, "fast", ::PAM_BlackoutSpectator, "PAM_BlackoutSpectator");
 
     pam\_pam_afteractionreport::onConnected();
 
@@ -343,7 +343,7 @@ PAM_BlackoutSpectator()
     if(level.mapended || level.roundended || level.halftime)
     {
         self maps\mp\uox\_uox_hud::clearBlackedoutClientHUD();
-        self maps\mp\uox\_uox_loops::removeFromLoop(self, "PAM_BlackoutSpectator");
+        self maps\mp\uox\_uox_loops::removeFromLoop(self, "fast", "PAM_BlackoutSpectator");
         return;
     }
 
