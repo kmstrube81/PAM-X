@@ -12,7 +12,7 @@ PAM_Init()
     //run pam routines before regular player killed callback
     level.PlayerKilled_Callbacks = maps\mp\uox\_uox_arrays::arrayUnshift(level.PlayerKilled_Callbacks, ::PAM_PlayerKilled);
     //run pam routines after regular player connect callback
-    level.PlayerConnect_Callbacks = maps\mp\uox\_uox_arrays::arrayPush(level.PlayerConnect_Callbacks);
+    level.PlayerConnect_Callbacks = maps\mp\uox\_uox_arrays::arrayPush(level.PlayerConnect_Callbacks, ::PAM_PlayerConnect);
 
 }
 
