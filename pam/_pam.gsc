@@ -269,7 +269,11 @@ PAM_CheckPK3Files()
     serverPK3 = [];
 	serverPK3 = getCvar("sv_pakNames");
 	iprintln("^2Server PK3 Files:");
-	iprintln("^2" + serverPK3);
+    foundPK3 = maps\mp\uox\_uox_utils::stringSplit(serverPK3, " ");
+	for (i=0; i < foundPK3.size ; i++)
+	{
+        iprintln("^2" + serverPK3);
+    }
 
     PK3check = PAM_NonstockPK3Check();
 
