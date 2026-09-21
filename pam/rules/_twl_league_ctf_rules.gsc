@@ -179,7 +179,7 @@ Rules()
 
 	//SMGs
 	//setcvar("sv_alliedSMGLimit", "99");	// allied smg limit
-	/setcvar("sv_axisSMGLimit", "99");	// axis smg limit
+	//setcvar("sv_axisSMGLimit", "99");	// axis smg limit
 
 	setcvar("scr_allow_sten" , "1");
 	setcvar("scr_allow_mp40" , "1");
