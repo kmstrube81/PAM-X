@@ -341,18 +341,18 @@ PAM_BlackoutSpectator()
 
     if(level.mapended || level.roundended || level.halftime)
     {
-        self clearBlackedoutClientHUD();
+        self maps\mp\uox\_uox_hud::clearBlackedoutClientHUD();
         self maps\mmp\uox\_uox_loops::removeFromLoop(self, "PAM_BlackoutSpectator");
         return;
     }
 
     if(self.pers["team"] != "spectator" && self.sessionstate == "spectator")
     {
-        self blackoutClientHUD();
+        self maps\mp\uox\_uox_hud::blackoutClientHUD();
     }
     else
     {
-        self clearBlackedoutClientHUD();
+        self maps\mp\uox\_uox_hud::clearBlackedoutClientHUD();
     }
 }
 
