@@ -302,7 +302,7 @@ PAM_StartGameType()
     game["headerL"] = game["leaguestring"];
 
     thread PAM_CheckPK3Files();
-    if([[level.getVars("pam_afteractionreport")]])
+    if([[level.getVars]]("pam_afteractionreport"))
     {
         thread PAM_AfterActionReport();
     }
