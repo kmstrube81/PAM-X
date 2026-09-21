@@ -23,6 +23,7 @@ PAM_Vars()
     maps\mp\uox\_uox_vars::varDef("pam", "mode", "string", true, "pub", "", "", "PAM Mode", ::PAM_Restart);
     maps\mp\uox\_uox_vars::varDef("pam", "blackoutspectator", "bool", true, false, "", "", "Black Out Spectators");
     maps\mp\uox\_uox_vars::varDef("pam", "custom_maps", "string", true, "", "", "", "Server Custom Maps");
+    maps\mp\uox\_uox_cars::varDef("pam", "afteractionreport", "bool", true, false, "", "", "After Action Report");
 }
 
 PAM_Rules()
