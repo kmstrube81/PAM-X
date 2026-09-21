@@ -342,7 +342,7 @@ PAM_BlackoutSpectator()
     if(level.mapended || level.roundended || level.halftime)
     {
         self maps\mp\uox\_uox_hud::clearBlackedoutClientHUD();
-        self maps\mmp\uox\_uox_loops::removeFromLoop(self, "PAM_BlackoutSpectator");
+        self maps\mp\uox\_uox_loops::removeFromLoop(self, "PAM_BlackoutSpectator");
         return;
     }
 
