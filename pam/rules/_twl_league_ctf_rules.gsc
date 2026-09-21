@@ -18,7 +18,7 @@ Rules()
 	// *****************************************************
 	
 	// CTF Settings 
-     maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "0", "ctf");
+    maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "0", "ctf");
     maps\mp\uox\_uox_vars::updateCvar("scr","ot_scorelimit", maps\mp\uox\_uox::getTeam1Score() + 1, "ctf");
     maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "ctf");
     maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "2", "ctf");
