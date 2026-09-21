@@ -2,7 +2,7 @@
 Rules()
 {
     // Hostname and MOTD 
-	setcvar("sv_hostname" , "NA COMP Pub Server"); 
+	setcvar("sv_hostname" , "NA COMP TEST Server"); 
 	setcvar("scr_motd" , "Join us on Discord: discord.gg/coduo"); 
 
 	//Logo
