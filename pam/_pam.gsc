@@ -272,7 +272,7 @@ PAM_CheckPK3Files()
     foundPK3 = maps\mp\uox\_uox_utils::stringSplit(serverPK3, " ");
 	for (i=0; i < foundPK3.size ; i++)
 	{
-        iprintln("^2" + serverPK3);
+        iprintln("^2" + foundPK3[i]);
     }
 
     PK3check = PAM_NonstockPK3Check();
