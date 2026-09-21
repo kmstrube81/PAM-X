@@ -84,7 +84,7 @@ Rules()
 	maps\mp\uox\_uox_vars::updateCvar("scr","countdraws", "1", "ctf");	// Count rounds that end in a draw? 1=Yes 0=No
 	
 	// Timers
-	setcvar(scr_ctf_strattime", "5");	// round warmup time
+	setcvar("scr_ctf_strattime", "5");	// round warmup time
 
 	// HUD & Scoreboard Options
 	maps\mp\uox\_uox_vars::updateCvar("sv","showEndRoundScoreboard", true, "ctf");
