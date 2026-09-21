@@ -14,7 +14,7 @@ Rules()
 
     // SD Settings 
     maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "sd");
-    aps\mp\uox\_uox_vars::updateCvar("scr","ot_roundlimit", "0", "sd");
+    maps\mp\uox\_uox_vars::updateCvar("scr","ot_roundlimit", "0", "sd");
     maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "0", "sd");
     maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "0", "sd");
     maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "14", "sd");
