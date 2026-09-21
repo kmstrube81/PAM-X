@@ -268,8 +268,8 @@ PAM_CheckPK3Files()
 
     serverPK3 = [];
 	serverPK3 = getCvar("sv_pakNames");
-	self iprintln("^2Server PK3 Files:");
-	self iprintln("^2" + serverPK3);
+	iprintln("^2Server PK3 Files:");
+	iprintln("^2" + serverPK3);
 
     PK3check = PAM_NonstockPK3Check();
 
@@ -279,18 +279,18 @@ PAM_CheckPK3Files()
 		self iprintln("^1Unknown PK3 files:");
 		for (index = 1;index < PK3check.size; index++ )
 		{
-			self iprintln("^1" + PK3check[index]);
+			iprintln("^1" + PK3check[index]);
 			wait .05;
 		}
 	}
-	self iprintln("^8.");
-	self iprintln("^8.");
-	self iprintln("^8.");
-	self iprintln("^8.");
-	self iprintln("^2Server PK3 Files in console");
+	iprintln("^8.");
+	iprintln("^8.");
+	iprintln("^8.");
+	iprintln("^8.");
+	println("^2Server PK3 Files in console");
 	if (PK3check.size > 1)
 	{
-			self iprintln("^1Warning: Unknown PK3 Files listed in console");
+			iprintln("^1Warning: Unknown PK3 Files listed in console");
 	}
 
 }
