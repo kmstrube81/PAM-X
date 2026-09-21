@@ -1,4 +1,4 @@
-sRules()
+Rules()
 {
     // Hostname and MOTD 
 	setcvar("sv_hostname" , "OGL Match in Progress"); 
