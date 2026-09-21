@@ -10,7 +10,7 @@ Rules()
     game["serverlogo"] = &"discord.gg/coduo";
 
 	/* Match Setup Options */
-	maps\mp\uox\_uox_vars::updateCvar("scr","warmup", "2");
+	maps\mp\uox\_uox_vars::updateCvar("scr","warmupmode", "2");
     maps\mp\uox\_uox_vars::updateCvar("scr","halftime", "1");
     maps\mp\uox\_uox_vars::updateCvar("scr","overtime", "1");
 	
