@@ -280,7 +280,7 @@ PAM_CheckPK3Files()
 	// Print Unknown PK3 Files
 	if (PK3check.size > 1)
 	{
-		self iprintln("^1Unknown PK3 files:");
+		iprintln("^1Unknown PK3 files:");
 		for (index = 1;index < PK3check.size; index++ )
 		{
 			iprintln("^1" + PK3check[index]);
@@ -291,7 +291,7 @@ PAM_CheckPK3Files()
 	iprintln("^8.");
 	iprintln("^8.");
 	iprintln("^8.");
-	println("^2Server PK3 Files in console");
+	iprintln("^2Server PK3 Files in console");
 	if (PK3check.size > 1)
 	{
 			iprintln("^1Warning: Unknown PK3 Files listed in console");
