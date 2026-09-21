@@ -84,7 +84,7 @@ Rules()
 
 	setCvar("scr_randomsides", "1");	// Choose Random Sides for us if we need OT
     maps\mp\uox\_uox_vars::updateCvar("scr","ot_roundlength", "7", "ctf");
-    maps\mp\uox\_uox_vars::updateCvar("scr","ot_roundlimit", "2", "ctf")
+    maps\mp\uox\_uox_vars::updateCvar("scr","ot_roundlimit", "2", "ctf");
 
 	// Timers
 	setcvar("scr_artillery_first_interval" , "45"); // How long after spawn the Artillery Strike becomes available?
