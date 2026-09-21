@@ -162,7 +162,7 @@ PAM_Rules()
         break;
     case "ga":
         if(getCvar("g_gametype") == "ctf")
-            thread maps\mp\gametypes\rules\_ga_ctf_rules::Rules();
+            thread pam\rules\_ga_ctf_rules::Rules();
         else
         {
             thread pam\rules\_public_rules::Rules();
