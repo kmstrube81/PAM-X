@@ -263,7 +263,7 @@ PAM_NonstockPK3Check()
 PAM_CheckPK3Files()
 {
 
-    waittill("readyup");
+    level waittill("readyup");
 
     serverPK3 = [];
 	serverPK3 = getCvar("sv_pakNames");
