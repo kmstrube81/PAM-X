@@ -247,7 +247,7 @@ Rules()
 
 	// HUD & Scoreboard Options
     maps\mp\uox\_uox_vars::updateCvar("sv","showEndRoundScoreboard", true);
-	aps\mp\uox\_uox_vars::updateCvar("sv","showScoreboard", true);
+	maps\mp\uox\_uox_vars::updateCvar("sv","showScoreboard", true);
     maps\mp\uox\_uox_vars::updateCvar("sv","showScoreboardScorelimit", true);
     maps\mp\uox\_uox_vars::updateCvar("sv","showPlayersLeft", true);
 
