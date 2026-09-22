@@ -119,7 +119,7 @@ onPlayerKilled(eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHi
 
 printToAll()
 {
-	if (!level.afterroundreport)
+	if (!level.afteractionreport)
 		return;
 
 	players = getentarray("player", "classname");
