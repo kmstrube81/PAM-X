@@ -170,7 +170,7 @@ print()
 		self iprintln(" ");
 		self iprintln(" ");
 		self iprintln(" ");
-		self iprintln(level._prefix + "Round report:");
+		self iprintln("PAM-X Round report:");
 	}
 
 
