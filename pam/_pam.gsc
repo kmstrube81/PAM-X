@@ -307,10 +307,7 @@ PAM_StartGameType()
     game["headerL"] = game["leaguestring"];
 
     thread PAM_CheckPK3Files();
-    if([[level.getVars]]("pam_afteractionreport"))
-    {
-        thread PAM_AfterActionReport();
-    }
+    thread PAM_AfterActionReport();
 }
 
 PAM_AfterActionReport()
@@ -321,6 +318,9 @@ PAM_AfterActionReport()
         level.afteractionreport = false;
     else
         level.afteractionreport = afteractionreport;
+
+    if(!level.afteractionreport)
+        return;
 
     level waittill("postround");
 
