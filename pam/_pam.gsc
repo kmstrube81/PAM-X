@@ -23,7 +23,7 @@ PAM_Vars()
     maps\mp\uox\_uox_vars::varDef("pam", "mode", "string", true, "pub", "", "", "PAM Mode", ::PAM_Restart);
     maps\mp\uox\_uox_vars::varDef("pam", "blackoutspectators", "bool", true, false, "", "", "Black Out Spectators");
     maps\mp\uox\_uox_vars::varDef("pam", "custom_maps", "string", true, "", "", "", "Server Custom Maps");
-    level.afterroundreport = maps\mp\uox\_uox_vars::varDef("pam", "afteractionreport", "bool", true, false, "", "", "After Action Report");
+    maps\mp\uox\_uox_vars::varDef("pam", "afteractionreport", "bool", true, false, "", "", "After Action Report");
 }
 
 PAM_Rules()
@@ -315,6 +315,13 @@ PAM_StartGameType()
 
 PAM_AfterActionReport()
 {
+
+    afteractionreport = [[level.getVars]]("pam_afteractionreport");
+    if(!afteractionreport || level.respawn_mode != "obj" || [[level.getVars]]("scr_reinforcements") != 1)
+        level.afteractionreport = false;
+    else
+        level.afteractionreport = afteractionreport;
+
     level waittill("postround");
 
     pam\_pam_afteractionreport::printToAll();
@@ -322,12 +329,14 @@ PAM_AfterActionReport()
 
 PAM_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc)
 {
-   self thread pam\_pam_afteractionreport::onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc);
+    if(level.afteractionreport)
+        self thread pam\_pam_afteractionreport::onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc);
 }
 
 PAM_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc)
 {
-    self thread pam\_pam_afteractionreport::onPlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc);
+    if(level.afteractionreport)
+        self thread pam\_pam_afteractionreport::onPlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc);
 }
 
 PAM_PlayerConnect()
@@ -335,7 +344,8 @@ PAM_PlayerConnect()
 
     self maps\mp\uox\_uox_loops::addToLoop(self, "fast", ::PAM_BlackoutSpectator, "PAM_BlackoutSpectator");
 
-    pam\_pam_afteractionreport::onConnected();
+    if(level.afteractionreport)
+        pam\_pam_afteractionreport::onConnected();
 
 }
 

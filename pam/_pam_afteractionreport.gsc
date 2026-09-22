@@ -45,7 +45,7 @@ onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 			eAttacker.round_report_array[updateIndex].hitLoc = sHitLoc;
 			eAttacker.round_report_array[updateIndex].sMeansOfDeath = sMeansOfDeath;
 			eAttacker.round_report_array[updateIndex].sWeapon = sWeapon;
-			eAttacker.round_report_array[updateIndex].bombPlanted = level.bombplanted;
+			eAttacker.round_report_array[updateIndex].objectiveStatus = getObjectiveStatus();
 			eAttacker.round_report_array[updateIndex].time = gettime();
 
 			// Hits that came in same time (shotgun) count together
@@ -75,7 +75,7 @@ onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 			lastDamage.multipleDamage = false;
 			lastDamage.wasKilled = false;
 			lastDamage.teamkill = (self != eAttacker) && (self.pers["team"] == eAttacker.pers["team"]);
-			lastDamage.bombPlanted = level.bombplanted;
+			lastDamage.objectiveStatus = getObjectiveStatus();
 			lastDamage.time = gettime();
 			lastDamage.firstTime = gettime();
 
@@ -110,7 +110,7 @@ onPlayerKilled(eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHi
 		myKill.sMeansOfDeath = sMeansOfDeath;
 		myKill.sWeapon = sWeapon;
 		myKill.time = gettime();
-		myKill.bombPlanted = level.bombplanted;
+		myKill.objectiveStatus = getObjectiveStatus();
 
 
 		self.round_report_myKill = myKill;
@@ -181,7 +181,7 @@ print()
 		{
 			log = self.round_report_array[i];
 
-			string = getTimeString(log.time, log.bombPlanted) + " ^9";
+			string = log.objectiveStatus + "^9"; //getTimeString(log.time, log.objectiveStatus) + " ^9";
 
 			if (log.wasKilled)
 			{
@@ -294,7 +294,7 @@ print()
 
 	if (self.round_report_array.size > 0 && isDefined(self.round_report_myKill))
 	{
-		string = getTimeString(self.round_report_myKill.time, self.round_report_myKill.bombPlanted) + " ^1killed";
+		string = "^1killed"; //getTimeString(self.round_report_myKill.time, self.round_report_myKill.objectiveStatus) + " ^1killed";
 
 		if (isDefined(hitLocTexts[self.round_report_myKill.hitLoc]))
 			string += " to " + hitLocTexts[self.round_report_myKill.hitLoc];
@@ -311,16 +311,37 @@ print()
 	//logprint(self.name + " print dmg egress\n");
 }
 
-getTimeString(time, bombPlanted)
+getObjectiveStatus()
 {
-	if (bombPlanted)
+	switch(level.objective)
+	{
+		case "bomb":
+			if(!level.bombsites["A"]["planted"] && !level.bombsites["B"]["planted"])
+				return "Bomb Planted ";
+		case "radio":
+			if(self.pers["team"] == level.defenseTeam)
+				return "HQ Defense ";
+			else if(level.defenseTeam != "none")
+				return "HQ Attack ";
+			else
+				return "HQ Contest ";
+		default:
+			return "";
+	}
+}
+
+/*
+getTimeString(time, objectiveStatus)
+{
+	if (objectiveStatus)
 		return "B " + formatTime((int)(level.countdowntime - (int)((time - level.bombtimerstart)/1000)));
 	else
 		return formatTime(level.z_rpam_strat_time + (int)((level.roundlength * 60) - (int)((time - level.starttime)/1000)));
 		//return formatTime(level.strat_time + ((level.roundlength * 60) - ((time - level.starttime)/1000)));
 }
-
+*/
 // Prints second in format 00:00:00 (hours are printed only if > 0)
+/*
 formatTime(timeSec, separator)
 {
 	if (!isDefined(separator)) separator = ":";
@@ -343,7 +364,7 @@ formatTime(timeSec, separator)
 
 	return str;
 }
-
+*/
 getWeapon(sMeansOfDeath, sWeapon)
 {
 	if (sMeansOfDeath == "MOD_MELEE")
