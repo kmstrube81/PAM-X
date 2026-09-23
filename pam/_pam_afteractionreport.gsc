@@ -181,7 +181,7 @@ print()
 		{
 			log = self.round_report_array[i];
 
-			string = log.objectiveStatus + "^9"; //getTimeString(log.time, log.objectiveStatus) + " ^9";
+			string = getObjectiveShort(log.objectiveStatus) + "^9"; //getTimeString(log.time, log.objectiveStatus) + " ^9";
 
 			if (log.wasKilled)
 			{
@@ -288,13 +288,15 @@ print()
 			*/
 
 
+			string += " " + log.objectiveStatus;
+
 			self iprintln("" + string);
 		}
 	}
 
 	if (self.round_report_array.size > 0 && isDefined(self.round_report_myKill))
 	{
-		string = "^1killed"; //getTimeString(self.round_report_myKill.time, self.round_report_myKill.objectiveStatus) + " ^1killed";
+		string = getObjectiveShort(self.round_report_myKill.objectiveStatus) + "^1killed"; //getTimeString(self.round_report_myKill.time, self.round_report_myKill.objectiveStatus) + " ^1killed";
 
 		if (isDefined(hitLocTexts[self.round_report_myKill.hitLoc]))
 			string += " to " + hitLocTexts[self.round_report_myKill.hitLoc];
@@ -305,6 +307,7 @@ print()
 		if (weapon != "")
 			string += " via "+weapon+"";
 
+		string += " " + self.round_report_myKill.objectiveStatus;
 		self iprintln("" + string);
 	}
 
@@ -316,32 +319,52 @@ getObjectiveStatus()
 	switch(level.objective)
 	{
 		case "bomb":
-			if(!level.bombsites["A"]["planted"] && !level.bombsites["B"]["planted"])
-				return "Bomb Planted ";
+			if(level.bombsites["A"]["planted"] || level.bombsites["B"]["planted"])
+				return "Bomb Planted";
+			break;
 		case "radio":
 			if(self.pers["team"] == level.defenseTeam)
-				return "HQ Defense ";
+				return "HQ Defense";
 			else if(level.defenseTeam != "none")
-				return "HQ Attack ";
+				return "HQ Capture";
 			else
-				return "HQ Contest ";
+				return "HQ Destroy";
+			break;
 		default:
 			return "";
 	}
 }
 
-/*
+getObjectiveShort(objective)
+{
+	switch(objective)
+	{
+		case "Bomb Planted":
+			return "B";
+		default:
+			return "";
+	}
+}
+
+
 getTimeString(time, objectiveStatus)
 {
-	if (objectiveStatus)
-		return "B " + formatTime((int)(level.countdowntime - (int)((time - level.bombtimerstart)/1000)));
-	else
-		return formatTime(level.z_rpam_strat_time + (int)((level.roundlength * 60) - (int)((time - level.starttime)/1000)));
+	switch(objectiveStatus)
+	{
+		case "Bomb Planted":
+			return "B " + formatTime((int)(level.countdowntime - (int)((time - level.bombtimerstart)/1000)));
+		default:
+			return formatTime((int)((level.roundlength * 60) - (int)((time - level.roundstarttime)/1000)));
+	}
+	//if (objectiveStatus)
+	//	return "B " + formatTime((int)(level.countdowntime - (int)((time - level.bombtimerstart)/1000)));
+	//else
+	//return formatTime((int)((level.roundlength * 60) - (int)((time - level.roundstarttime)/1000)));
+		//return formatTime(level.z_rpam_strat_time + (int)((level.roundlength * 60) - (int)((time - level.starttime)/1000)));
 		//return formatTime(level.strat_time + ((level.roundlength * 60) - ((time - level.starttime)/1000)));
 }
-*/
+
 // Prints second in format 00:00:00 (hours are printed only if > 0)
-/*
 formatTime(timeSec, separator)
 {
 	if (!isDefined(separator)) separator = ":";
@@ -364,7 +387,7 @@ formatTime(timeSec, separator)
 
 	return str;
 }
-*/
+
 getWeapon(sMeansOfDeath, sWeapon)
 {
 	if (sMeansOfDeath == "MOD_MELEE")
