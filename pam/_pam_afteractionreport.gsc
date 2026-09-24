@@ -356,6 +356,7 @@ getObjectiveStatus()
 		default:
 			return "";
 	}
+	return "";
 }
 
 getObjectiveShort(objective)
