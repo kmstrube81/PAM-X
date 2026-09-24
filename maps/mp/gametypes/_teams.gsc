@@ -357,7 +357,7 @@ modeltype()
 precache()
 {
 
-	if([[level.getVars]]("pam_enabled");
+	if([[level.getVars]]("pam_enabled"))
 	{
 		maps\mp\gametypes\_pam_teams::precache();
 		return;
@@ -575,7 +575,7 @@ initGlobalCvars()
 initWeaponCvars()
 {
 
-	if([[level.getVars]]("pam_enabled");
+	if([[level.getVars]]("pam_enabled"))
 	{
 		maps\mp\gametypes\_pam_teams::initWeaponCvars();
 		return;
@@ -880,9 +880,9 @@ updateGlobalCvars()
 
 updateWeaponCvars()
 {
-	if([[level.getVars]]("pam_enabled");
+	if([[level.getVars]]("pam_enabled"))
 	{
-		maps\mp\gametypes\_pam_teams::updateWeaponCvars();
+		thread maps\mp\gametypes\_pam_teams::updateWeaponCvars();
 		return;
 	}
 	
@@ -1111,7 +1111,7 @@ updateWeaponCvars()
 
 restrictPlacedWeapons()
 {
-	if([[level.getVars]]("pam_enabled");
+	if([[level.getVars]]("pam_enabled"))
 	{
 		maps\mp\gametypes\_pam_teams::restrictPlacedWeapons();
 		return;
@@ -1344,10 +1344,9 @@ giveSmokeGrenades(spawnweapon)
 getWeaponBasedSmokeGrenadeCount(weapon)
 {
 
-	if([[level.getVars]]("pam_enabled");
+	if([[level.getVars]]("pam_enabled"))
 	{
-		maps\mp\gametypes\_pam_teams::getWeaponBasedSmokeGrenadeCount(weapon);
-		return;
+		return maps\mp\gametypes\_pam_teams::getWeaponBasedSmokeGrenadeCount(weapon);
 	}
 	
 	// if battle rank is on then call the battle rank function
@@ -1470,10 +1469,9 @@ giveGrenades(spawnweapon)
 getWeaponBasedGrenadeCount(weapon)
 {
 
-	if([[level.getVars]]("pam_enabled");
+	if([[level.getVars]]("pam_enabled"))
 	{
-		maps\mp\gametypes\_pam_teams::getWeaponBasedGrenadeCount(weapon);
-		return;
+		return maps\mp\gametypes\_pam_teams::getWeaponBasedGrenadeCount(weapon);
 	}
 	
 
@@ -1585,10 +1583,9 @@ giveBinoculars(spawnweapon)
 restrict(response)
 {
 
-	if([[level.getVars]]("pam_enabled");
+	if([[level.getVars]]("pam_enabled"))
 	{
-		maps\mp\gametypes\_pam_teams::restrict(response);
-		return;
+		return maps\mp\gametypes\_pam_teams::restrict(response);
 	}
 	
 
@@ -1816,10 +1813,9 @@ restrict(response)
 restrict_anyteam(response)
 {
 
-	if([[level.getVars]]("pam_enabled");
+	if([[level.getVars]]("pam_enabled"))
 	{
-		maps\mp\gametypes\_pam_teams::restrict_anyteam(response);
-		return;
+		return maps\mp\gametypes\_pam_teams::restrict_anyteam(response);
 	}
 	
 			switch(response)		
