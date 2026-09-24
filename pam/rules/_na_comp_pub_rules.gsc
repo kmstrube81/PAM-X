@@ -12,7 +12,7 @@ Rules()
 	/* Match Setup Options */
 	maps\mp\uox\_uox_vars::updateCvar("scr","warmupmode", "2");
     maps\mp\uox\_uox_vars::updateCvar("scr","autoreadycount", "10");
-    maps\mp\uox\_uox_vars::updateCvar("scr","autoreadycount", "60");
+    maps\mp\uox\_uox_vars::updateCvar("scr","autoreadytime", "60");
     maps\mp\uox\_uox_vars::updateCvar("scr","halftime", "1");
     maps\mp\uox\_uox_vars::updateCvar("scr","overtime", "0");
 	
