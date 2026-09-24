@@ -356,6 +356,13 @@ modeltype()
 
 precache()
 {
+
+	if([[level.getVars]]("pam_enabled");
+	{
+		maps\mp\gametypes\_pam_teams::precache();
+		return;
+	}
+	
 	maps\mp\gametypes\_shellshock_gmi::precache(); // Precache shellshock.
 	maps\mp\gametypes\_rank_gmi::PrecacheBattleRank(); // Precache rank items.
 	maps\mp\gametypes\_secondary_gmi::Precache(); // Precache rank items.
@@ -567,6 +574,13 @@ initGlobalCvars()
 
 initWeaponCvars()
 {
+
+	if([[level.getVars]]("pam_enabled");
+	{
+		maps\mp\gametypes\_pam_teams::initWeaponCvars();
+		return;
+	}
+	
 	level.allow_m1carbine = getCvar("scr_allow_m1carbine");
 	if(level.allow_m1carbine == "")
 		level.allow_m1carbine = "1";
@@ -866,6 +880,12 @@ updateGlobalCvars()
 
 updateWeaponCvars()
 {
+	if([[level.getVars]]("pam_enabled");
+	{
+		maps\mp\gametypes\_pam_teams::updateWeaponCvars();
+		return;
+	}
+	
 	for(;;)
 	{
 		scr_allow_m1carbine = getCvar("scr_allow_m1carbine");
@@ -1091,6 +1111,13 @@ updateWeaponCvars()
 
 restrictPlacedWeapons()
 {
+	if([[level.getVars]]("pam_enabled");
+	{
+		maps\mp\gametypes\_pam_teams::restrictPlacedWeapons();
+		return;
+	}
+	
+
 	if(level.allow_m1carbine != "1")
 		deletePlacedEntity("mpweapon_m1carbine");
 	if(level.allow_m1garand != "1")
@@ -1316,6 +1343,13 @@ giveSmokeGrenades(spawnweapon)
 
 getWeaponBasedSmokeGrenadeCount(weapon)
 {
+
+	if([[level.getVars]]("pam_enabled");
+	{
+		maps\mp\gametypes\_pam_teams::getWeaponBasedSmokeGrenadeCount(weapon);
+		return;
+	}
+	
 	// if battle rank is on then call the battle rank function
 	if ( isDefined(level.battlerank) && level.battlerank)
 	{
@@ -1435,6 +1469,14 @@ giveGrenades(spawnweapon)
 
 getWeaponBasedGrenadeCount(weapon)
 {
+
+	if([[level.getVars]]("pam_enabled");
+	{
+		maps\mp\gametypes\_pam_teams::getWeaponBasedGrenadeCount(weapon);
+		return;
+	}
+	
+
 	// if battle rank is on then call the battle rank function
 	if ( isDefined(level.battlerank) && level.battlerank)
 	{
@@ -1542,6 +1584,14 @@ giveBinoculars(spawnweapon)
 
 restrict(response)
 {
+
+	if([[level.getVars]]("pam_enabled");
+	{
+		maps\mp\gametypes\_pam_teams::restrict(response);
+		return;
+	}
+	
+
 	if(self.pers["team"] == "allies")
 	{
 		switch(game["allies"])		
@@ -1765,6 +1815,13 @@ restrict(response)
 
 restrict_anyteam(response)
 {
+
+	if([[level.getVars]]("pam_enabled");
+	{
+		maps\mp\gametypes\_pam_teams::restrict_anyteam(response);
+		return;
+	}
+	
 			switch(response)		
 			{
 			case "m1carbine_mp":
