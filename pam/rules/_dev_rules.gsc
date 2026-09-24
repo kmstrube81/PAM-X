@@ -22,6 +22,7 @@ Rules()
 	// *****************************************************
     maps\mp\uox\_uox_vars::updateCvar("scr","teamscorepenalty", "0");
     maps\mp\uox\_uox_vars::updateCvar("scr","graceperiod", "5");
+    maps\mp\uox\_uox_vars::updateCvar("scr","postroundtime", "5");
 	// Team Icons 
     maps\mp\uox\_uox_vars::updateCvar("scr", "drawfriend", "0");
 	// Friendly Fire 
@@ -240,7 +241,7 @@ Rules()
 	setCvar("scr_randomsides", "0");	// Choose Random Sides for us if we need OT - Not implemented in SD yet
 
 	// Timers
-	setcvar("g_strattime", "5");	// round warmup time
+	maps\mp\uox\_uox_vars::updateCvar("scr", "strattime", "5", "sd");	// round warmup time
 
 	// Score Settings
 	setcvar("scr_sd_clearscoreeachhalf", "0");	// Re-set Players Score at halftime? 1=Yes 0=No  Used to reset battlerank if it is on.
