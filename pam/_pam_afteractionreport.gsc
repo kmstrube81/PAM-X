@@ -49,7 +49,7 @@ onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 			eAttacker.round_report_array[updateIndex].rawtime = gettime();
 			if(eAttacker.round_report_array[updateIndex].objectiveStatus == "Bomb Planted")
 			{
-				eAttacker.round_report_array[updateIndex].time = "B " + formatTime((int)(level.countdowntime - (int)((eAttacker.round_report_array[updateIndex].rawtime - level.objectivetime)/1000));
+				eAttacker.round_report_array[updateIndex].time = "B " + formatTime(  (int)(level.countdowntime - (int)((eAttacker.round_report_array[updateIndex].rawtime - level.objectivetime)/1000)) );
 			}
 			else
 			{
@@ -88,7 +88,7 @@ onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 			lastDamage.firstTime = gettime();
 			if(lastDamage.objectiveStatus == "Bomb Planted")
 			{
-				lastDamage.time = "B " + formatTime((int)(level.countdowntime - (int)((lastDamage.rawtime - level.objectivetime)/1000));
+				lastDamage.time = "B " + formatTime( (int)(level.countdowntime - (int)((lastDamage.rawtime - level.objectivetime)/1000)) );
 			}
 			else
 			{
@@ -129,7 +129,7 @@ onPlayerKilled(eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHi
 		myKill.objectiveStatus = getObjectiveStatus();
 		if(myKill.objectiveStatus == "Bomb Planted")
 			{
-				myKill.time = "B " + formatTime((int)(level.countdowntime - (int)((myKill.rawtime - level.objectivetime)/1000));
+				myKill.time = "B " + formatTime( (int)(level.countdowntime - (int)((myKill.rawtime - level.objectivetime)/1000)) );
 			}
 			else
 			{
