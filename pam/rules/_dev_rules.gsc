@@ -22,6 +22,7 @@ Rules()
 	// *****************************************************
     maps\mp\uox\_uox_vars::updateCvar("scr","teamscorepenalty", "0");
     maps\mp\uox\_uox_vars::updateCvar("scr","graceperiod", "5");
+    maps\mp\uox\_uox_vars::updateCvar("scr","postroundtime", "5");
 	// Team Icons 
     maps\mp\uox\_uox_vars::updateCvar("scr", "drawfriend", "0");
 	// Friendly Fire 
