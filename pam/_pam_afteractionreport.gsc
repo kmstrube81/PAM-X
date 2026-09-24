@@ -53,7 +53,7 @@ onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 			}
 			else
 			{
-				eAttacker.round_report_array[updateIndex].time = (int)((level.roundlength * 60) - (int)((eAttacker.round_report_array[updateIndex].rawtime - level.roundresumetime)/1000));
+				eAttacker.round_report_array[updateIndex].time = formatTime( (int)((level.roundlength * 60) - (int)((eAttacker.round_report_array[updateIndex].rawtime - level.roundresumetime)/1000)) );
 			}
 
 			// Hits that came in same time (shotgun) count together
@@ -92,7 +92,7 @@ onPlayerDamaged(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon,
 			}
 			else
 			{
-				lastDamage.time = (int)((level.roundlength * 60) - (int)((lastDamage.rawtime - level.roundresumetime)/1000));
+				lastDamage.time = formatTime( (int)((level.roundlength * 60) - (int)((lastDamage.rawtime - level.roundresumetime)/1000)) );
 			}
 
 			eAttacker.round_report_array[eAttacker.round_report_array.size] = lastDamage;
@@ -133,7 +133,7 @@ onPlayerKilled(eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHi
 			}
 			else
 			{
-				myKill.time = (int)((level.roundlength * 60) - (int)((myKill.rawtime - level.roundresumetime)/1000));
+				myKill.time = formatTime( (int)((level.roundlength * 60) - (int)((myKill.rawtime - level.roundresumetime)/1000)) );
 			}
 
 		self.round_report_myKill = myKill;
