@@ -107,7 +107,7 @@ onPlayerKilled(eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHi
 		// Remove this player if was hited 5 sec before
 		for (i = eAttacker.round_report_array.size-1; i >= 0; i--)
 		{
-			if (isDefined(eAttacker.round_report_array[i].enemy) && eAttacker.round_report_array[i].enemy == self && (eAttacker.round_report_array[i].time + 5000) > gettime())
+			if (isDefined(eAttacker.round_report_array[i].enemy) && eAttacker.round_report_array[i].enemy == self && (eAttacker.round_report_array[i].rawtime + 5000) > gettime())
 			{
 				// Set as kill
 				eAttacker.round_report_array[i].wasKilled = true;
