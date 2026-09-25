@@ -1,4 +1,3 @@
-
 Rules()
 {
     // Hostname and MOTD 
@@ -54,6 +53,9 @@ Rules()
     maps\mp\uox\_uox_vars::updateCvar("pam","afteractionreport" , true);
     //Black Out Spectators
     maps\mp\uox\_uox_vars::updateCvar("pam","blackoutspectators", false);
+    //Enfore cvars - frame cap
+    setCvar("com_maxfps", "333");
+    maps\mp\uox\_uox_vars::updateCvar("sv","enforcedClientCvars", "com_maxfps");
 
     //*****************************************************
 	// *********** Gametype Config Cvars ****************
@@ -116,7 +118,7 @@ Rules()
             break;
         case "sd":
         	// S&D Settings 
-        		maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "sd");
+        	maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "0", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "1", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "20", "sd");
@@ -148,9 +150,9 @@ Rules()
             maps\mp\uox\_uox_vars::updateCvar("scr", "reinforcements", "1", "re");
             //RE VARS
             maps\mp\uox\_uox_vars::updateCvar("scr", "showcarrier", false, "re");
-        		maps\mp\uox\_uox_vars::updateCvar("scr", "objpickupbonuspoints", "0", "re");
-        		maps\mp\uox\_uox_vars::updateCvar("scr", "objscorebonuspoints", "0", "re");
-        		maps\mp\uox\_uox_vars::updateCvar("scr", "objcarrierkillbonuspoints", "0", "re");
+        	maps\mp\uox\_uox_vars::updateCvar("scr", "objpickupbonuspoints", "0", "re");
+        	maps\mp\uox\_uox_vars::updateCvar("scr", "objscorebonuspoints", "0", "re");
+        	maps\mp\uox\_uox_vars::updateCvar("scr", "objcarrierkillbonuspoints", "0", "re");
             break;
         case "dom":
             maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "300", "dom");
@@ -208,10 +210,10 @@ Rules()
             maps\mp\uox\_uox_vars::updateCvar("scr", "wavetimer", "45", "hq");
             //HQ VARS
             maps\mp\uox\_uox_vars::updateCvar("scr", "radiocapturetime", "10", "hq");
-        		maps\mp\uox\_uox_vars::updateCvar("scr", "radiodestroytime", "10", "hq");
+        	maps\mp\uox\_uox_vars::updateCvar("scr", "radiodestroytime", "10", "hq");
             maps\mp\uox\_uox_vars::updateCvar("scr", "radiomaxhold", "6", "hq");
-        		maps\mp\uox\_uox_vars::updateCvar("scr", "radiocapturebonuspoints", "0", "hq");
-        		maps\mp\uox\_uox_vars::updateCvar("scr", "radiodestroybonuspoints", "0", "hq");
+        	maps\mp\uox\_uox_vars::updateCvar("scr", "radiocapturebonuspoints", "0", "hq");
+        	maps\mp\uox\_uox_vars::updateCvar("scr", "radiodestroybonuspoints", "0", "hq");
             maps\mp\uox\_uox_vars::updateCvar("scr", "radioholdbonuspoints", "0", "hq");
             break;
         case "bas":
@@ -228,12 +230,12 @@ Rules()
             maps\mp\uox\_uox_vars::updateCvar("scr", "basehealth", "24500", "bas");
             maps\mp\uox\_uox_vars::updateCvar("scr", "basedefensebonus", "1", "bas");
             maps\mp\uox\_uox_vars::updateCvar("scr", "bombplanttime", "10", "bas");
-        		maps\mp\uox\_uox_vars::updateCvar("scr", "bombdefusetime", "10", "bas");
-        		maps\mp\uox\_uox_vars::updateCvar("scr", "bombtimer", "60", "bas");
+        	maps\mp\uox\_uox_vars::updateCvar("scr", "bombdefusetime", "10", "bas");
+        	maps\mp\uox\_uox_vars::updateCvar("scr", "bombtimer", "60", "bas");
             maps\mp\uox\_uox_vars::updateCvar("scr", "bombplantbonuspoints", "2", "bas");
             maps\mp\uox\_uox_vars::updateCvar("scr", "bombdefusebonuspoints", "4", "bas");
-        		maps\mp\uox\_uox_vars::updateCvar("scr", "bombbonustime", "0", "bas");
-        		maps\mp\uox\_uox_vars::updateCvar("scr", "bombbonuspoints", "3", "bas");
+        	maps\mp\uox\_uox_vars::updateCvar("scr", "bombbonustime", "0", "bas");
+        	maps\mp\uox\_uox_vars::updateCvar("scr", "bombbonuspoints", "3", "bas");
             break;
     }
 
