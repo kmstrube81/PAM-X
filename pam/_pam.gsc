@@ -229,14 +229,12 @@ PAM_GetCustomMapPK3()
     // List all Allowed PK3 file names HERE separated by a space.  DO NOT include '.pk3'
     customPK3 = [[level.getVars]]("pam_custom_maps");
     
-    return customePK3; 
+    return customPK3; 
 }
 
 PAM_NonstockPK3Check()
 {
 	stockmaxxing = PAM_GetStockPK3();
-
-    customs = PAM_GetCustomMapPK3();
 
 	serverPK3 = [];
 	serverPK3 = getCvar("sv_pakNames");
@@ -249,6 +247,30 @@ PAM_NonstockPK3Check()
 	for (i=0; i < foundPK3.size ; i++)
 	{
 		found = maps\mp\uox\_uox_utils::findStr(foundPK3[i], stockmaxxing, "anywhere");
+		if (found != -1)
+			continue;
+		else
+		{
+			foundCount++;
+			PK3check[foundCount] = foundPK3[i];
+		}
+	}
+
+    return PK3check;
+}
+
+PAM_NoncustomPK3Check(nonstockPK3s)
+{
+	customs = PAM_GetCustomMapPK3();
+	
+	foundCount = 0;
+	PK3check = [];
+	PK3check[0] = "none";
+
+	foundPK3 = maps\mp\uox\_uox_utils::stringSplit(customs, " ");
+	for (i=0; i < foundPK3.size ; i++)
+	{
+		found = maps\mp\uox\_uox_utils::findStr(foundPK3[i], nonstockPK3s, "anywhere");
 		if (found != -1)
 			continue;
 		else
@@ -275,7 +297,9 @@ PAM_CheckPK3Files()
         iprintln("^2" + foundPK3[i]);
     }
 
-    PK3check = PAM_NonstockPK3Check();
+    stockmaxxing = PAM_NonstockPK3Check();
+
+    PK3check = PAM_NoncustomPK3Check(stockmaxxing);
 
 	// Print Unknown PK3 Files
 	if (PK3check.size > 1)
