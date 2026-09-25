@@ -23,6 +23,7 @@ Rules()
     maps\mp\uox\_uox_vars::updateCvar("scr","teamscorepenalty", "0");
     maps\mp\uox\_uox_vars::updateCvar("scr","graceperiod", "5");
     maps\mp\uox\_uox_vars::updateCvar("scr","postroundtime", "5");
+    maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "30");
 	// Team Icons 
     maps\mp\uox\_uox_vars::updateCvar("scr", "drawfriend", "0");
 	// Friendly Fire 
@@ -90,6 +91,7 @@ Rules()
             }
         case "tdm":
             maps\mp\uox\_uox_vars::updateCvar("scr", "scorelimit", "0", "tdm");
+            maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "tdm");
             maps\mp\uox\_uox_vars::updateCvar("scr", "roundlimit", "2", "tdm");
             maps\mp\uox\_uox_vars::updateCvar("scr", "roundlength", "15", "tdm");
             maps\mp\uox\_uox_vars::updateCvar("scr", "respawn_mode", "dm", "tdm");
@@ -114,7 +116,7 @@ Rules()
             break;
         case "sd":
         	// S&D Settings 
-        	maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "sd");
+        		maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "0", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "1", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "20", "sd");
@@ -146,13 +148,13 @@ Rules()
             maps\mp\uox\_uox_vars::updateCvar("scr", "reinforcements", "1", "re");
             //RE VARS
             maps\mp\uox\_uox_vars::updateCvar("scr", "showcarrier", false, "re");
-        	maps\mp\uox\_uox_vars::updateCvar("scr", "objpickupbonuspoints", "0", "re");
-        	maps\mp\uox\_uox_vars::updateCvar("scr", "objscorebonuspoints", "0", "re");
-        	maps\mp\uox\_uox_vars::updateCvar("scr", "objcarrierkillbonuspoints", "0", "re");
+        		maps\mp\uox\_uox_vars::updateCvar("scr", "objpickupbonuspoints", "0", "re");
+        		maps\mp\uox\_uox_vars::updateCvar("scr", "objscorebonuspoints", "0", "re");
+        		maps\mp\uox\_uox_vars::updateCvar("scr", "objcarrierkillbonuspoints", "0", "re");
             break;
         case "dom":
             maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "300", "dom");
-            maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", maps\mp\uox\_uox::getTeam1Score() + 15, "dom");
+            maps\mp\uox\_uox_vars::updateCvar("scr","ot_scorelimit", maps\mp\uox\_uox::getTeam1Score() + 15, "dom");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "2", "dom");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlength", "0", "dom");
             maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "0", "dom");
@@ -176,6 +178,7 @@ Rules()
             break;
         case "ctf":
             maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "0", "ctf");
+            maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "2", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlength", "15", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr", "respawn_mode", "spawndelay", "ctf");
@@ -205,10 +208,10 @@ Rules()
             maps\mp\uox\_uox_vars::updateCvar("scr", "wavetimer", "45", "hq");
             //HQ VARS
             maps\mp\uox\_uox_vars::updateCvar("scr", "radiocapturetime", "10", "hq");
-        	maps\mp\uox\_uox_vars::updateCvar("scr", "radiodestroytime", "10", "hq");
+        		maps\mp\uox\_uox_vars::updateCvar("scr", "radiodestroytime", "10", "hq");
             maps\mp\uox\_uox_vars::updateCvar("scr", "radiomaxhold", "6", "hq");
-        	maps\mp\uox\_uox_vars::updateCvar("scr", "radiocapturebonuspoints", "0", "hq");
-        	maps\mp\uox\_uox_vars::updateCvar("scr", "radiodestroybonuspoints", "0", "hq");
+        		maps\mp\uox\_uox_vars::updateCvar("scr", "radiocapturebonuspoints", "0", "hq");
+        		maps\mp\uox\_uox_vars::updateCvar("scr", "radiodestroybonuspoints", "0", "hq");
             maps\mp\uox\_uox_vars::updateCvar("scr", "radioholdbonuspoints", "0", "hq");
             break;
         case "bas":
@@ -225,12 +228,12 @@ Rules()
             maps\mp\uox\_uox_vars::updateCvar("scr", "basehealth", "24500", "bas");
             maps\mp\uox\_uox_vars::updateCvar("scr", "basedefensebonus", "1", "bas");
             maps\mp\uox\_uox_vars::updateCvar("scr", "bombplanttime", "10", "bas");
-        	maps\mp\uox\_uox_vars::updateCvar("scr", "bombdefusetime", "10", "bas");
-        	maps\mp\uox\_uox_vars::updateCvar("scr", "bombtimer", "60", "bas");
+        		maps\mp\uox\_uox_vars::updateCvar("scr", "bombdefusetime", "10", "bas");
+        		maps\mp\uox\_uox_vars::updateCvar("scr", "bombtimer", "60", "bas");
             maps\mp\uox\_uox_vars::updateCvar("scr", "bombplantbonuspoints", "2", "bas");
             maps\mp\uox\_uox_vars::updateCvar("scr", "bombdefusebonuspoints", "4", "bas");
-        	maps\mp\uox\_uox_vars::updateCvar("scr", "bombbonustime", "0", "bas");
-        	maps\mp\uox\_uox_vars::updateCvar("scr", "bombbonuspoints", "3", "bas");
+        		maps\mp\uox\_uox_vars::updateCvar("scr", "bombbonustime", "0", "bas");
+        		maps\mp\uox\_uox_vars::updateCvar("scr", "bombbonuspoints", "3", "bas");
             break;
     }
 
@@ -241,7 +244,7 @@ Rules()
 	setCvar("scr_randomsides", "0");	// Choose Random Sides for us if we need OT - Not implemented in SD yet
 
 	// Timers
-	maps\mp\uox\_uox_vars::updateCvar("scr", "strattime", "5", "sd");	// round warmup time
+	maps\mp\uox\_uox_vars::updateCvar("scr", "strattime", "0");	// round warmup time
 
 	// Score Settings
 	setcvar("scr_sd_clearscoreeachhalf", "0");	// Re-set Players Score at halftime? 1=Yes 0=No  Used to reset battlerank if it is on.
