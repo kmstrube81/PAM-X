@@ -236,6 +236,8 @@ PAM_NonstockPK3Check()
 {
 	stockmaxxing = PAM_GetStockPK3();
 
+    maps\mp\uox\_uox_debug::debugLog("info", maps\mp\uox\_uox_utils::stringSplit(stockmaxxing, " ").size + " total stock pak files. stock server pak files: " + stockmaxxing);   
+
 	serverPK3 = [];
 	serverPK3 = getCvar("sv_pakNames");
 	
@@ -255,6 +257,8 @@ PAM_NonstockPK3Check()
 			PK3check[foundCount] = foundPK3[i];
 		}
 	}
+
+    maps\mp\uox\_uox_debug::debugLog("info", "found " + foundCount + " total non stock pak files");
 
     return PK3check;
 }
@@ -280,6 +284,8 @@ PAM_NoncustomPK3Check(nonstockPK3s)
 		}
 	}
 
+    maps\mp\uox\_uox_debug::debugLog("info", "found " + foundPK3.size + " pak files not specified in config");
+
     return PK3check;
 }
 
@@ -296,6 +302,8 @@ PAM_CheckPK3Files()
 	{
         iprintln("^2" + foundPK3[i]);
     }
+
+    maps\mp\uox\_uox_debug::debugLog("info", "found " + foundPK3.size + " total pak files");
 
     stockmaxxing = PAM_NonstockPK3Check();
 
@@ -320,7 +328,7 @@ PAM_CheckPK3Files()
 	{
 			iprintln("^1Warning: Unknown PK3 Files listed in console");
 	}
-
+    maps\mp\uox\_uox_debug::debugLog("info", "server pak files: " + serverPK3);
 }
 
 PAM_StartGameType()
