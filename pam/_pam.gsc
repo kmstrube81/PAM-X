@@ -282,7 +282,7 @@ PAM_NoncustomPK3Check(nonstockPK3s)
 		else
 		{
 			foundCount++;
-			PK3check[foundCount] = foundPK3[i];
+			PK3check[foundCount] = nonstockPK3s[i];
 		}
 	}
 
