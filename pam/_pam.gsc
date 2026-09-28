@@ -271,10 +271,12 @@ PAM_NoncustomPK3Check(nonstockPK3s)
 	PK3check = [];
 	PK3check[0] = "none";
 
-	foundPK3 = maps\mp\uox\_uox_utils::stringSplit(customs, " ");
-	for (i=0; i < foundPK3.size ; i++)
+    if(!isDefined(nonstockPK3s[1]))
+        return PK3check;
+
+	for (i=0; i < nonstockPK3s.size ; i++)
 	{
-		found = maps\mp\uox\_uox_utils::findStr(foundPK3[i], nonstockPK3s, "anywhere");
+		found = maps\mp\uox\_uox_utils::findStr(nonstockPK3s[i], customs, "anywhere");
 		if (found != -1)
 			continue;
 		else
@@ -284,7 +286,7 @@ PAM_NoncustomPK3Check(nonstockPK3s)
 		}
 	}
 
-    maps\mp\uox\_uox_debug::debugLog("info", "found " + foundPK3.size + " pak files not specified in config");
+    maps\mp\uox\_uox_debug::debugLog("info", "found " + PK3check.size + " pak files not specified in config");
 
     return PK3check;
 }
@@ -313,10 +315,12 @@ PAM_CheckPK3Files()
 	if (PK3check.size > 1)
 	{
 		iprintln("^1Unknown PK3 files:");
+        maps\mp\uox\_uox_debug::debugLog("info", "unknown server pak files:");
 		for (index = 1;index < PK3check.size; index++ )
 		{
 			iprintln("^1" + PK3check[index]);
-			wait .05;
+            maps\mp\uox\_uox_debug::debugLog("info", PK3check[index]);
+			wait level.frametime;
 		}
 	}
 	iprintln("^8.");
@@ -328,11 +332,7 @@ PAM_CheckPK3Files()
 	{
 			iprintln("^1Warning: Unknown PK3 Files listed in console");
 	}
-    maps\mp\uox\_uox_debug::debugLog("info", "server pak files:");
-    for (i=0; i < foundPK3.size ; i++)
-	{
-        maps\mp\uox\_uox_debug::debugLog("info", foundPK3[i]);
-    }
+
 }
 
 PAM_StartGameType()
