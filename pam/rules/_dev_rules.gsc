@@ -120,7 +120,7 @@ Rules()
         	// S&D Settings 
         	maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "0", "sd");
-            maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "1", "sd");
+            maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "0", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "20", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlength", "1.75", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr", "respawn_mode", "obj", "sd");
