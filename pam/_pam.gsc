@@ -328,7 +328,11 @@ PAM_CheckPK3Files()
 	{
 			iprintln("^1Warning: Unknown PK3 Files listed in console");
 	}
-    maps\mp\uox\_uox_debug::debugLog("info", "server pak files: " + serverPK3);
+    maps\mp\uox\_uox_debug::debugLog("info", "server pak files:");
+    for (i=0; i < foundPK3.size ; i++)
+	{
+        maps\mp\uox\_uox_debug::debugLog("info", foundPK3[i]);
+    }
 }
 
 PAM_StartGameType()
