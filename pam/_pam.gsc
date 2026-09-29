@@ -274,7 +274,7 @@ PAM_NoncustomPK3Check(nonstockPK3s)
     if(!isDefined(nonstockPK3s[1]))
         return PK3check;
 
-	for (i=0; i < nonstockPK3s.size ; i++)
+	for (i=1; i < nonstockPK3s.size ; i++)
 	{
 		found = maps\mp\uox\_uox_utils::findStr(nonstockPK3s[i], customs, "anywhere");
 		if (found != -1)
