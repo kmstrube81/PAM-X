@@ -23,6 +23,7 @@ Rules()
     maps\mp\uox\_uox_vars::updateCvar("scr","graceperiod", "5");
     maps\mp\uox\_uox_vars::updateCvar("scr","postroundtime", "5");
     maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "30");
+    maps\mp\uox\_uox_vars::updateCvar("scr","countdraws", "1";
 	// Team Icons 
     maps\mp\uox\_uox_vars::updateCvar("scr", "drawfriend", "0");
 	// Friendly Fire 
@@ -118,6 +119,7 @@ Rules()
             break;
         case "sd":
         	// S&D Settings 
+            maps\mp\uox\_uox_vars::updateCvar("scr","countdraws", "0", "sd");
         	maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "0", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "0", "sd");
@@ -139,6 +141,7 @@ Rules()
             maps\mp\uox\_uox_vars::updateCvar("sv", "showbombtimer", true, "sd");
             break;
         case "re":
+            maps\mp\uox\_uox_vars::updateCvar("scr","countdraws", "0", "re");
             maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "re");
             maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "0", "re");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "20", "re");
@@ -183,6 +186,7 @@ Rules()
             maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "2", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlength", "15", "ctf");
+            maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "0", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr", "respawn_mode", "spawndelay", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr", "spawn_type", "near_team", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr", "spawnpoints", "uo", "ctf");
@@ -203,6 +207,7 @@ Rules()
             maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "0", "hq");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "2", "hq");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlength", "10", "hq");
+            maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "0", "hq");
             maps\mp\uox\_uox_vars::updateCvar("scr", "respawn_mode", "hq", "hq");
             maps\mp\uox\_uox_vars::updateCvar("scr", "spawn_type", "hq", "hq");
             maps\mp\uox\_uox_vars::updateCvar("scr", "spawnpoints", "tdm", "hq");
