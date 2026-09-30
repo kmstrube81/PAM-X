@@ -2033,6 +2033,7 @@ restrict_anyteam(response)
 				response = "restricted";
 				break;
 			}
+	response = self pam\_pam_checksnipers::isWeaponLimited(response);
 	return response;
 }
 
