@@ -75,13 +75,16 @@ Rules()
                 case "wawa_redux_american":
                 case "wawa_redux_british":
                 case "wawa_gyhas":
-                    maps\mp\uox\_uox_vars::updateCvar("scr","halftime", "0", "dm", map);
-                    maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "10", "dm", map);
+                    maps\mp\uox\_uox_vars::updateCvar("scr", "halftime", "0", "dm", map);
+					maps\mp\uox\_uox_vars::updateCvar("scr","warmupmode", "0", "dm", map);
+					maps\mp\uox\_uox_vars::updateCvar("scr", "roundlimit", "0", "dm", map);
+                    maps\mp\uox\_uox_vars::updateCvar("scr", "scorelimit", "10", "dm", map);
+					maps\mp\uox\_uox_vars::updateCvar("scr", "roundlength", "0", "dm", map);
                     maps\mp\uox\_uox_vars::updateCvar("scr", "respawn_mode", "dm", "dm", map);
                     maps\mp\uox\_uox_vars::updateCvar("scr", "spawn_type", "deathmatch", "dm", map);
                     maps\mp\uox\_uox_vars::updateCvar("scr", "spawnpoints", "dm", "dm", map);
                     maps\mp\uox\_uox_vars::updateCvar("scr", "reinforcements", "-1", "dm", map);
-                    maps\mp\uox\_uox_vars::updateCvar("scr","final_killcam", true, "dm", map);
+                    maps\mp\uox\_uox_vars::updateCvar("scr", "final_killcam", true, "dm", map);
                     break;
                 default:
                     maps\mp\uox\_uox_vars::updateCvar("scr","halftime", "0", "dm", map);
@@ -121,8 +124,8 @@ Rules()
         	// S&D Settings 
             maps\mp\uox\_uox_vars::updateCvar("scr","countdraws", "0", "sd");
         	maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "sd");
-            maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "0", "sd");
-            maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "0", "sd");
+            maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "1", "sd");
+            maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "1", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "20", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlength", "1.75", "sd");
             maps\mp\uox\_uox_vars::updateCvar("scr", "respawn_mode", "obj", "sd");
