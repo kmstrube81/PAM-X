@@ -1,3 +1,120 @@
+isWeaponLimited(weapon)
+{
+	switch(weapon)
+	{
+		case "restricted":
+			return weapon; //nothing to do, weapon is already restricted
+			break;
+		case "springfield_mp":
+		case "mosin_nagant_sniper_mp":
+		case "kar98k_sniper_mp":
+			limit = getcvarint("sv_SniperLimit");
+			if (limit < 1 || limit == 99)
+				limit = 99;
+			else 
+				limitweapons = true;
+			class = "Sniper";
+			break;
+		case "thompson_mp":
+		case "thompson_semi_mp":
+		case "sten_mp":
+		case "ppsh_mp":
+		case "ppsh_semi_mp":
+		case "sten_silenced_mp":
+		case "mp40_mp":
+			limit = getcvarint("sv_SMGLimit");
+			if (limit < 1 || limit == 99)
+				limit = 99;
+			else 
+				limitweapons = true;
+			class = "SMG";
+			break;
+		case "bren_mp":
+		case "bar_mp":
+		case "bar_slow_mp":
+		case "mp44_mp":
+		case "mp44_semi_mp":
+			limit = getcvarint("sv_MGLimit");
+			if (limit < 1 || limit == 99)
+				limit = 99;
+			else 
+				limitweapons = true;
+			class = "MG";
+			break;
+		case "dp28_mp":
+		case "mg30cal_mp":
+		case "mg34_mp":
+			limit = getcvarint("sv_DMGLimit");
+			if (limit < 1 || limit == 99)
+				limit = 99;
+			else 
+				limitweapons = true;
+			class = "LMG";
+			break;
+	}
+	if (isdefined(limitweapons))
+	{
+		if(limit < getWeaponsCount(class,self.pers["team"]))
+		{
+			iprintln("Team is already at the maximum number of " + class + " players");
+			return "restricted";
+		}
+	}
+	return weapon;
+}
+
+getWeaponsCount(weaponClass, team)
+{
+	count = 0;
+	//get weapons counts
+	lplayers = getentarray("player", "classname");
+	for(i = 0; i < lplayers.size; i++)
+	{
+		lplayer = lplayers[i];
+
+		if(isdefined(lplayer.pers["weapon"]))
+		{
+			switch (lplayer.pers["weapon"])
+			{
+				case "springfield_mp":
+				case "mosin_nagant_sniper_mp":
+				case "kar98k_sniper_mp":
+					if(team == lplayer.pers["team"] && weaponClass == "Sniper")
+						count++;
+					break;
+
+				case "thompson_mp":
+				case "thompson_semi_mp":
+				case "sten_mp":
+				case "ppsh_mp":
+				case "ppsh_semi_mp":
+				case "sten_silenced_mp":
+				case "mp40_mp":
+					if(team == lplayer.pers["team"] && weaponClass == "SMG")
+						count++;				
+					break;
+				
+				case "bren_mp":
+				case "bar_mp":
+				case "bar_slow_mp":
+				case "mp44_mp":
+				case "mp44_semi_mp":
+					if(team == lplayer.pers["team"] && weaponClass == "MG")
+						count++;
+					break;
+				
+				case "dp28_mp":
+				case "mg30cal_mp":
+				case "mg34_mp":
+					if(team == lplayer.pers["team"] && weaponClass == "LMG")
+						count++;
+					break;
+			}
+		}
+	}
+	return count;
+}
+
 CheckSnipersScript()
 {
 	//check weapon limits
