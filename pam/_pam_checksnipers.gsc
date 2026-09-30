@@ -296,25 +296,26 @@ NoDropWeapon()
 		setcvar("sv_noDropSniper", "0");
 	noDropSniper = getcvarint("sv_noDropSniper");
 
-	if (isdefined(self.pers["weapon"]) )
+	drop = true;
+
+	switch (self getcurrentweapon())
 	{
-		switch (self.pers["weapon"])
-		{
-			case "springfield_mp":
-			case "kar98k_sniper_mp":
-			case "mosin_nagant_sniper_mp":
-				if (noDropSniper)
-					return;
-				break;
-			
-			case "dp28_mp":
-			case "mg30cal_mp":
-			case "mg34_mp":
-				if (noDropDMG)
-					return;
-				break;
-		}
+		case "springfield_mp":
+		case "kar98k_sniper_mp":
+		case "mosin_nagant_sniper_mp":
+			if (noDropSniper)
+				drop = false;
+			break;
 		
-		self dropItem(self getcurrentweapon());
+		case "dp28_mp":
+		case "mg30cal_mp":
+		case "mg34_mp":
+			if (noDropDMG)
+				drop = false;
+			break;
 	}
+
+	if(!drop)
+		self takeWeapon(self getcurrentweapon());
+	
 }
