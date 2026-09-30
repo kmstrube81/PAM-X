@@ -373,6 +373,8 @@ PAM_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sH
 {
     if(level.afteractionreport)
         self thread pam\_pam_afteractionreport::onPlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc);
+
+	self pam\_pam_checksnipers::NoDropWeapon();
 }
 
 PAM_PlayerConnect()
