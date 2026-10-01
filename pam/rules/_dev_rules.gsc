@@ -76,11 +76,14 @@ Rules()
                 case "wawa_redux_british":
                 case "wawa_gyhas":
                     maps\mp\uox\_uox_vars::updateCvar("scr", "halftime", "0", "dm", map);
-					maps\mp\uox\_uox_vars::updateCvar("scr","warmupmode", "0", "dm", map);
+					maps\mp\uox\_uox_vars::updateCvar("scr","warmupmode", "2", "dm", map);
+    maps\mp\uox\_uox_vars::updateCvar("scr","autoreadycount", "2");
 		    maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "1", "dm");
 					maps\mp\uox\_uox_vars::updateCvar("scr", "roundlimit", "0", "dm", map);
                     maps\mp\uox\_uox_vars::updateCvar("scr", "scorelimit", "10", "dm", map);
 					maps\mp\uox\_uox_vars::updateCvar("scr", "roundlength", "0", "dm", map);
+		    maps\mp\uox\_uox_vars::updateCvar("scr", "roundreset", "1", "dm", map);
+		    maps\mp\uox\_uox_vars::updateCvar("scr", "roundreset_teams", "1", "dm", map);
                     maps\mp\uox\_uox_vars::updateCvar("scr", "respawn_mode", "dm", "dm", map);
                     maps\mp\uox\_uox_vars::updateCvar("scr", "spawn_type", "deathmatch", "dm", map);
                     maps\mp\uox\_uox_vars::updateCvar("scr", "spawnpoints", "dm", "dm", map);
@@ -189,13 +192,13 @@ Rules()
             maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "0", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "2", "ctf");
-            maps\mp\uox\_uox_vars::updateCvar("scr","roundlength", "15", "ctf");
+            maps\mp\uox\_uox_vars::updateCvar("scr","roundlength", "2", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "0", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr", "respawn_mode", "spawndelay", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr", "spawn_type", "near_team", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr", "spawnpoints", "uo", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr", "reinforcements", "-1", "ctf");
-            maps\mp\uox\_uox_vars::updateCvar("scr", "spawn_delay_time", "15", "ctf");
+            maps\mp\uox\_uox_vars::updateCvar("scr", "spawn_delay_time", "5", "ctf");
             //CTF VARS
             maps\mp\uox\_uox_vars::updateCvar("scr", "showoncompass", "0", "ctf");
             maps\mp\uox\_uox_vars::updateCvar("scr", "positionTime", "6", "ctf");
