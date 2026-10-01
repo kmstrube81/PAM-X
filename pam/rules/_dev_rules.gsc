@@ -23,7 +23,7 @@ Rules()
     maps\mp\uox\_uox_vars::updateCvar("scr","graceperiod", "5");
     maps\mp\uox\_uox_vars::updateCvar("scr","postroundtime", "5");
     maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "30");
-    maps\mp\uox\_uox_vars::updateCvar("scr","countdraws", "1";
+    maps\mp\uox\_uox_vars::updateCvar("scr","countdraws", "1");
 	// Team Icons 
     maps\mp\uox\_uox_vars::updateCvar("scr", "drawfriend", "0");
 	// Friendly Fire 
@@ -77,6 +77,7 @@ Rules()
                 case "wawa_gyhas":
                     maps\mp\uox\_uox_vars::updateCvar("scr", "halftime", "0", "dm", map);
 					maps\mp\uox\_uox_vars::updateCvar("scr","warmupmode", "0", "dm", map);
+		    maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "1", "dm");
 					maps\mp\uox\_uox_vars::updateCvar("scr", "roundlimit", "0", "dm", map);
                     maps\mp\uox\_uox_vars::updateCvar("scr", "scorelimit", "10", "dm", map);
 					maps\mp\uox\_uox_vars::updateCvar("scr", "roundlength", "0", "dm", map);
