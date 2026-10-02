@@ -24,6 +24,9 @@ PAM_Vars()
     maps\mp\uox\_uox_vars::varDef("pam", "blackoutspectators", "bool", true, false, "", "", "Black Out Spectators");
     maps\mp\uox\_uox_vars::varDef("pam", "custom_maps", "string", true, "", "", "", "Server Custom Maps");
     maps\mp\uox\_uox_vars::varDef("pam", "afteractionreport", "bool", true, false, "", "", "After Action Report");
+    maps\mp\uox\_uox_vars::varDef("pam", "exploitblocker", "bool", false, false, "", "", "Fix Exploits");
+    level.pam_dropweapon = maps\mp\uox\_uox_vars::varDef("pam", "dropweapon", "bool", true, false, "", "",
+                                                         "Allow Manual Weapon Drop", ::PAM_UpdateDropWeapon);
 }
 
 PAM_Rules()
@@ -339,6 +342,7 @@ PAM_StartGameType()
 {
     PAM_Vars();
     PAM_Rules();
+    PAM_FixExploits();
 
     game["headerL"] = game["leaguestring"];
 
@@ -385,6 +389,9 @@ PAM_PlayerConnect()
     if(level.afteractionreport)
         pam\_pam_afteractionreport::onConnected();
 
+    if(level.pam_dropweapon)
+       self maps\mp\uox\_uox_inputs::addHoldUse("drop weapon", 0, 1, ::PAM_CanDrop, ::PAM_DropWeapon);
+
 }
 
 PAM_BlackoutSpectator()
@@ -427,4 +434,68 @@ PAM_Restart()
 	exitLevel(false);
 }
 
+PAM_FixExploits()
+{
+    if(![[level.getVars]]("pam_exploitblocker"))
+        return;
+
+    mapname = getcvar("mapname");
+
+    switch(mapname)
+    {
+        case "mp_berlin":
+            pam\exploits\mp_berlin::fixExploits();
+            break;
+        case "mp_cassino":
+            pam\exploits\mp_cassino::fixExploits();
+            break;
+        case "mp_foy":
+            pam\exploits\mp_foy::fixExploits();
+            break;
+        case "mp_kursk":
+            pam\exploits\mp_kursk::fixExploits();
+            break;
+        case "mp_ponyri":
+            pam\exploits\mp_ponyri::fixExploits();
+            break;
+        case "mp_rhinevalley":
+            pam\exploits\mp_rhinevalley::fixExploits();
+            break;
+        case "mp_sicily":
+            pam\exploits\mp_sicily::fixExploits();
+            break;
+        case "mp_streets":
+            pam\exploits\mp_streets::fixExploits();
+            break;
+        case "mp_uo_powcamp":
+            pam\exploits\mp_uo_powcamp::fixExploits();
+            break;
+        case "mp_uo_stanjel":
+            pam\exploits\mp_uo_stanjel::fixExploits();
+            break;
+    }
+}
+
+PAM_UpdateDropWeapon(update)
+{
+    level.pam_dropweapon = update;
+
+    if(level.pam_dropweapon)
+    {
+        players
+    }
+}
+
+PAM_CanDrop()
+{
+
+}
+
+PAM_DropWeapon()
+{
+    if(!PAM_CanDrop())
+        return;
+
+    self dropItem(self getcurrentweapon());
+}
 
