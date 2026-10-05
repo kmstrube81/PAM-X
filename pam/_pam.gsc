@@ -560,7 +560,7 @@ PAM_DropWeapon()
     self dropItem(self getcurrentweapon());
     
     secondary = self getWeaponSlotWeapon("primaryb");
-    if(secondary != "")
+    if(secondary != "none")
         self switchToWeapon(secondary);
     else 
         self switchToWeapon(self getWeaponSlotWeapon("pistol"));
