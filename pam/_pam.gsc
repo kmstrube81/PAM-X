@@ -532,6 +532,22 @@ PAM_CanDrop(weapon)
 			if (noDropDMG)
 				drop = false;
 			break;
+        //don't drop pistols, grenades, smokes or satchel
+        case "colt_mp":
+        case "luger_mp":
+        case "tt34_mp":
+        case "webley_mp":
+        case "fraggrenade_mp":
+		case "mk1britishfrag_mp":
+		case "rgd-33russianfrag_mp":
+		case "stielhandgranate_mp":
+		case "smokegrenade_mp":
+	    case "flashgrenade_mp":
+	    case "binoculars_mp":
+	    case "binoculars_artillery_mp":
+	    case "satchelcharge_mp":
+    		    drop = false;
+    		    break;
 	}
 	return drop; 
 }
@@ -542,5 +558,11 @@ PAM_DropWeapon()
         return;
 
     self dropItem(self getcurrentweapon());
+    
+    secondary = self getWeaponSlotWeapon("primaryb");
+    if(secondary != "")
+        self switchToWeaponSlot("primaryb");
+    else 
+        self switchToWeaponSlot("pistol");
 }
 
