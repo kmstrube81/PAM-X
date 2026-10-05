@@ -390,7 +390,7 @@ PAM_PlayerConnect()
         pam\_pam_afteractionreport::onConnected();
 
     if(level.pam_dropweapon)
-       self maps\mp\uox\_uox_inputs::addHoldUse("drop weapon", true, 0, 1, ::PAM_CanDrop, ::PAM_DropWeapon);
+       self maps\mp\uox\_uox_inputs::addHoldUse("drop weapon", true, 0, 1, ::PAM_CanDrop, ::PAM_DropWeapon, undefined, false);
 
 }
 
@@ -487,7 +487,7 @@ PAM_UpdateDropWeapon(update)
         {
             player = players[i];
             
-            player maps\mp\uox\_uox_inputs::addHoldUse("drop weapon", true, 0, 1, ::PAM_CanDrop, ::PAM_DropWeapon);
+            player maps\mp\uox\_uox_inputs::addHoldUse("drop weapon", true, 0, 1, ::PAM_CanDrop, ::PAM_DropWeapon, undefined, false);
         }
     }
     else
@@ -561,8 +561,8 @@ PAM_DropWeapon()
     
     secondary = self getWeaponSlotWeapon("primaryb");
     if(secondary != "")
-        self switchToWeaponSlot("primaryb");
+        self switchToWeapon(secondary);
     else 
-        self switchToWeaponSlot("pistol");
+        self switchToWeaponSlot(self getWeaponSlotWeapon("pistol"));
 }
 
