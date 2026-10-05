@@ -390,7 +390,7 @@ PAM_PlayerConnect()
         pam\_pam_afteractionreport::onConnected();
 
     if(level.pam_dropweapon)
-       self maps\mp\uox\_uox_inputs::addHoldUse("drop weapon", 0, 1, ::PAM_CanDrop, ::PAM_DropWeapon);
+       self maps\mp\uox\_uox_inputs::addHoldUse("drop weapon", true, 0, 1, ::PAM_CanDrop, ::PAM_DropWeapon);
 
 }
 
@@ -482,18 +482,63 @@ PAM_UpdateDropWeapon(update)
 
     if(level.pam_dropweapon)
     {
-        players
+        players = getentarray("player", "classname");
+        for( i = 0; i < players.size; i++)
+        {
+            player = players[i];
+            
+            player maps\mp\uox\_uox_inputs::addHoldUse("drop weapon", true, 0, 1, ::PAM_CanDrop, ::PAM_DropWeapon);
+        }
+    }
+    else
+    {
+        players = getentarray("player", "classname");
+        for( i = 0; i < players.size; i++)
+        {
+            player = players[i];
+            
+            player maps\mp\uox\_uox_inputs::removeHoldUse("drop weapon");
+        }
     }
 }
 
-PAM_CanDrop()
+PAM_CanDrop(weapon)
 {
+    if(!isAlive(self) || self.pers["team"] == "spectator")
+        return false;
+        
+    if (getcvar("sv_noDropDMG") == "")
+		setcvar("sv_noDropDMG", "0");
+	noDropDMG = getcvarint("sv_noDropDMG");
 
+	if (getcvar("sv_noDropSniper") == "")
+		setcvar("sv_noDropSniper", "0");
+	noDropSniper = getcvarint("sv_noDropSniper");
+
+	drop = true;
+
+	switch (weapon)
+	{
+		case "springfield_mp":
+		case "kar98k_sniper_mp":
+		case "mosin_nagant_sniper_mp":
+			if (noDropSniper)
+				drop = false;
+			break;
+		
+		case "dp28_mp":
+		case "mg30cal_mp":
+		case "mg34_mp":
+			if (noDropDMG)
+				drop = false;
+			break;
+	}
+	return drop; 
 }
 
 PAM_DropWeapon()
 {
-    if(!PAM_CanDrop())
+    if(!( self PAM_CanDrop(self getcurrentweapon())))
         return;
 
     self dropItem(self getcurrentweapon());

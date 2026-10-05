@@ -54,6 +54,8 @@ Rules()
     maps\mp\uox\_uox_vars::updateCvar("pam","afteractionreport" , true);
     //Black Out Spectators
     maps\mp\uox\_uox_vars::updateCvar("pam","blackoutspectators", false);
+    //Drop Weapon
+    maps\mp\uox\_uox_vars::updateCvar("pam","dropweapon", true);
     //Enfore cvars - frame cap
     setCvar("com_maxfps", "333");
     maps\mp\uox\_uox_vars::updateCvar("sv","enforcedClientCvars", "com_maxfps");
