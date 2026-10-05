@@ -517,7 +517,7 @@ PAM_CanDrop(weapon)
 
 	drop = true;
 
-	switch (weapon)
+	switch (self getcurrentweapon())
 	{
 		case "springfield_mp":
 		case "kar98k_sniper_mp":
@@ -538,7 +538,7 @@ PAM_CanDrop(weapon)
 
 PAM_DropWeapon()
 {
-    if(!( self PAM_CanDrop(self getcurrentweapon())))
+    if(!( self PAM_CanDrop()))
         return;
 
     self dropItem(self getcurrentweapon());
