@@ -83,6 +83,7 @@ Rules()
 		    maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "1", "dm");
                     maps\mp\uox\_uox_vars::updateCvar("scr", "roundlimit", "0", "dm", map);
                     maps\mp\uox\_uox_vars::updateCvar("scr", "scorelimit", "10", "dm", map);
+                    maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "dm", map);
                     maps\mp\uox\_uox_vars::updateCvar("scr", "roundlength", "0", "dm", map);
 		    maps\mp\uox\_uox_vars::updateCvar("scr", "roundreset", "1", "dm", map);
 		    maps\mp\uox\_uox_vars::updateCvar("scr", "roundreset_teams", "1", "dm", map);
