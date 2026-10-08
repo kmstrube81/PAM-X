@@ -7,6 +7,8 @@ PAM_Init()
 
     //run pam before regular start game callback
     level.StartGametype_Callbacks = maps\mp\uox\_uox_arrays::arrayUnshift(level.StartGametype_Callbacks, ::PAM_StartGameType);
+    //define menus after regular start game callback
+    level.StartGametype_Callbacks = maps\mp\uox\_uox_arrays::arrayPush(level.StartGametype_Callbacks, ::PAM_DefineMenus);
     //run pam routines before regular player damage callback
     level.PlayerDamage_Callbacks = maps\mp\uox\_uox_arrays::arrayUnshift(level.PlayerDamage_Callbacks, ::PAM_PlayerDamage);
     //run pam routines before regular player killed callback
@@ -353,9 +355,9 @@ PAM_DefineMenus()
     }
     else
     {
-        handlers = maps\mp\uox\_uox_arrays::arrayPush(handlers, ::PAM_handleWeaponMenu);
+        handlers = maps\mp\uox\_uox_arrays::arrayUnshift(handlers, ::PAM_handleWeaponMenu);
     }
-    game["menuHandlers"] = maps\mp\uox\_uox_arrays::arrayPush(game["menuHandlers"], handlers, game["menu_weapon_all"]);
+    game["menuHandlers"] = maps\mp\uox\_uox_arrays::arrayUnshift(game["menuHandlers"], handlers, game["menu_weapon_all"]);
     //handle weapons - allies
     handlers = maps\mp\uox\_uox_arrays::getValue(game["menuHandlers"], game["menu_weapon_allies"]);
     if(!isDefined(handlers))
@@ -365,9 +367,9 @@ PAM_DefineMenus()
     }
     else
     {
-        handlers = maps\mp\uox\_uox_arrays::arrayPush(handlers, ::PAM_handleWeaponMenu);
+        handlers = maps\mp\uox\_uox_arrays::arrayUnshift(handlers, ::PAM_handleWeaponMenu);
     }
-    game["menuHandlers"] = maps\mp\uox\_uox_arrays::arrayPush(game["menuHandlers"], handlers, game["menu_weapon_allies"]);
+    game["menuHandlers"] = maps\mp\uox\_uox_arrays::arrayUnshift(game["menuHandlers"], handlers, game["menu_weapon_allies"]);
     //hande weapons - axis
     handlers = maps\mp\uox\_uox_arrays::getValue(game["menuHandlers"], game["menu_weapon_axis"]);
     if(!isDefined(handlers))
@@ -377,9 +379,9 @@ PAM_DefineMenus()
     }
     else
     {
-        handlers = maps\mp\uox\_uox_arrays::arrayPush(handlers, ::PAM_handleWeaponMenu);
+        handlers = maps\mp\uox\_uox_arrays::arrayUnshift(handlers, ::PAM_handleWeaponMenu);
     }
-    game["menuHandlers"] = maps\mp\uox\_uox_arrays::arrayPush(game["menuHandlers"], handlers, game["menu_weapon_axis"]);
+    game["menuHandlers"] = maps\mp\uox\_uox_arrays::arrayUnshift(game["menuHandlers"], handlers, game["menu_weapon_axis"]);
 }
 
 PAM_handleWeaponMenu(response, weapon)
@@ -393,7 +395,6 @@ PAM_handleWeaponMenu(response, weapon)
 PAM_StartGameType()
 {
     PAM_Vars();
-    PAM_DefineMenus();
     PAM_Rules();
     PAM_FixExploits();
 
