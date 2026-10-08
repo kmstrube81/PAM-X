@@ -1583,12 +1583,6 @@ giveBinoculars(spawnweapon)
 restrict(response)
 {
 
-	if([[level.getVars]]("pam_enabled"))
-	{
-		return maps\mp\gametypes\_pam_teams::restrict(response);
-	}
-	
-
 	if(self.pers["team"] == "allies")
 	{
 		switch(game["allies"])		
@@ -1813,11 +1807,6 @@ restrict(response)
 restrict_anyteam(response)
 {
 
-	if([[level.getVars]]("pam_enabled"))
-	{
-		return maps\mp\gametypes\_pam_teams::restrict_anyteam(response);
-	}
-	
 			switch(response)		
 			{
 			case "m1carbine_mp":

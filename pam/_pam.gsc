@@ -338,9 +338,62 @@ PAM_CheckPK3Files()
 
 }
 
+PAM_DefineMenus()
+{
+    //set up menu handlers
+    if(!isDefined(game["menuHandlers"]))
+        game["menuHandlers"] = maps\mp\uox\_uox_arrays::superArray();
+    //override weapon select handling
+    //handle weapons - all
+    handlers = maps\mp\uox\_uox_arrays::getValue(game["menuHandlers"], game["menu_weapon_all"]);
+    if(!isDefined(handlers))
+    {
+        handlers = [];
+        handlers[0] = ::PAM_handleWeaponMenu;
+    }
+    else
+    {
+        handlers = maps\mp\uox\_uox_arrays::arrayPush(handlers, ::PAM_handleWeaponMenu);
+    }
+    game["menuHandlers"] = maps\mp\uox\_uox_arrays::arrayPush(game["menuHandlers"], handlers, game["menu_weapon_all"]);
+    //handle weapons - allies
+    handlers = maps\mp\uox\_uox_arrays::getValue(game["menuHandlers"], game["menu_weapon_allies"]);
+    if(!isDefined(handlers))
+    {
+        handlers = [];
+        handlers[0] = ::PAM_handleWeaponMenu;
+    }
+    else
+    {
+        handlers = maps\mp\uox\_uox_arrays::arrayPush(handlers, ::PAM_handleWeaponMenu);
+    }
+    game["menuHandlers"] = maps\mp\uox\_uox_arrays::arrayPush(game["menuHandlers"], handlers, game["menu_weapon_allies"]);
+    //hande weapons - axis
+    handlers = maps\mp\uox\_uox_arrays::getValue(game["menuHandlers"], game["menu_weapon_axis"]);
+    if(!isDefined(handlers))
+    {
+        handlers = [];
+        handlers[0] = ::PAM_handleWeaponMenu;
+    }
+    else
+    {
+        handlers = maps\mp\uox\_uox_arrays::arrayPush(handlers, ::PAM_handleWeaponMenu);
+    }
+    game["menuHandlers"] = maps\mp\uox\_uox_arrays::arrayPush(game["menuHandlers"], handlers, game["menu_weapon_axis"]);
+}
+
+PAM_handleWeaponMenu(response, weapon)
+{
+    if(!isDefined(weapon) || weapon != "restricted") 
+        weapon = self maps\mp\gametypes\_pam_teams::restrict(response);
+
+    return weapon;
+}
+
 PAM_StartGameType()
 {
     PAM_Vars();
+    PAM_DefineMenus();
     PAM_Rules();
     PAM_FixExploits();
 

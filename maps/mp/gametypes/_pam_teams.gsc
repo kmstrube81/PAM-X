@@ -1574,6 +1574,10 @@ giveBinoculars(spawnweapon)
 
 restrict(response)
 {
+    if(level.objective == "bel")
+    {
+        return restrict_anyteam(response);
+    }
 	// PAM UO Rifles Only
 	if (getcvar("scr_force_bolt_rifles") == "1")
 	{
@@ -1850,189 +1854,240 @@ restrict(response)
 			break;
 		}			
 	}
+    response = self pam\_pam_checksnipers::isWeaponLimited(response);
 	return response;
 }
 
 restrict_anyteam(response)
 {
-			switch(response)		
+    // PAM UO Rifles Only
+	if (getcvar("scr_force_bolt_rifles") == "1")
+	{
+		if(self.pers["team"] == "allies")
+		{
+			switch(game["allies"])		
 			{
-			case "m1carbine_mp":
-				if(!getcvar("scr_allow_m1carbine"))
-				{
-					self iprintln(&"MPSCRIPT_M1A1_CARBINE_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-				
-			case "m1garand_mp":
-				if(!getcvar("scr_allow_m1garand"))
-				{
-					self iprintln(&"MPSCRIPT_M1_GARAND_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-				
-			case "thompson_mp":
-				if(!getcvar("scr_allow_thompson"))
-				{
-					self iprintln(&"MPSCRIPT_THOMPSON_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-				
-			case "bar_mp":
-				if(!getcvar("scr_allow_bar"))
-				{
-					self iprintln(&"MPSCRIPT_BAR_IS_A_RESTRICTED_WEAPON");
-					response = "restricted";
-				}
-				break;
-				
-			case "springfield_mp":
-				if(!getcvar("scr_allow_springfield"))
-				{
-					self iprintln(&"MPSCRIPT_SPRINGFIELD_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "mg30cal_mp":
-				if(!getcvar("scr_allow_mg30cal"))
-				{
-					self iprintln(&"GMI_WEAPON_30CAL_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "enfield_mp":
-				if(!getcvar("scr_allow_enfield"))
-				{
-					self iprintln(&"MPSCRIPT_LEEENFIELD_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "sten_mp":
-				if(!getcvar("scr_allow_sten"))
-				{
-					self iprintln(&"MPSCRIPT_STEN_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "bren_mp":
-				if(!getcvar("scr_allow_bren"))
-				{
-					self iprintln(&"MPSCRIPT_BREN_LMG_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "mosin_nagant_mp":
-				if(game["allies"] == "russian")
-				{
-					if(!getcvar("scr_allow_nagant"))
+				case "american":
+					mapname = getcvar("mapname");
+					switch(mapname)
 					{
-						self iprintln(&"MPSCRIPT_MOSINNAGANT_IS_A_RESTRICTED");
-						response = "restricted";
+						case "mp_streets":
+						case "mp_uo_carentan":
+						case "mp_uo_dawnville":
+						case "mp_brecourt":
+						case "mp_carentan":
+						case "mp_dawnville":
+						case "mp_hurtgen":
+						case "mp_bocage":
+						case "mp_neuville":
+						case "mp_tigertown":
+							response = "mosin_nagant_mp";
+							break;
+						
+						default:
+							response = "kar98k_mp";
+							break;
 					}
-				}
-				else if(game["allies"] == "american")
-				{
-					if(!getcvar("scr_allow_us_nagant"))
-					{
-						self iprintln(&"MPSCRIPT_MOSINNAGANT_IS_A_RESTRICTED");
-						response = "restricted";
-					}
-				}
-				break;
+					break;
 
-			case "svt40_mp":
-				if(!getcvar("scr_allow_svt40"))
-				{
-					self iprintln(&"GMI_WEAPON_SVT40_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "ppsh_mp":
-				if(!getcvar("scr_allow_ppsh"))
-				{
-					self iprintln(&"MPSCRIPT_PPSH_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "mosin_nagant_sniper_mp":
-				if(!getcvar("scr_allow_nagantsniper"))
-				{
-					self iprintln(&"MPSCRIPT_SCOPED_MOSINNAGANT_IS");
-					response = "restricted";
-				}
-				break;
-
-			case "dp28_mp":
-				if(!getcvar("scr_allow_dp28"))
-				{
-					self iprintln(&"GMI_WEAPON_DP28_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "kar98k_mp":
-				if(!getcvar("scr_allow_kar98k"))
-				{
-					self iprintln(&"MPSCRIPT_KAR98K_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "gewehr43_mp":
-				if(!getcvar("scr_allow_gewehr43"))
-				{
-					self iprintln(&"GMI_WEAPON_GEWEHR43_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "mp40_mp":
-				if(!getcvar("scr_allow_mp40"))
-				{
-					self iprintln(&"MPSCRIPT_MP40_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "mp44_mp":
-				if(!getcvar("scr_allow_mp44"))
-				{
-					self iprintln(&"MPSCRIPT_MP44_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "kar98k_sniper_mp":
-				if(!getcvar("scr_allow_kar98ksniper"))
-				{
-					self iprintln(&"MPSCRIPT_SCOPED_KAR98K_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			case "mg34_mp":
-				if(!getcvar("scr_allow_mg34"))
-				{
-					self iprintln(&"GMI_WEAPON_MG34_IS_A_RESTRICTED");
-					response = "restricted";
-				}
-				break;
-
-			default:
-				self iprintln(&"MPSCRIPT_UNKNOWN_WEAPON_SELECTED");
-				response = "restricted";
-				break;
+				case "british":
+					response = "enfield_mp";
+					break;
+				case "russian":
+					response = "mosin_nagant_mp";
+					break;
 			}
+		}
+		else if(self.pers["team"] == "axis")
+		{
+			switch(game["axis"])
+			{
+				case "german":
+					response = "kar98k_mp";
+					break;
+			}
+		}
+		return response;
+	}
+
+    switch(response)		
+    {
+        case "m1carbine_mp":
+            if(!getcvar("scr_allow_m1carbine"))
+            {
+                self iprintln(&"MPSCRIPT_M1A1_CARBINE_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+            
+        case "m1garand_mp":
+            if(!getcvar("scr_allow_m1garand"))
+            {
+                self iprintln(&"MPSCRIPT_M1_GARAND_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+            
+        case "thompson_mp":
+            if(!getcvar("scr_allow_thompson"))
+            {
+                self iprintln(&"MPSCRIPT_THOMPSON_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+            
+        case "bar_mp":
+            if(!getcvar("scr_allow_bar"))
+            {
+                self iprintln(&"MPSCRIPT_BAR_IS_A_RESTRICTED_WEAPON");
+                response = "restricted";
+            }
+            break;
+            
+        case "springfield_mp":
+            if(!getcvar("scr_allow_springfield"))
+            {
+                self iprintln(&"MPSCRIPT_SPRINGFIELD_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "mg30cal_mp":
+            if(!getcvar("scr_allow_mg30cal"))
+            {
+                self iprintln(&"GMI_WEAPON_30CAL_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "enfield_mp":
+            if(!getcvar("scr_allow_enfield"))
+            {
+                self iprintln(&"MPSCRIPT_LEEENFIELD_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "sten_mp":
+            if(!getcvar("scr_allow_sten"))
+            {
+                self iprintln(&"MPSCRIPT_STEN_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "bren_mp":
+            if(!getcvar("scr_allow_bren"))
+            {
+                self iprintln(&"MPSCRIPT_BREN_LMG_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "mosin_nagant_mp":
+            if(game["allies"] == "russian")
+            {
+                if(!getcvar("scr_allow_nagant"))
+                {
+                    self iprintln(&"MPSCRIPT_MOSINNAGANT_IS_A_RESTRICTED");
+                    response = "restricted";
+                }
+            }
+            else if(game["allies"] == "american")
+            {
+                if(!getcvar("scr_allow_us_nagant"))
+                {
+                    self iprintln(&"MPSCRIPT_MOSINNAGANT_IS_A_RESTRICTED");
+                    response = "restricted";
+                }
+            }
+            break;
+
+        case "svt40_mp":
+            if(!getcvar("scr_allow_svt40"))
+            {
+                self iprintln(&"GMI_WEAPON_SVT40_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "ppsh_mp":
+            if(!getcvar("scr_allow_ppsh"))
+            {
+                self iprintln(&"MPSCRIPT_PPSH_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "mosin_nagant_sniper_mp":
+            if(!getcvar("scr_allow_nagantsniper"))
+            {
+                self iprintln(&"MPSCRIPT_SCOPED_MOSINNAGANT_IS");
+                response = "restricted";
+            }
+            break;
+
+        case "dp28_mp":
+            if(!getcvar("scr_allow_dp28"))
+            {
+                self iprintln(&"GMI_WEAPON_DP28_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "kar98k_mp":
+            if(!getcvar("scr_allow_kar98k"))
+            {
+                self iprintln(&"MPSCRIPT_KAR98K_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "gewehr43_mp":
+            if(!getcvar("scr_allow_gewehr43"))
+            {
+                self iprintln(&"GMI_WEAPON_GEWEHR43_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "mp40_mp":
+            if(!getcvar("scr_allow_mp40"))
+            {
+                self iprintln(&"MPSCRIPT_MP40_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "mp44_mp":
+            if(!getcvar("scr_allow_mp44"))
+            {
+                self iprintln(&"MPSCRIPT_MP44_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "kar98k_sniper_mp":
+            if(!getcvar("scr_allow_kar98ksniper"))
+            {
+                self iprintln(&"MPSCRIPT_SCOPED_KAR98K_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        case "mg34_mp":
+            if(!getcvar("scr_allow_mg34"))
+            {
+                self iprintln(&"GMI_WEAPON_MG34_IS_A_RESTRICTED");
+                response = "restricted";
+            }
+            break;
+
+        default:
+            self iprintln(&"MPSCRIPT_UNKNOWN_WEAPON_SELECTED");
+            response = "restricted";
+            break;
+    }
 	response = self pam\_pam_checksnipers::isWeaponLimited(response);
 	return response;
 }
