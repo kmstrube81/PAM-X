@@ -386,6 +386,9 @@ PAM_DefineMenus()
 
 PAM_handleWeaponMenu(response, weapon)
 {
+    if(response == "open" || response == "close")
+        return;
+
     if(!isDefined(weapon) || weapon != "restricted") 
         weapon = self maps\mp\gametypes\_pam_teams::restrict(response);
 
