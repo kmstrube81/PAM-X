@@ -342,9 +342,10 @@ PAM_CheckPK3Files()
 
 PAM_DefineMenus()
 {
-    if(!isDefined(game["gamestarted"]))
+    if(!isDefined(game["PAM_gamestarted"]))
     {
-        placeholder = 0;
+
+        game["PAM_gamestarted"] = true;
     }
 
     PAM_SetupMenuHandlers();
