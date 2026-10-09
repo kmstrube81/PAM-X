@@ -390,7 +390,7 @@ PAM_handleWeaponMenu(response, weapon)
         return;
 
     if(isDefined(weapon))
-        maps\mp\uox\_uox_debug::debugLog("info", "PAM handleWeaponMenu passed in weapon is " + weapon);
+        maps\mp\uox\_uox_debug::debugLog("info", self.name + " PAM handleWeaponMenu passed in weapon is " + weapon);
 
     if(!isDefined(weapon) || weapon != "restricted") 
         weapon = self maps\mp\gametypes\_pam_teams::restrict(response);
