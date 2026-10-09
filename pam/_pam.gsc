@@ -342,6 +342,9 @@ PAM_CheckPK3Files()
 
 PAM_DefineMenus()
 {
+    if(isDefined(game["gamestarted"]))
+        return;
+
     //set up menu handlers
     if(!isDefined(game["menuHandlers"]))
         game["menuHandlers"] = maps\mp\uox\_uox_arrays::superArray();
@@ -387,6 +390,25 @@ PAM_DefineMenus()
 PAM_handleWeaponMenu(response, weapon)
 {
     if(response == "open" || response == "close")
+        return;
+
+    if(response == "team")
+    {
+        self openMenu(game["menu_team"]);
+        return;
+    }
+    else if(response == "viewmap")
+    {
+        self openMenu(game["menu_viewmap"]);
+        return;
+    }
+    else if(response == "callvote")
+    {
+        self openMenu(game["menu_callvote"]);
+        return;
+    }
+
+    if(!isDefined(self.pers["team"]) || (self.pers["team"] != "allies" && self.pers["team"] != "axis"))
         return;
 
     if(isDefined(weapon))
