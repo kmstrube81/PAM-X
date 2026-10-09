@@ -171,8 +171,6 @@ updateWeaponSelectMenu(weapon, class, team)
         if(lplayer == self || lplayer.pers["team"] == "spectator")
             continue;
 
-		take_away_weap = 0;
-
 		if(isdefined(lplayer.pers["weapon"]))
 		{
 			switch (lplayer.pers["weapon"])
@@ -180,7 +178,7 @@ updateWeaponSelectMenu(weapon, class, team)
 				case "springfield_mp":
 				case "mosin_nagant_sniper_mp":
 				case "kar98k_sniper_mp":
-					if(player.pers["team"] == "allies")
+					if(lplayer.pers["team"] == "allies")
 						ialliedSniperCount++;
                     else
                         iaxisSniperCount++;
@@ -193,7 +191,7 @@ updateWeaponSelectMenu(weapon, class, team)
 				case "ppsh_semi_mp":
 				case "sten_silenced_mp":
 				case "mp40_mp":
-					if(player.pers["team"] == "allies")
+					if(lplayer.pers["team"] == "allies")
 						ialliedSMGCount++;
                     else
                         iaxisSMGCount++;			
@@ -204,7 +202,7 @@ updateWeaponSelectMenu(weapon, class, team)
 				case "bar_slow_mp":
 				case "mp44_mp":
 				case "mp44_semi_mp":
-					if(player.pers["team"] == "allies")
+					if(lplayer.pers["team"] == "allies")
 						ialliedMGCount++;
                     else
                         iaxisMGCount++;
@@ -213,7 +211,7 @@ updateWeaponSelectMenu(weapon, class, team)
 				case "dp28_mp":
 				case "mg30cal_mp":
 				case "mg34_mp":
-					if(player.pers["team"] == "allies")
+					if(lplayer.pers["team"] == "allies")
 						ialliedDMGCount++;
                     else
                         iaxisDMGCount++;
