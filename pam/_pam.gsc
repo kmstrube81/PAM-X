@@ -482,12 +482,12 @@ handleDraftMenuResponse(response, optional)
                     if(maps\mp\uox\_uox_utils::findStr("option", response, "start") > -1)
                     {
                         action = "option";
-                        player = (int)maps\mp\uox\_uox_utils::subString(response, 6);
+                        player = (int)maps\mp\uox\_uox_utils::subString(response, 6) - 1;
                     }
                     else if(maps\mp\uox\_uox_utils::findStr("cut", response, "start") > -1)
                     {//if chose cut
                         action = "cut";
-                        player = (int)maps\mp\uox\_uox_utils::subString(response, 3);
+                        player = (int)maps\mp\uox\_uox_utils::subString(response, 3) - 1;
                     }
                     else
                         return;
@@ -542,22 +542,22 @@ handleDraftMenuResponse(response, optional)
                     }
                     else if(action == "cut")
                     {
-                        if(dratee.pers["team"] == level.pam_draft.picking.pers["team"])
+                        if(draftee.pers["team"] == level.pam_draft.picking.pers["team"])
                         { //kick to spec
-                            player.pers["team"] = "spectator";
-                            player.pers["teamTime"] = 1000000;
-                            player.pers["weapon"] = undefined;
-                            player.pers["weapon1"] = undefined;
-                            player.pers["weapon2"] = undefined;
-                            player.pers["spawnweapon"] = undefined;
-                            player.pers["savedmodel"] = undefined;
+                            draftee.pers["team"] = "spectator";
+                            draftee.pers["teamTime"] = 1000000;
+                            draftee.pers["weapon"] = undefined;
+                            draftee.pers["weapon1"] = undefined;
+                            draftee.pers["weapon2"] = undefined;
+                            draftee.pers["spawnweapon"] = undefined;
+                            draftee.pers["savedmodel"] = undefined;
                             
-                            player.sessionteam = "spectator";
-                            player setClientCvar("g_scriptMainMenu", game["menu_team"]);
-                            player setClientCvar("ui_weapontab", "0");
-                            player maps\mp\uox\_uox_respawns::spawnSpectator();
+                            draftee.sessionteam = "spectator";
+                            draftee setClientCvar("g_scriptMainMenu", game["menu_team"]);
+                            draftee setClientCvar("ui_weapontab", "0");
+                            draftee maps\mp\uox\_uox_respawns::spawnSpectator();
 
-                            PAM_DraftCutPlayerFromRoster(level.pam_draft_picking, player);
+                            PAM_DraftCutPlayerFromRoster(level.pam_draft_picking, draftee);
                         }
                     }
             } 
