@@ -29,6 +29,7 @@ PAM_Vars()
     maps\mp\uox\_uox_vars::varDef("pam", "exploitblocker", "bool", false, false, "", "", "Fix Exploits");
     level.pam_dropweapon = maps\mp\uox\_uox_vars::varDef("pam", "dropweapon", "bool", true, false, "", "",
                                                          "Allow Manual Weapon Drop", ::PAM_UpdateDropWeapon);
+    maps\mp\uox\_uox_vars::varDef("pam", "draft_teams", "bool", false, false, "", "", "Draft Teams at Start"); 
 }
 
 PAM_Rules()
@@ -344,7 +345,8 @@ PAM_DefineMenus()
 {
     if(!isDefined(game["PAM_gamestarted"]))
     {
-
+        game["menu_draft"] = "menu_draft";
+        precacheMenu(game["menu_draft"]);
         game["PAM_gamestarted"] = true;
     }
 
@@ -356,56 +358,19 @@ PAM_SetupMenuHandlers()
     //set up menu handlers
     if(!isDefined(level.menuHandlers))
         level.menuHandlers = maps\mp\uox\_uox_arrays::superArray();
+
+    maps\mp\uox\_uox_menus::registerMenu(game["menu_draft"], ::handleDraftMenuResponse, true);
     //override weapon select handling
     //handle weapons - all
-    handlers = maps\mp\uox\_uox_arrays::getValue(level.menuHandlers, game["menu_weapon_all"]);
-    if(!isDefined(handlers))
-    {
-        handlers = [];
-        handlers[0] = ::PAM_handleWeaponMenu;
-    }
-    else
-    {
-        handlers = maps\mp\uox\_uox_arrays::arrayUnshift(handlers, ::PAM_handleWeaponMenu);
-    }
-    level.menuHandlers = maps\mp\uox\_uox_arrays::arrayUnshift(level.menuHandlers, handlers, game["menu_weapon_all"]);
+    maps\mp\uox\_uox_menus::registerMenu(game["menu_weapon_all"], ::PAM_handleWeaponMenu, false);
     //handle weapons - allies
-    handlers = maps\mp\uox\_uox_arrays::getValue(level.menuHandlers, game["menu_weapon_allies"]);
-    if(!isDefined(handlers))
-    {
-        handlers = [];
-        handlers[0] = ::PAM_handleWeaponMenu;
-    }
-    else
-    {
-        handlers = maps\mp\uox\_uox_arrays::arrayUnshift(handlers, ::PAM_handleWeaponMenu);
-    }
-    level.menuHandlers = maps\mp\uox\_uox_arrays::arrayUnshift(level.menuHandlers, handlers, game["menu_weapon_allies"]);
+    maps\mp\uox\_uox_menus::registerMenu(game["menu_weapon_allies"], ::PAM_handleWeaponMenu, false);
     //hande weapons - axis
-    handlers = maps\mp\uox\_uox_arrays::getValue(level.menuHandlers, game["menu_weapon_axis"]);
-    if(!isDefined(handlers))
-    {
-        handlers = [];
-        handlers[0] = ::PAM_handleWeaponMenu;
-    }
-    else
-    {
-        handlers = maps\mp\uox\_uox_arrays::arrayUnshift(handlers, ::PAM_handleWeaponMenu);
-    }
-    level.menuHandlers = maps\mp\uox\_uox_arrays::arrayUnshift(level.menuHandlers, handlers, game["menu_weapon_axis"]);
+    maps\mp\uox\_uox_menus::registerMenu(game["menu_weapon_axis"], ::PAM_handleWeaponMenu, false);
 }
 
 PAM_handleWeaponMenu(response, weapon)
 {
-    if(response == "open" || response == "close")
-        return;
-
-    if(response == "team")
-        return;
-    else if(response == "viewmap")
-        return;
-    else if(response == "callvote")
-        return;
 
     if(!isDefined(self.pers["team"]) || (self.pers["team"] != "allies" && self.pers["team"] != "axis"))
         return;
@@ -419,6 +384,99 @@ PAM_handleWeaponMenu(response, weapon)
     return weapon;
 }
 
+handleDraftMenuResponse(response, optional)
+{
+    if(level.pam_draft_picking != self)
+        return;
+        
+    switch(level.pam_draft) //response depends on stage
+    {
+        case 0:
+        case 1:
+            if(response == "option1")
+            { //chose allies
+                level.pam_draft_picking.pers["team"] = "allies";
+                level.pam_draft_picking.pers["teamTime"] = (gettime() / 1000);
+                level.pam_draft_picking.pers["weapon"] = undefined;
+                level.pam_draft_picking.pers["weapon1"] = undefined;
+                level.pam_draft_picking.pers["weapon2"] = undefined;
+                level.pam_draft_picking.pers["spawnweapon"] = undefined;
+                level.pam_draft_picking.pers["savedmodel"] = undefined;
+                
+                if(level.uox_teamplay) // update spectator permissions immediately on change of team
+                    level.pam_draft_picking maps\mp\gametypes\_teams::SetSpectatePermissions();
+                level.pam_draft_waiting.pers["team"] = "axis";
+                level.pam_draft_waiting.pers["teamTime"] = (gettime() / 1000);
+                level.pam_draft_waiting.pers["weapon"] = undefined;
+                level.pam_draft_waiting.pers["weapon1"] = undefined;
+                level.pam_draft_waiting.pers["weapon2"] = undefined;
+                level.pam_draft_waiting.pers["spawnweapon"] = undefined;
+                level.pam_draft_waiting.pers["savedmodel"] = undefined;
+                
+                if(level.uox_teamplay) // update spectator permissions immediately on change of team
+                    level.pam_draft_waiting maps\mp\gametypes\_teams::SetSpectatePermissions();
+                level.pam_draft++; //advance draft stage
+            }
+            else if(response == "option2")
+            { //chose defense
+                level.pam_draft_picking.pers["team"] = "axis";
+                level.pam_draft_picking.pers["teamTime"] = (gettime() / 1000);
+                level.pam_draft_picking.pers["weapon"] = undefined;
+                level.pam_draft_picking.pers["weapon1"] = undefined;
+                level.pam_draft_picking.pers["weapon2"] = undefined;
+                level.pam_draft_picking.pers["spawnweapon"] = undefined;
+                level.pam_draft_picking.pers["savedmodel"] = undefined;
+                
+                if(level.uox_teamplay) // update spectator permissions immediately on change of team
+                    level.pam_draft_picking maps\mp\gametypes\_teams::SetSpectatePermissions();
+                level.pam_draft_waiting.pers["team"] = "allies";
+                level.pam_draft_waiting.pers["teamTime"] = (gettime() / 1000);
+                level.pam_draft_waiting.pers["weapon"] = undefined;
+                level.pam_draft_waiting.pers["weapon1"] = undefined;
+                level.pam_draft_waiting.pers["weapon2"] = undefined;
+                level.pam_draft_waiting.pers["spawnweapon"] = undefined;
+                level.pam_draft_waiting.pers["savedmodel"] = undefined;
+                
+                if(level.uox_teamplay) // update spectator permissions immediately on change of team
+                    level.pam_draft_waiting maps\mp\gametypes\_teams::SetSpectatePermissions();
+                level.pam_draft++; //advance draft stage
+            }
+            else if(response == "option3")
+            {
+                if(level.pam_draft == 0)
+                    level.pam_draft++; //advance draft stage
+            }
+            break;
+        default:
+            switch(response)
+            {
+                case "readyUp":
+                case "skip":
+                    if(response == "readyUp")
+                    {
+                        if(level.objective == "bel")
+                            level.pam_draft_picking setClientCvar("g_scriptMainMenu", game["menu_weapon_all"]);
+                        else if(level.pam_draft_picking.pers["team"] == "allies")
+                            level.pam_draft_picking setClientCvar("g_scriptMainMenu", game["menu_weapon_allies"]);
+                        else if(level.pam_draft_picking.pers["team"] == "axis")
+                            level.pam_draft_picking setClientCvar("g_scriptMainMenu", game["menu_weapon_axis"]);
+                        level.pam_draft_picking.teamReady = 1; 
+                    }
+                    temp1 = level.pam_draft_waiting;
+                    level.pam_draft_waiting = level.pam_draft_picking;
+                    level.pam_draft_picking = temp1;
+                    level.pam_draft_picking setClientCvar("ui_draftbanner", "Pick Next Player.");
+                    level.pam_draft_waiting setClientCvar("ui_draftbanner", "Other Captain is Picking...");
+                    break;
+                default:
+                    //if chose option
+                    
+                    
+                    //if chose cut 
+            } 
+    } 
+}
+
 PAM_StartGameType()
 {
     PAM_Vars();
@@ -429,6 +487,7 @@ PAM_StartGameType()
 
     thread PAM_CheckPK3Files();
     thread PAM_AfterActionReport();
+    thread PAM_DraftTeams();
 }
 
 PAM_AfterActionReport()
@@ -446,6 +505,190 @@ PAM_AfterActionReport()
     level waittill("postround");
 
     pam\_pam_afteractionreport::printToAll();
+}
+
+PAM_DraftTeams()
+{
+    level waittill("postround");
+    
+    if([[ level.getVars ]]("pam_draft_teams") && !game["matchstarted"]
+        && !isDefined(game["drafted"]))
+        level notify("kill_endround"); //interrupt roundend for draft
+    else
+        return;
+        
+    //check that team captains are valid
+    team1guid = getCvar("pam_team1_captain");
+    team2guid = getCvar("pam_team2_captain");
+    
+    //find captains
+    players = getentarray("player", "classname");
+    for( i = 0; i < players.size; i++)
+    {
+        player = players[i];
+        guid = player getGuid();
+        
+        if(guid != team1guid && guid != team2guid)
+            continue;
+        else if(guid == team1guid && guid != team2guid)
+            team1captain = player;
+        else if(guid != team1guid && guid == team2guid)
+            team2captain = player;
+    }
+    //if one of the captains are invalid
+    if(!isDefined(team1captain) || !isDefined(team2captain))
+    {
+        level iprintlnbold("Captains not present. Game will start without draft");
+        //clear team names
+        setCvar("pam_team1_name", "");
+        setCvar("pam_team2_name", "");
+        //clear team players
+        setCvar("pam_team1_roster", "");
+        setCvar("pam_team2_roster", "");
+        game["drafted"] = false;
+        level.roundended = false;
+        maps\mp\uox\_uox::endRound("reset");
+    }
+    else
+    {
+        //set team names
+        setCvar("pam_team1_name", team1captain.name);
+        setCvar("pam_team2_name", team2captain.name);
+        //set team players
+        setCvar("pam_team1_roster", team1guid);
+        setCvar("pam_team2_roster", team2guid);
+        //kick others to spec
+        level iprintlnbold("Captains picking teams. Game will start shortly");
+        level.lockteams = true;
+        for( i = 0; i < players.size; i++) //kick all others to spec
+        {
+            player = players[i];
+            if(player == team1captain || player == team2captain)
+                continue;
+            else
+            {
+                self.pers["team"] = "spectator";
+                self.pers["teamTime"] = 1000000;
+                self.pers["weapon"] = undefined;
+                self.pers["weapon1"] = undefined;
+                self.pers["weapon2"] = undefined;
+                self.pers["spawnweapon"] = undefined;
+                self.pers["savedmodel"] = undefined;
+                
+                self.sessionteam = "spectator";
+                self setClientCvar("g_scriptMainMenu", game["menu_team"]);
+                self setClientCvar("ui_weapontab", "0");
+                self maps\mp\uox\_uox_respawns::spawnSpectator();
+                
+            } 
+        }
+        //set draft stage
+        level.pam_draft = 0;
+        level.pam_draft_picking = team1captain;
+        level.pam_draft_waiting = team2captain;
+        //open draft menu for captains
+        team1captain openMenu(game["menu_draft"]);
+        team1captain setClientCvar("g_scriptMainMenu", game["menu_draft"]);
+        team2captain openMenu(game["menu_draft"]);
+        team2captain setClientCvar("g_scriptMainMenu", game["menu_draft"]);
+        //team gets asked pick or side first, set banner ui cvar
+        team1captain setClientCvar("ui_draftbanner", "Pick First or Pick Side?");
+        team2captain setClientCvar("ui_draftbanner", "Other Captain Choosing Pick or Side...");
+        
+        //wait until draft stage 0 is done (team 1 chooses pick or side)
+        while(level.pam_draft == 0)
+            wait level.frametime;
+        //draft stage 1 (team 2 choose team if team 1 chose pick)
+        level.pam_draft_picking = team2captain;
+        level.pam_draft_waiting = team1captain;
+        if(level.pam_draft_picking.pers["team"] != "spectator") //team 1 chose side
+        {   //make both players pick a weapon
+            // if there are weapons the user can select then open the weapon menu      
+            if(level.objective == "bel" && ( maps\mp\gametypes\_teams::isweaponavailable("axis")
+                || maps\mp\gametypes\_teams::isweaponavailable("allies") ))
+            {
+                menu = game["menu_weapon_all"];
+                level.pam_draft_picking setClientCvar("ui_weapontab", "1");
+                level.pam_draft_picking openMenu(menu);
+                level.pam_draft_waiting setClientCvar("ui_weapontab", "1");
+                level.pam_draft_waiting openMenu(menu);
+            }
+            if(level.pam_draft_picking.pers["team"] == "allies" && maps\mp\gametypes\_teams::isweaponavailable(level.pam_draft_picking.pers["team"]))
+            {
+                menu = game["menu_weapon_allies"];
+                level.pam_draft_picking setClientCvar("ui_weapontab", "1");
+                level.pam_draft_picking openMenu(menu);
+            if(maps\mp\gametypes\_teams::isweaponavailable(level.pam_draft_waiting.pers["team"]))
+                {
+                    menu = game["menu_weapon_axis"];
+                    level.pam_draft_waiting setClientCvar("ui_weapontab", "1");
+                    level.pam_draft_waiting openMenu(menu);
+                }
+                else
+                {
+                    level.pam_draft_waiting setClientCvar("ui_weapontab", "0");
+                    level.pam_draft_waiting maps\mp\uox\_uox_respawns::menu_spawn("none");
+                }
+            }
+            else if(level.pam_draft_picking.pers["team"] == "axis" && maps\mp\gametypes\_teams::isweaponavailable(self.pers["team"])) 
+            {
+                menu = game["menu_weapon_axis"];
+                level.pam_draft_picking setClientCvar("ui_weapontab", "1");
+                level.pam_draft_picking openMenu(menu);
+                if(maps\mp\gametypes\_teams::isweaponavailable(level.pam_draft_waiting.pers["team"]))
+                {
+                    menu = game["menu_weapon_allies"];
+                    level.pam_draft_waiting setClientCvar("ui_weapontab", "1");
+                    level.pam_draft_waiting openMenu(menu);
+                }
+                else
+                {
+                    level.pam_draft_waiting setClientCvar("ui_weapontab", "0");
+                    level.pam_draft_waiting maps\mp\uox\_uox_respawns::menu_spawn("none");
+                }
+            }
+            else
+            {
+                level.pam_draft_picking setClientCvar("ui_weapontab", "0");
+                level.pam_draft_picking maps\mp\uox\_uox_respawns::menu_spawn("none");
+                level.pam_draft_waiting setClientCvar("ui_weapontab", "0");
+                level.pam_draft_waiting maps\mp\uox\_uox_respawns::menu_spawn("none");
+            }
+
+            if(!isDefined(menu))
+                menu = game["menu_team"];
+            self setClientCvar("g_scriptMainMenu", menu);
+            
+            while(!isDefined(level.pam_draft_picking.pers["weapon"]) || !isDefined(level.pam_draft_waiting.pers["weapon"]))
+            wait level.frametime;
+            //set main menu back to draft menu
+            //open draft menu for captains
+            team1captain openMenu(game["menu_draft"]);
+            team1captain setClientCvar("g_scriptMainMenu", game["menu_draft"]);
+            team2captain openMenu(game["menu_draft"]);
+            team2captain setClientCvar("g_scriptMainMenu", game["menu_draft"]);
+            //team gets asked pick or side first, set banner ui cvar
+            team2captain setClientCvar("ui_draftbanner", "Please Wait...");
+            team1captain setClientCvar("ui_draftbanner", "Please Wait...");
+            level.pam_draft++;
+        }
+        else //team 1 chose pick
+        {
+            team2captain setClientCvar("ui_draftbanner", "Pick Side.");
+            team1captain setClientCvar("ui_draftbanner", "Other Captain is Choosing Side...");
+        }
+        //wait until next draft stage
+        while(level.pam_draft == 1)
+            wait level.frametime;
+        //wait until both teams are ready
+        while(!isDefined(team1captain.teamReady) || !isDefined(team2captain.teamReady))
+            wait level.frametime;
+            
+        level iprintlnbold("Both Teams Ready. Game Starting...");
+        game["drafted"] = true;
+        level.roundended = false;
+        maps\mp\uox\_uox::endRound("reset"); 
+    }        
 }
 
 PAM_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc)
