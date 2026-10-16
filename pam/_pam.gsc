@@ -15,7 +15,8 @@ PAM_Init()
     level.PlayerKilled_Callbacks = maps\mp\uox\_uox_arrays::arrayUnshift(level.PlayerKilled_Callbacks, ::PAM_PlayerKilled);
     //run pam routines after regular player connect callback
     level.PlayerConnect_Callbacks = maps\mp\uox\_uox_arrays::arrayPush(level.PlayerConnect_Callbacks, ::PAM_PlayerConnect);
-
+    //run pam routines after regular player disconnect callback
+    level.PlayerDisconnect_Callbacks = maps\mp\uox\_uox_arrays::arrayPush(level.PlayerDisconnect_Callbacks, ::PAM_PlayerDisconnect);
 }
 
 PAM_Vars()
@@ -391,6 +392,8 @@ handleDraftMenuResponse(response, optional)
         
     switch(level.pam_draft) //response depends on stage
     {
+        case -1:
+            return;
         case 0:
         case 1:
             if(response == "option1")
@@ -450,6 +453,12 @@ handleDraftMenuResponse(response, optional)
         default:
             switch(response)
             {
+                case "next":
+                case "previous":
+                    if(level.pam_draftees.size < 10)
+                        return;
+                    PAM_DraftRotateDraftees(response);
+                    break;
                 case "readyUp":
                 case "skip":
                     if(response == "readyUp")
@@ -470,9 +479,87 @@ handleDraftMenuResponse(response, optional)
                     break;
                 default:
                     //if chose option
-                    
-                    
-                    //if chose cut 
+                    if(maps\mp\uox\_uox_utils::findStr("option", response, "start") > -1)
+                    {
+                        action = "option";
+                        player = (int)maps\mp\uox\_uox_utils::subString(response, 6);
+                    }
+                    else if(maps\mp\uox\_uox_utils::findStr("cut", response, "start") > -1)
+                    {//if chose cut
+                        action = "cut";
+                        player = (int)maps\mp\uox\_uox_utils::subString(response, 3);
+                    }
+                    else
+                        return;
+                    if(action == "option")
+                    { //add player to team
+                        draftee = level.pam_draftees[player];
+                        if(draftee.pers["team"] == "spectator")
+                        {
+                            draftee.pers["team"] = level.pam_draft_picking.pers["team"];
+                            draftee.pers["teamTime"] = (gettime() / 1000);
+                            draftee.pers["weapon"] = undefined;
+                            draftee.pers["weapon1"] = undefined;
+                            draftee.pers["weapon2"] = undefined;
+                            draftee.pers["spawnweapon"] = undefined;
+                            draftee.pers["savedmodel"] = undefined;
+                            if(level.uox_teamplay) // update spectator permissions immediately on change of team
+                                draftee maps\mp\gametypes\_teams::SetSpectatePermissions();
+
+                            if(level.objective == "bel" && ( maps\mp\gametypes\_teams::isweaponavailable("axis")
+                                || maps\mp\gametypes\_teams::isweaponavailable("allies") ))
+                            {
+                                menu = game["menu_weapon_all"];
+                                draftee setClientCvar("ui_weapontab", "1");
+                                draftee openMenu(menu);
+                            }
+                            if(draftee.pers["team"] == "allies" && maps\mp\gametypes\_teams::isweaponavailable(draftee.pers["team"]))
+                            {
+                                menu = game["menu_weapon_allies"];
+                                draftee setClientCvar("ui_weapontab", "1");
+                                draftee openMenu(menu);
+                            }
+                            else if(draftee.pers["team"] == "axis" && maps\mp\gametypes\_teams::isweaponavailable(draftee.pers["team"])) 
+                            {
+                                menu = game["menu_weapon_axis"];
+                                draftee setClientCvar("ui_weapontab", "1");
+                                draftee openMenu(menu);
+                            }
+                            else
+                            {
+                                draftee setClientCvar("ui_weapontab", "0");
+                                draftee maps\mp\uox\_uox_respawns::menu_spawn("none");
+                            }
+                            PAM_DraftAddPlayerToRoster(level.pam_draft_picking, player);
+                            temp1 = level.pam_draft_waiting;
+                            level.pam_draft_waiting = level.pam_draft_picking;
+                            level.pam_draft_picking = temp1;
+                            level.pam_draft_picking setClientCvar("ui_draftbanner", "Pick Next Player.");
+                            level.pam_draft_waiting setClientCvar("ui_draftbanner", "Other Captain is Picking...");
+                        }
+                        else
+                            return;
+                    }
+                    else if(action == "cut")
+                    {
+                        if(dratee.pers["team"] == level.pam_draft.picking.pers["team"])
+                        { //kick to spec
+                            player.pers["team"] = "spectator";
+                            player.pers["teamTime"] = 1000000;
+                            player.pers["weapon"] = undefined;
+                            player.pers["weapon1"] = undefined;
+                            player.pers["weapon2"] = undefined;
+                            player.pers["spawnweapon"] = undefined;
+                            player.pers["savedmodel"] = undefined;
+                            
+                            player.sessionteam = "spectator";
+                            player setClientCvar("g_scriptMainMenu", game["menu_team"]);
+                            player setClientCvar("ui_weapontab", "0");
+                            player maps\mp\uox\_uox_respawns::spawnSpectator();
+
+                            PAM_DraftCutPlayerFromRoster(level.pam_draft_picking, player);
+                        }
+                    }
             } 
     } 
 }
@@ -480,6 +567,7 @@ handleDraftMenuResponse(response, optional)
 PAM_StartGameType()
 {
     PAM_Vars();
+    level.pam_draft = -1;
     PAM_Rules();
     PAM_FixExploits();
 
@@ -518,22 +606,20 @@ PAM_DraftTeams()
         return;
         
     //check that team captains are valid
-    team1guid = getCvar("pam_team1_captain");
-    team2guid = getCvar("pam_team2_captain");
-    
-    //find captains
     players = getentarray("player", "classname");
     for( i = 0; i < players.size; i++)
     {
         player = players[i];
-        guid = player getGuid();
-        
-        if(guid != team1guid && guid != team2guid)
+        isCaptain = PAM_DraftIsCaptain(player);
+        if(isCaptain == 0)
             continue;
-        else if(guid == team1guid && guid != team2guid)
+        else if(isCaptain == 1)
             team1captain = player;
-        else if(guid != team1guid && guid == team2guid)
+        else if(isCaptain == 2)
             team2captain = player;
+
+        if(isDefined(team1captain) && isDefined(team2captain))
+            break;
     }
     //if one of the captains are invalid
     if(!isDefined(team1captain) || !isDefined(team2captain))
@@ -555,8 +641,10 @@ PAM_DraftTeams()
         setCvar("pam_team1_name", team1captain.name);
         setCvar("pam_team2_name", team2captain.name);
         //set team players
-        setCvar("pam_team1_roster", team1guid);
-        setCvar("pam_team2_roster", team2guid);
+        setCvar("pam_team1_roster", "");
+        setCvar("pam_team2_roster", "");
+        PAM_DraftAddPlayerToRoster(team1captain, team1captain);
+        PAM_DraftAddPlayerToRoster(team2captain, team2captain);
         //kick others to spec
         level iprintlnbold("Captains picking teams. Game will start shortly");
         level.lockteams = true;
@@ -567,19 +655,18 @@ PAM_DraftTeams()
                 continue;
             else
             {
-                self.pers["team"] = "spectator";
-                self.pers["teamTime"] = 1000000;
-                self.pers["weapon"] = undefined;
-                self.pers["weapon1"] = undefined;
-                self.pers["weapon2"] = undefined;
-                self.pers["spawnweapon"] = undefined;
-                self.pers["savedmodel"] = undefined;
+                player.pers["team"] = "spectator";
+                player.pers["teamTime"] = 1000000;
+                player.pers["weapon"] = undefined;
+                player.pers["weapon1"] = undefined;
+                player.pers["weapon2"] = undefined;
+                player.pers["spawnweapon"] = undefined;
+                player.pers["savedmodel"] = undefined;
                 
-                self.sessionteam = "spectator";
-                self setClientCvar("g_scriptMainMenu", game["menu_team"]);
-                self setClientCvar("ui_weapontab", "0");
-                self maps\mp\uox\_uox_respawns::spawnSpectator();
-                
+                player.sessionteam = "spectator";
+                player setClientCvar("g_scriptMainMenu", game["menu_team"]);
+                player setClientCvar("ui_weapontab", "0");
+                player maps\mp\uox\_uox_respawns::spawnSpectator();
             } 
         }
         //set draft stage
@@ -677,6 +764,8 @@ PAM_DraftTeams()
             team2captain setClientCvar("ui_draftbanner", "Pick Side.");
             team1captain setClientCvar("ui_draftbanner", "Other Captain is Choosing Side...");
         }
+        //update player list
+        PAM_DraftUpdateDraftees();
         //wait until next draft stage
         while(level.pam_draft == 1)
             wait level.frametime;
@@ -684,11 +773,330 @@ PAM_DraftTeams()
         while(!isDefined(team1captain.teamReady) || !isDefined(team2captain.teamReady))
             wait level.frametime;
             
+        level.pam_draft = -1;
+
         level iprintlnbold("Both Teams Ready. Game Starting...");
         game["drafted"] = true;
         level.roundended = false;
         maps\mp\uox\_uox::endRound("reset"); 
     }        
+}
+
+PAM_DraftRotateDraftees(dir, offset)
+{
+    if(!isDefined(offset))
+        offset = 10;
+    if(dir == "previous")
+        offset = offset * -1;
+
+    level.pam_draftees = maps\mp\uox\_uox_arrays::arrayOffset(level.pam_draftees, offset);
+    for(index = 0; index < level.pam_draftees; index++)
+    {
+        if(index < 10)
+        {
+            level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+            level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 1);
+            level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", maps\mp\uox\_uox_utils::subStr(player.name, 0, undefined));
+            level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", maps\mp\uox\_uox_utils::subStr(player.name, 0, undefined));
+
+            if(player.pers["team"] == "spectator")
+            {
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "gfx/hud/headicon@us_rank1.dds"); //shader for team
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
+            }
+            else if(player.pers["team"] == "allies")
+            {
+                switch(game["allies"])
+                {
+                    case "american":
+                        teamshader = "gfx/hud/headicon@american.tga";
+                        break;
+                    case "russian":
+                        teamshader = "gfx/hud/headicon@russian.tga";
+                        break;
+                    case "british":
+                        teamshader = "gfx/hud/headicon@british.tga";
+                        break;
+                }
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", teamshader); //shader for team
+                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", teamshader); //shader for team
+                if(isDefined(player.pers["weapon"]))
+                {
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
+                }
+                else
+                {
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                }
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 0);
+                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+            }
+            else if(player.pers["team"] == "axis")
+            {
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "gfx/hud/headicon@german.tga"); //shader for team
+                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", "gfx/hud/headicon@german.tga"); //shader for team
+                if(isDefined(player.pers["weapon"]))
+                {
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
+                }
+                else
+                {
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                }
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 0);
+                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+            }
+            if(player.pers["team"] == level.pam_draft_picking.pers["team"])
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 1); //should cut be shown
+            else
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
+            level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
+        }
+        else
+            break;
+    }
+    //clear out any extra slots
+    for(; index < 10; index++)
+    {
+        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 0);
+        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", "");
+        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", "");
+        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0);
+        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_b", 0);
+        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "");
+        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", "");
+        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "");
+        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "");
+    }
+}
+
+PAM_DraftUpdateDraftees()
+{
+    level.pam_draftees = [];
+    for( i = 0; i < players.size; i++) 
+    {
+        player = players[i];
+        if(player == level.pam_draft_picking || player == level.pam_draft_waiting)
+            continue;
+        else
+        {
+            index = level.pam_draftees.size;
+            level.pam_draftees[index] = player;
+            if(index < 10)
+            {
+                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 1);
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", maps\mp\uox\_uox_utils::subStr(player.name, 0, undefined));
+                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", maps\mp\uox\_uox_utils::subStr(player.name, 0, undefined));
+
+                if(player.pers["team"] == "spectator")
+                {
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "gfx/hud/headicon@us_rank1.dds"); //shader for team
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
+                }
+                else if(player.pers["team"] == "allies")
+                {
+                    switch(game["allies"])
+                	{
+                    	case "american":
+                    		teamshader = "gfx/hud/headicon@american.tga";
+                            break;
+                        case "russian":
+                    		teamshader = "gfx/hud/headicon@russian.tga";
+                            break;
+                        case "british":
+                    		teamshader = "gfx/hud/headicon@british.tga";
+                            break;
+                    }
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", teamshader); //shader for team
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", teamshader); //shader for team
+                    if(isDefined(player.pers["weapon"]))
+                    {
+                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
+                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
+                    }
+                    else
+                    {
+                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                    }
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 0);
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+                }
+                else if(player.pers["team"] == "axis")
+                {
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "gfx/hud/headicon@german.tga"); //shader for team
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", "gfx/hud/headicon@german.tga"); //shader for team
+                    if(isDefined(player.pers["weapon"]))
+                    {
+                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
+                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
+                    }
+                    else
+                    {
+                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                    }
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 0);
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+                }
+                if(player.pers["team"] == level.pam_draft_picking.pers["team"])
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 1); //should cut be shown
+                else
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
+                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
+            }
+        } 
+    }
+
+    //clear out any extra slots
+    for(index++; index < 10; index++)
+    {
+        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 0);
+        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", "");
+        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", "");
+        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0);
+        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_b", 0);
+        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "");
+        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", "");
+        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "");
+        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "");
+    }
+}
+
+PAM_DraftIsCaptain(player)
+{
+    team1id = getCvar("pam_team1_captain");
+    team2id = getCvar("pam_team2_captain");
+    
+    dedicated = getCvar("dedicated");
+    //check if captain
+    switch(dedicated)
+    {
+        case 0:
+        case 1:
+            pid = player getEntityNumber();
+            break;
+        default:
+            pid = player getGuid();
+    }
+    if(pid == team1id && pid != team2id)
+        return 1;
+    else if(pid != team1id && pid == team2id) 
+        return 2;
+    else
+        return 0;
+}
+
+PAM_DraftAddPlayerToRoster(captain, player)
+{
+    team = PAM_DraftIsCaptain(captain);
+    if(team == 0)
+        return;
+    roster = "pam_team" + team + "_roster";
+
+    currentroster = getCvar(roster);
+
+    dedicated = getCvar("dedicated");
+    switch(dedicated)
+    {
+        case 0:
+        case 1:
+            pid = player getEntityNumber() + ";";
+            break;
+        default:
+            pid = player getGuid() + ";";
+    }
+
+    currentroster = currentroster + pid;
+
+    setCvar(roster, currentroster);
+}
+
+PAM_DraftCutPlayerFromRoster(captain, player)
+{
+    team = PAM_DraftIsCaptain(captain);
+    if(team == 0)
+        return;
+    roster = "pam_team" + team + "_roster";
+
+    currentroster = getCvar(roster);
+
+    dedicated = getCvar("dedicated");
+    switch(dedicated)
+    {
+        case 0:
+        case 1:
+            pid = player getEntityNumber() + ";";
+            break;
+        default:
+            pid = player getGuid() + ";";
+    }
+    psize = pid.size;
+    //find where
+    start = maps\mp\uox\_uox_utils::findStr(pid, currentroster, "anywhere");
+    beg = "";
+    end = "";
+    if(start == -1)
+        return; //nothing to change
+    if(start != 0)
+        beg = maps\mp\uox\_uox_utils::subStr( currentroster, 0, start );
+    end = maps\mp\uox\_uox_utils::subStr( currentroster, start + psize );
+    newroster = beg + end;
+
+    setCvar(roster, newroster);
+}
+
+PAM_CheckRoster(player)
+{
+    team1 = getCvar("pam_team1_roster");
+    team2 = getCvar("pam_team2_roster");
+
+    dedicated = getCvar("dedicated");
+    switch(dedicated)
+    {
+        case 0:
+        case 1:
+            pid = player getEntityNumber() + ";";
+            break;
+        default:
+            pid = player getGuid() + ";";
+    }
+    team1find = maps\mp\uox\_uox_utils::findStr(pid, team1, "anywhere");
+    team2find = maps\mp\uox\_uox_utils::findStr(pid, team2, "anywhere");
+
+    if(team1find != -1 && team2find == -1)
+    {
+        player.pers["team"] = game["team1"];
+        player.pers["teamTime"] = (gettime() / 1000);
+        player.pers["weapon"] = undefined;
+        player.pers["weapon1"] = undefined;
+        player.pers["weapon2"] = undefined;
+        player.pers["spawnweapon"] = undefined;
+        player.pers["savedmodel"] = undefined;
+        if(level.uox_teamplay) // update spectator permissions immediately on change of team
+            player maps\mp\gametypes\_teams::SetSpectatePermissions();
+    }
+    else if(team1find == -1 && team2find != -1)
+    {
+        player.pers["team"] = game["team2"];
+        player.pers["teamTime"] = (gettime() / 1000);
+        player.pers["weapon"] = undefined;
+        player.pers["weapon1"] = undefined;
+        player.pers["weapon2"] = undefined;
+        player.pers["spawnweapon"] = undefined;
+        player.pers["savedmodel"] = undefined;
+        if(level.uox_teamplay) // update spectator permissions immediately on change of team
+            player maps\mp\gametypes\_teams::SetSpectatePermissions();
+    }
 }
 
 PAM_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc)
@@ -715,6 +1123,62 @@ PAM_PlayerConnect()
 
     if(level.pam_dropweapon)
        self maps\mp\uox\_uox_inputs::addHoldUse("drop weapon", true, 0, 1, ::PAM_CanDrop, ::PAM_DropWeapon, undefined, false);
+
+    //add to draft pool if drafting
+    if(level.pam_draft >= 2)
+    {
+        level.pam_draftees = maps\mp\uox\_uox_arrays::arrayPush(level.pam_draftees, self);
+        PAM_DraftRotateDraftees(0, "none"); //update list
+    }
+    
+    PAM_CheckRoster(self);
+
+    if(isDefined(self.pers["team"]) && self.pers["team"] != "spectator")
+    {
+        self setClientCvar("ui_weapontab", "1");
+        self.sessionteam = "none";
+
+        if(level.objective == "bel" && ( maps\mp\gametypes\_teams::isweaponavailable("axis")
+                || maps\mp\gametypes\_teams::isweaponavailable("allies") ))
+        {
+            menu = game["menu_weapon_all"];
+            player setClientCvar("ui_weapontab", "1");
+            player openMenu(menu);
+        }
+        if(player.pers["team"] == "allies" && maps\mp\gametypes\_teams::isweaponavailable(player.pers["team"]))
+        {
+            menu = game["menu_weapon_allies"];
+            player setClientCvar("ui_weapontab", "1");
+            player openMenu(menu);
+        }
+        else if(player.pers["team"] == "axis" && maps\mp\gametypes\_teams::isweaponavailable(player.pers["team"])) 
+        {
+            menu = game["menu_weapon_axis"];
+            player setClientCvar("ui_weapontab", "1");
+            player openMenu(menu);
+        }
+        else
+        {
+            player setClientCvar("ui_weapontab", "0");
+            player maps\mp\uox\_uox_respawns::menu_spawn("none");
+        }
+    }
+}
+
+PAM_PlayerDisconnect()
+{
+
+    self maps\mp\uox\_uox_loops::removeFromLoop(self, "fast", "PAM_BlackoutSpectator");
+
+    if(level.pam_dropweapon)
+       self maps\mp\uox\_uox_inputs::removeHoldUse("drop weapon");
+
+    //add to draft pool if drafting
+    if(level.pam_draft >= 2)
+    {
+        level.pam_draftees = maps\mp\uox\_uox_arrays::arraySlice(level.pam_draftees, maps\mp\uox\_uox_arrays::arrayFind(level.pam_draftees, self));
+        PAM_DraftRotateDraftees(0, "none"); //update list
+    }
 
 }
 
