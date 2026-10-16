@@ -673,6 +673,8 @@ PAM_DraftTeams()
         level.pam_draft = 0;
         level.pam_draft_picking = team1captain;
         level.pam_draft_waiting = team2captain;
+        team1captain setClientCvar("ui_draftphase", 0);
+        team2captain setClientCvar("ui_draftphase", 0);
         //open draft menu for captains
         team1captain openMenu(game["menu_draft"]);
         team1captain setClientCvar("g_scriptMainMenu", game["menu_draft"]);
@@ -766,6 +768,14 @@ PAM_DraftTeams()
         }
         //update player list
         PAM_DraftUpdateDraftees();
+        team1captain setClientCvar("ui_draftphase", 1);
+        team2captain setClientCvar("ui_draftphase", 1);
+        //clear out any extra slots
+        for(index = 0; index < 10; index++)
+        {
+            team1captain setClientCvar("ui_scoreboard" + index + "_active", 0);
+            team2captain setClientCvar("ui_scoreboard" + index + "_active", 0);
+        }
         //wait until next draft stage
         while(level.pam_draft == 1)
             wait level.frametime;
@@ -794,7 +804,7 @@ PAM_DraftRotateDraftees(dir, offset)
     {
         if(index < 10)
         {
-            level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+            level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
             level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 1);
             level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", maps\mp\uox\_uox_utils::subStr(player.name, 0, undefined));
             level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", maps\mp\uox\_uox_utils::subStr(player.name, 0, undefined));
@@ -831,8 +841,8 @@ PAM_DraftRotateDraftees(dir, offset)
                     level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
                     level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
                 }
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 0);
-                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 2);
+                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
             }
             else if(player.pers["team"] == "axis")
             {
@@ -848,8 +858,8 @@ PAM_DraftRotateDraftees(dir, offset)
                     level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
                     level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
                 }
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 0);
-                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 2);
+                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
             }
             if(player.pers["team"] == level.pam_draft_picking.pers["team"])
                 level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 1); //should cut be shown
@@ -890,7 +900,7 @@ PAM_DraftUpdateDraftees()
             level.pam_draftees[index] = player;
             if(index < 10)
             {
-                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
                 level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 1);
                 level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", maps\mp\uox\_uox_utils::subStr(player.name, 0, undefined));
                 level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", maps\mp\uox\_uox_utils::subStr(player.name, 0, undefined));
@@ -927,8 +937,8 @@ PAM_DraftUpdateDraftees()
                         level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
                         level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
                     }
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 0);
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 2);
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
                 }
                 else if(player.pers["team"] == "axis")
                 {
@@ -944,8 +954,8 @@ PAM_DraftUpdateDraftees()
                         level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
                         level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
                     }
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 0);
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 2);
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
                 }
                 if(player.pers["team"] == level.pam_draft_picking.pers["team"])
                     level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 1); //should cut be shown
