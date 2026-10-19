@@ -813,8 +813,8 @@ PAM_DraftRotateDraftees(dir, offset)
 
             if(player.pers["team"] == "spectator")
             {
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "gfx/hud/headicon@us_rank1.dds"); //shader for team
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "spectator"); //shader for team
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
                 level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
             }
             else if(player.pers["team"] == "allies")
@@ -822,43 +822,43 @@ PAM_DraftRotateDraftees(dir, offset)
                 switch(game["allies"])
                 {
                     case "american":
-                        teamshader = "gfx/hud/headicon@american.tga";
+                        teamshader = "american";
                         break;
                     case "russian":
-                        teamshader = "gfx/hud/headicon@russian.tga";
+                        teamshader = "russian";
                         break;
                     case "british":
-                        teamshader = "gfx/hud/headicon@british.tga";
+                        teamshader = "british";
                         break;
                 }
                 level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", teamshader); //shader for team
                 level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", teamshader); //shader for team
                 if(isDefined(player.pers["weapon"]))
                 {
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
                 }
                 else
                 {
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
                 }
                 level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 2);
                 level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
             }
             else if(player.pers["team"] == "axis")
             {
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "gfx/hud/headicon@german.tga"); //shader for team
-                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", "gfx/hud/headicon@german.tga"); //shader for team
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "german"); //shader for team
+                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", "german"); //shader for team
                 if(isDefined(player.pers["weapon"]))
                 {
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
                 }
                 else
                 {
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
                 }
                 level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 2);
                 level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
@@ -911,8 +911,8 @@ PAM_DraftUpdateDraftees()
 
                 if(player.pers["team"] == "spectator")
                 {
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "gfx/hud/headicon@us_rank1.dds"); //shader for team
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "spectator"); //shader for team
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
                     level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
                 }
                 else if(player.pers["team"] == "allies")
@@ -920,43 +920,43 @@ PAM_DraftUpdateDraftees()
                     switch(game["allies"])
                 	{
                     	case "american":
-                    		teamshader = "gfx/hud/headicon@american.tga";
+                    		teamshader = "american";
                             break;
                         case "russian":
-                    		teamshader = "gfx/hud/headicon@russian.tga";
+                    		teamshader = "russian";
                             break;
                         case "british":
-                    		teamshader = "gfx/hud/headicon@british.tga";
+                    		teamshader = "british";
                             break;
                     }
                     level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", teamshader); //shader for team
                     level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", teamshader); //shader for team
                     if(isDefined(player.pers["weapon"]))
                     {
-                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
-                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
+                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
+                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
                     }
                     else
                     {
-                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
-                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
+                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
                     }
                     level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 2);
                     level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
                 }
                 else if(player.pers["team"] == "axis")
                 {
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "gfx/hud/headicon@german.tga"); //shader for team
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", "gfx/hud/headicon@german.tga"); //shader for team
+                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "german"); //shader for team
+                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", "german"); //shader for team
                     if(isDefined(player.pers["weapon"]))
                     {
-                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
-                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "ui_mp/assets/hud@mp44.tga"); //shader for weapon
+                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
+                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
                     }
                     else
                     {
-                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
-                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "gfx/hud/headicon@us_rank1.dds"); //shader for weapon
+                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
+                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
                     }
                     level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 2);
                     level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
@@ -1025,7 +1025,7 @@ PAM_DraftAddPlayerToRoster(captain, player)
 
     currentroster = getCvar(roster);
 
-    dedicated = getCvar("dedicated");
+    dedicated = (int)getCvar("dedicated");
     switch(dedicated)
     {
         case 0:
@@ -1050,7 +1050,7 @@ PAM_DraftCutPlayerFromRoster(captain, player)
 
     currentroster = getCvar(roster);
 
-    dedicated = getCvar("dedicated");
+    dedicated = (int)getCvar("dedicated");
     switch(dedicated)
     {
         case 0:
