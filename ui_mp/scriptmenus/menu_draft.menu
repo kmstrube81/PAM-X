@@ -1,0 +1,1845 @@
+#include "ui_mp/menudef.h"
+
+#define ORIGIN_MENUTABS				96 64
+#define ORIGIN_MENUWINDOW			96 96
+
+// PAM-X captain draft menu (game["menu_draft"])
+// ui_draftphase 0 : side / pick-first selection  (level.pam_draft 0 or 1)
+// ui_draftphase 1 : player selection             (level.pam_draft 2)
+// ui_scoreboard<0-9>_name : player name
+// ui_scoreboard<0-9>_c    : team shader path (selects which static icon is shown)
+// ui_scoreboard<0-9>_d    : weapon shader path (selects which static icon is shown)
+// ui_scoreboard<0-9>_b    : "1" shows the Cut button
+
+{
+	menuDef
+	{
+		name			"menu_draft"
+		fullscreen		0
+		rect			0 0 640 480
+		focuscolor		1 1 1 1
+		disablecolor	0 0 0 0
+		style			WINDOW_STYLE_EMPTY
+		onEsc
+		{
+			scriptMenuResponse "close";
+			close menu_draft;
+		}
+		onOpen
+		{
+			scriptMenuResponse "open";
+		}
+		onClose
+		{
+			scriptMenuResponse "close";
+		}
+
+// WINDOW BACKGROUND
+		itemDef
+		{
+			name			"window_background"
+			visible			1
+			rect			0 0 448 288
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@window_background.tga"
+			decoration
+		}
+
+// MENU TABS
+		itemDef
+		{
+			name			"button_mainmenu"
+			visible			1
+			rect			0 0 89 32
+			origin			ORIGIN_MENUTABS
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@tab_left_unselected.tga"
+			type			ITEM_TYPE_BUTTON
+			text			"@MPMENU_MAIN_MENU"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		45
+			textaligny		24
+			textalign		ITEM_ALIGN_CENTER
+			action
+			{
+				play "mouse_click";
+				close menu_draft;
+				open main;
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// DRAFT BANNER (fills the space of the removed Team/Weapon/View Map/Call Vote tabs)
+		itemDef
+		{
+			name			"text_draftbanner"
+			visible			1
+			rect			89 0 358 32
+			origin			ORIGIN_MENUTABS
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@tab_center_selected.tga"
+			forecolor		1 1 1 1
+			cvar			"ui_draftbanner"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		179
+			textaligny		24
+			textalign		ITEM_ALIGN_CENTER
+			decoration
+		}
+
+// ==========================================================================
+// PHASE 0 - SIDE / PICK FIRST  (hidden once ui_draftphase is 1)
+// ==========================================================================
+		itemDef
+		{
+			name			"button_allies"
+			visible			1
+			rect			16 24 160 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"1. Allies"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			hideCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option1";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+		itemDef
+		{
+			name			"button_axis"
+			visible			1
+			rect			16 48 160 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"2. Axis"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			hideCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option2";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+		itemDef
+		{
+			name			"button_pickfirst"
+			visible			1
+			rect			16 72 160 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"3. Pick First"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			hideCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option3";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// ==========================================================================
+// PHASE 1 - PLAYER SELECTION  (shown when ui_draftphase is 1)
+// Column 1 = slots 0-4 (1.-5.), Column 2 = slots 5-9 (6.-10.)
+// ==========================================================================
+// slot 0 (1.)
+		itemDef
+		{
+			name			"button_player0"
+			visible			1
+			rect			16 24 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"1."
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option1";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+		itemDef
+		{
+			name			"text_player0_name"
+			visible			1
+			rect			46 24 92 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			cvar			"ui_scoreboard0_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player0_team_american"
+			visible			1
+			rect			138 28 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@american.tga"
+			cvartest		"ui_scoreboard0_c"
+			showCvar		{ "gfx/hud/headicon@american.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player0_team_british"
+			visible			1
+			rect			138 28 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@british.tga"
+			cvartest		"ui_scoreboard0_c"
+			showCvar		{ "gfx/hud/headicon@british.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player0_team_russian"
+			visible			1
+			rect			138 28 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@russian.tga"
+			cvartest		"ui_scoreboard0_c"
+			showCvar		{ "gfx/hud/headicon@russian.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player0_team_german"
+			visible			1
+			rect			138 28 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@german.tga"
+			cvartest		"ui_scoreboard0_c"
+			showCvar		{ "gfx/hud/headicon@german.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player0_team_us_rank1"
+			visible			1
+			rect			138 28 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard0_c"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player0_weapon_mp44"
+			visible			1
+			rect			156 28 32 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@mp44.tga"
+			cvartest		"ui_scoreboard0_d"
+			showCvar		{ "ui_mp/assets/hud@mp44.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player0_weapon_us_rank1"
+			visible			1
+			rect			156 28 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard0_d"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"button_player0_cut"
+			visible			1
+			rect			190 27 26 17
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_FILLED
+			backcolor		.5 0 0 .6
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"Cut"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textalignx		13
+			textaligny		13
+			textalign		ITEM_ALIGN_CENTER
+			cvartest		"ui_scoreboard0_b"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "cut1";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// slot 1 (2.)
+		itemDef
+		{
+			name			"button_player1"
+			visible			1
+			rect			16 48 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"2."
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option2";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+		itemDef
+		{
+			name			"text_player1_name"
+			visible			1
+			rect			46 48 92 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			cvar			"ui_scoreboard1_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player1_team_american"
+			visible			1
+			rect			138 52 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@american.tga"
+			cvartest		"ui_scoreboard1_c"
+			showCvar		{ "gfx/hud/headicon@american.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player1_team_british"
+			visible			1
+			rect			138 52 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@british.tga"
+			cvartest		"ui_scoreboard1_c"
+			showCvar		{ "gfx/hud/headicon@british.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player1_team_russian"
+			visible			1
+			rect			138 52 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@russian.tga"
+			cvartest		"ui_scoreboard1_c"
+			showCvar		{ "gfx/hud/headicon@russian.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player1_team_german"
+			visible			1
+			rect			138 52 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@german.tga"
+			cvartest		"ui_scoreboard1_c"
+			showCvar		{ "gfx/hud/headicon@german.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player1_team_us_rank1"
+			visible			1
+			rect			138 52 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard1_c"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player1_weapon_mp44"
+			visible			1
+			rect			156 52 32 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@mp44.tga"
+			cvartest		"ui_scoreboard1_d"
+			showCvar		{ "ui_mp/assets/hud@mp44.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player1_weapon_us_rank1"
+			visible			1
+			rect			156 52 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard1_d"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"button_player1_cut"
+			visible			1
+			rect			190 51 26 17
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_FILLED
+			backcolor		.5 0 0 .6
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"Cut"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textalignx		13
+			textaligny		13
+			textalign		ITEM_ALIGN_CENTER
+			cvartest		"ui_scoreboard1_b"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "cut2";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// slot 2 (3.)
+		itemDef
+		{
+			name			"button_player2"
+			visible			1
+			rect			16 72 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"3."
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option3";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+		itemDef
+		{
+			name			"text_player2_name"
+			visible			1
+			rect			46 72 92 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			cvar			"ui_scoreboard2_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player2_team_american"
+			visible			1
+			rect			138 76 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@american.tga"
+			cvartest		"ui_scoreboard2_c"
+			showCvar		{ "gfx/hud/headicon@american.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player2_team_british"
+			visible			1
+			rect			138 76 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@british.tga"
+			cvartest		"ui_scoreboard2_c"
+			showCvar		{ "gfx/hud/headicon@british.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player2_team_russian"
+			visible			1
+			rect			138 76 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@russian.tga"
+			cvartest		"ui_scoreboard2_c"
+			showCvar		{ "gfx/hud/headicon@russian.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player2_team_german"
+			visible			1
+			rect			138 76 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@german.tga"
+			cvartest		"ui_scoreboard2_c"
+			showCvar		{ "gfx/hud/headicon@german.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player2_team_us_rank1"
+			visible			1
+			rect			138 76 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard2_c"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player2_weapon_mp44"
+			visible			1
+			rect			156 76 32 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@mp44.tga"
+			cvartest		"ui_scoreboard2_d"
+			showCvar		{ "ui_mp/assets/hud@mp44.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player2_weapon_us_rank1"
+			visible			1
+			rect			156 76 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard2_d"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"button_player2_cut"
+			visible			1
+			rect			190 75 26 17
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_FILLED
+			backcolor		.5 0 0 .6
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"Cut"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textalignx		13
+			textaligny		13
+			textalign		ITEM_ALIGN_CENTER
+			cvartest		"ui_scoreboard2_b"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "cut3";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// slot 3 (4.)
+		itemDef
+		{
+			name			"button_player3"
+			visible			1
+			rect			16 96 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"4."
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option4";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+		itemDef
+		{
+			name			"text_player3_name"
+			visible			1
+			rect			46 96 92 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			cvar			"ui_scoreboard3_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player3_team_american"
+			visible			1
+			rect			138 100 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@american.tga"
+			cvartest		"ui_scoreboard3_c"
+			showCvar		{ "gfx/hud/headicon@american.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player3_team_british"
+			visible			1
+			rect			138 100 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@british.tga"
+			cvartest		"ui_scoreboard3_c"
+			showCvar		{ "gfx/hud/headicon@british.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player3_team_russian"
+			visible			1
+			rect			138 100 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@russian.tga"
+			cvartest		"ui_scoreboard3_c"
+			showCvar		{ "gfx/hud/headicon@russian.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player3_team_german"
+			visible			1
+			rect			138 100 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@german.tga"
+			cvartest		"ui_scoreboard3_c"
+			showCvar		{ "gfx/hud/headicon@german.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player3_team_us_rank1"
+			visible			1
+			rect			138 100 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard3_c"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player3_weapon_mp44"
+			visible			1
+			rect			156 100 32 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@mp44.tga"
+			cvartest		"ui_scoreboard3_d"
+			showCvar		{ "ui_mp/assets/hud@mp44.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player3_weapon_us_rank1"
+			visible			1
+			rect			156 100 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard3_d"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"button_player3_cut"
+			visible			1
+			rect			190 99 26 17
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_FILLED
+			backcolor		.5 0 0 .6
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"Cut"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textalignx		13
+			textaligny		13
+			textalign		ITEM_ALIGN_CENTER
+			cvartest		"ui_scoreboard3_b"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "cut4";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// slot 4 (5.)
+		itemDef
+		{
+			name			"button_player4"
+			visible			1
+			rect			16 120 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"5."
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option5";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+		itemDef
+		{
+			name			"text_player4_name"
+			visible			1
+			rect			46 120 92 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			cvar			"ui_scoreboard4_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player4_team_american"
+			visible			1
+			rect			138 124 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@american.tga"
+			cvartest		"ui_scoreboard4_c"
+			showCvar		{ "gfx/hud/headicon@american.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player4_team_british"
+			visible			1
+			rect			138 124 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@british.tga"
+			cvartest		"ui_scoreboard4_c"
+			showCvar		{ "gfx/hud/headicon@british.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player4_team_russian"
+			visible			1
+			rect			138 124 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@russian.tga"
+			cvartest		"ui_scoreboard4_c"
+			showCvar		{ "gfx/hud/headicon@russian.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player4_team_german"
+			visible			1
+			rect			138 124 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@german.tga"
+			cvartest		"ui_scoreboard4_c"
+			showCvar		{ "gfx/hud/headicon@german.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player4_team_us_rank1"
+			visible			1
+			rect			138 124 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard4_c"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player4_weapon_mp44"
+			visible			1
+			rect			156 124 32 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@mp44.tga"
+			cvartest		"ui_scoreboard4_d"
+			showCvar		{ "ui_mp/assets/hud@mp44.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player4_weapon_us_rank1"
+			visible			1
+			rect			156 124 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard4_d"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"button_player4_cut"
+			visible			1
+			rect			190 123 26 17
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_FILLED
+			backcolor		.5 0 0 .6
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"Cut"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textalignx		13
+			textaligny		13
+			textalign		ITEM_ALIGN_CENTER
+			cvartest		"ui_scoreboard4_b"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "cut5";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// slot 5 (6.)
+		itemDef
+		{
+			name			"button_player5"
+			visible			1
+			rect			232 24 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"6."
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option6";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+		itemDef
+		{
+			name			"text_player5_name"
+			visible			1
+			rect			262 24 92 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			cvar			"ui_scoreboard5_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player5_team_american"
+			visible			1
+			rect			354 28 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@american.tga"
+			cvartest		"ui_scoreboard5_c"
+			showCvar		{ "gfx/hud/headicon@american.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player5_team_british"
+			visible			1
+			rect			354 28 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@british.tga"
+			cvartest		"ui_scoreboard5_c"
+			showCvar		{ "gfx/hud/headicon@british.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player5_team_russian"
+			visible			1
+			rect			354 28 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@russian.tga"
+			cvartest		"ui_scoreboard5_c"
+			showCvar		{ "gfx/hud/headicon@russian.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player5_team_german"
+			visible			1
+			rect			354 28 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@german.tga"
+			cvartest		"ui_scoreboard5_c"
+			showCvar		{ "gfx/hud/headicon@german.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player5_team_us_rank1"
+			visible			1
+			rect			354 28 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard5_c"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player5_weapon_mp44"
+			visible			1
+			rect			372 28 32 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@mp44.tga"
+			cvartest		"ui_scoreboard5_d"
+			showCvar		{ "ui_mp/assets/hud@mp44.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player5_weapon_us_rank1"
+			visible			1
+			rect			372 28 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard5_d"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"button_player5_cut"
+			visible			1
+			rect			406 27 26 17
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_FILLED
+			backcolor		.5 0 0 .6
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"Cut"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textalignx		13
+			textaligny		13
+			textalign		ITEM_ALIGN_CENTER
+			cvartest		"ui_scoreboard5_b"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "cut6";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// slot 6 (7.)
+		itemDef
+		{
+			name			"button_player6"
+			visible			1
+			rect			232 48 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"7."
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option7";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+		itemDef
+		{
+			name			"text_player6_name"
+			visible			1
+			rect			262 48 92 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			cvar			"ui_scoreboard6_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player6_team_american"
+			visible			1
+			rect			354 52 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@american.tga"
+			cvartest		"ui_scoreboard6_c"
+			showCvar		{ "gfx/hud/headicon@american.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player6_team_british"
+			visible			1
+			rect			354 52 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@british.tga"
+			cvartest		"ui_scoreboard6_c"
+			showCvar		{ "gfx/hud/headicon@british.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player6_team_russian"
+			visible			1
+			rect			354 52 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@russian.tga"
+			cvartest		"ui_scoreboard6_c"
+			showCvar		{ "gfx/hud/headicon@russian.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player6_team_german"
+			visible			1
+			rect			354 52 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@german.tga"
+			cvartest		"ui_scoreboard6_c"
+			showCvar		{ "gfx/hud/headicon@german.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player6_team_us_rank1"
+			visible			1
+			rect			354 52 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard6_c"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player6_weapon_mp44"
+			visible			1
+			rect			372 52 32 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@mp44.tga"
+			cvartest		"ui_scoreboard6_d"
+			showCvar		{ "ui_mp/assets/hud@mp44.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player6_weapon_us_rank1"
+			visible			1
+			rect			372 52 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard6_d"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"button_player6_cut"
+			visible			1
+			rect			406 51 26 17
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_FILLED
+			backcolor		.5 0 0 .6
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"Cut"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textalignx		13
+			textaligny		13
+			textalign		ITEM_ALIGN_CENTER
+			cvartest		"ui_scoreboard6_b"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "cut7";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// slot 7 (8.)
+		itemDef
+		{
+			name			"button_player7"
+			visible			1
+			rect			232 72 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"8."
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option8";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+		itemDef
+		{
+			name			"text_player7_name"
+			visible			1
+			rect			262 72 92 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			cvar			"ui_scoreboard7_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player7_team_american"
+			visible			1
+			rect			354 76 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@american.tga"
+			cvartest		"ui_scoreboard7_c"
+			showCvar		{ "gfx/hud/headicon@american.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player7_team_british"
+			visible			1
+			rect			354 76 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@british.tga"
+			cvartest		"ui_scoreboard7_c"
+			showCvar		{ "gfx/hud/headicon@british.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player7_team_russian"
+			visible			1
+			rect			354 76 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@russian.tga"
+			cvartest		"ui_scoreboard7_c"
+			showCvar		{ "gfx/hud/headicon@russian.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player7_team_german"
+			visible			1
+			rect			354 76 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@german.tga"
+			cvartest		"ui_scoreboard7_c"
+			showCvar		{ "gfx/hud/headicon@german.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player7_team_us_rank1"
+			visible			1
+			rect			354 76 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard7_c"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player7_weapon_mp44"
+			visible			1
+			rect			372 76 32 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@mp44.tga"
+			cvartest		"ui_scoreboard7_d"
+			showCvar		{ "ui_mp/assets/hud@mp44.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player7_weapon_us_rank1"
+			visible			1
+			rect			372 76 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard7_d"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"button_player7_cut"
+			visible			1
+			rect			406 75 26 17
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_FILLED
+			backcolor		.5 0 0 .6
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"Cut"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textalignx		13
+			textaligny		13
+			textalign		ITEM_ALIGN_CENTER
+			cvartest		"ui_scoreboard7_b"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "cut8";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// slot 8 (9.)
+		itemDef
+		{
+			name			"button_player8"
+			visible			1
+			rect			232 96 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"9."
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option9";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+		itemDef
+		{
+			name			"text_player8_name"
+			visible			1
+			rect			262 96 92 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			cvar			"ui_scoreboard8_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player8_team_american"
+			visible			1
+			rect			354 100 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@american.tga"
+			cvartest		"ui_scoreboard8_c"
+			showCvar		{ "gfx/hud/headicon@american.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player8_team_british"
+			visible			1
+			rect			354 100 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@british.tga"
+			cvartest		"ui_scoreboard8_c"
+			showCvar		{ "gfx/hud/headicon@british.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player8_team_russian"
+			visible			1
+			rect			354 100 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@russian.tga"
+			cvartest		"ui_scoreboard8_c"
+			showCvar		{ "gfx/hud/headicon@russian.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player8_team_german"
+			visible			1
+			rect			354 100 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@german.tga"
+			cvartest		"ui_scoreboard8_c"
+			showCvar		{ "gfx/hud/headicon@german.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player8_team_us_rank1"
+			visible			1
+			rect			354 100 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard8_c"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player8_weapon_mp44"
+			visible			1
+			rect			372 100 32 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@mp44.tga"
+			cvartest		"ui_scoreboard8_d"
+			showCvar		{ "ui_mp/assets/hud@mp44.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player8_weapon_us_rank1"
+			visible			1
+			rect			372 100 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard8_d"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"button_player8_cut"
+			visible			1
+			rect			406 99 26 17
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_FILLED
+			backcolor		.5 0 0 .6
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"Cut"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textalignx		13
+			textaligny		13
+			textalign		ITEM_ALIGN_CENTER
+			cvartest		"ui_scoreboard8_b"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "cut9";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// slot 9 (10.)
+		itemDef
+		{
+			name			"button_player9"
+			visible			1
+			rect			232 120 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"10."
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "option10";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+		itemDef
+		{
+			name			"text_player9_name"
+			visible			1
+			rect			262 120 92 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			cvar			"ui_scoreboard9_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player9_team_american"
+			visible			1
+			rect			354 124 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@american.tga"
+			cvartest		"ui_scoreboard9_c"
+			showCvar		{ "gfx/hud/headicon@american.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player9_team_british"
+			visible			1
+			rect			354 124 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@british.tga"
+			cvartest		"ui_scoreboard9_c"
+			showCvar		{ "gfx/hud/headicon@british.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player9_team_russian"
+			visible			1
+			rect			354 124 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@russian.tga"
+			cvartest		"ui_scoreboard9_c"
+			showCvar		{ "gfx/hud/headicon@russian.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player9_team_german"
+			visible			1
+			rect			354 124 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@german.tga"
+			cvartest		"ui_scoreboard9_c"
+			showCvar		{ "gfx/hud/headicon@german.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player9_team_us_rank1"
+			visible			1
+			rect			354 124 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard9_c"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player9_weapon_mp44"
+			visible			1
+			rect			372 124 32 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@mp44.tga"
+			cvartest		"ui_scoreboard9_d"
+			showCvar		{ "ui_mp/assets/hud@mp44.tga" }
+			decoration
+		}
+		itemDef
+		{
+			name			"icon_player9_weapon_us_rank1"
+			visible			1
+			rect			372 124 16 16
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/hud/headicon@us_rank1.dds"
+			cvartest		"ui_scoreboard9_d"
+			showCvar		{ "gfx/hud/headicon@us_rank1.dds" }
+			decoration
+		}
+		itemDef
+		{
+			name			"button_player9_cut"
+			visible			1
+			rect			406 123 26 17
+			origin			ORIGIN_MENUWINDOW
+			style			WINDOW_STYLE_FILLED
+			backcolor		.5 0 0 .6
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"Cut"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textalignx		13
+			textaligny		13
+			textalign		ITEM_ALIGN_CENTER
+			cvartest		"ui_scoreboard9_b"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "cut10";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// NAVIGATION / TURN CONTROLS
+		itemDef
+		{
+			name			"button_previous"
+			visible			1
+			rect			16 168 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"A. View Previous Players"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "previous";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+		itemDef
+		{
+			name			"button_skip"
+			visible			1
+			rect			16 192 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"Y. Skip Turn"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "skip";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+		itemDef
+		{
+			name			"button_next"
+			visible			1
+			rect			232 168 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"B. View Next Players"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "next";
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+		itemDef
+		{
+			name			"button_readyup"
+			visible			1
+			rect			232 192 172 23
+			origin			ORIGIN_MENUWINDOW
+			forecolor		1 1 1 1
+			type			ITEM_TYPE_BUTTON
+			text			"Z. Confirm Team"
+			textfont		UI_FONT_NORMAL
+			textscale		.24
+			textalignx		10
+			textaligny		20
+			cvartest		"ui_draftphase"
+			showCvar		{ "1" }
+			action
+			{
+				play "mouse_click";
+				scriptMenuResponse "readyup";
+				close menu_draft;
+			}
+			onFocus
+			{
+				play "mouse_over";
+			}
+		}
+
+// HOTKEYS
+// 1-3 double as phase 0 keys: GSC treats option1/2/3 as Allies/Axis/Pick First while
+// level.pam_draft is 0 or 1, and as player slots once level.pam_draft is 2.
+		execKey "1" { play "mouse_click"; scriptMenuResponse "option1" }
+		execKey "2" { play "mouse_click"; scriptMenuResponse "option2" }
+		execKey "3" { play "mouse_click"; scriptMenuResponse "option3" }
+		execKey "4" { play "mouse_click"; scriptMenuResponse "option4" }
+		execKey "5" { play "mouse_click"; scriptMenuResponse "option5" }
+		execKey "6" { play "mouse_click"; scriptMenuResponse "option6" }
+		execKey "7" { play "mouse_click"; scriptMenuResponse "option7" }
+		execKey "8" { play "mouse_click"; scriptMenuResponse "option8" }
+		execKey "9" { play "mouse_click"; scriptMenuResponse "option9" }
+		execKey "0" { play "mouse_click"; scriptMenuResponse "option10" }
+		execKey "a" { play "mouse_click"; scriptMenuResponse "previous" }
+		execKey "b" { play "mouse_click"; scriptMenuResponse "next" }
+		execKey "y" { play "mouse_click"; scriptMenuResponse "skip" }
+		execKey "z" { play "mouse_click"; scriptMenuResponse "readyup"; close menu_draft }
+	}
+}

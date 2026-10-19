@@ -459,9 +459,9 @@ handleDraftMenuResponse(response, optional)
                         return;
                     PAM_DraftRotateDraftees(response);
                     break;
-                case "readyUp":
+                case "readyup":
                 case "skip":
-                    if(response == "readyUp")
+                    if(response == "readyup")
                     {
                         if(level.objective == "bel")
                             level.pam_draft_picking setClientCvar("g_scriptMainMenu", game["menu_weapon_all"]);
@@ -542,7 +542,8 @@ handleDraftMenuResponse(response, optional)
                     }
                     else if(action == "cut")
                     {
-                        if(draftee.pers["team"] == level.pam_draft.picking.pers["team"])
+                        draftee = level.pam_draftees[player];
+                        if(draftee.pers["team"] == level.pam_draft_picking.pers["team"])
                         { //kick to spec
                             draftee.pers["team"] = "spectator";
                             draftee.pers["teamTime"] = 1000000;
@@ -719,7 +720,7 @@ PAM_DraftTeams()
                     level.pam_draft_waiting maps\mp\uox\_uox_respawns::menu_spawn("none");
                 }
             }
-            else if(level.pam_draft_picking.pers["team"] == "axis" && maps\mp\gametypes\_teams::isweaponavailable(self.pers["team"])) 
+            else if(level.pam_draft_picking.pers["team"] == "axis" && maps\mp\gametypes\_teams::isweaponavailable(level.pam_draft_picking.pers["team"])) 
             {
                 menu = game["menu_weapon_axis"];
                 level.pam_draft_picking setClientCvar("ui_weapontab", "1");
@@ -746,7 +747,7 @@ PAM_DraftTeams()
 
             if(!isDefined(menu))
                 menu = game["menu_team"];
-            self setClientCvar("g_scriptMainMenu", menu);
+            level.pam_draft_picking setClientCvar("g_scriptMainMenu", menu);
             
             while(!isDefined(level.pam_draft_picking.pers["weapon"]) || !isDefined(level.pam_draft_waiting.pers["weapon"]))
             wait level.frametime;
@@ -768,17 +769,17 @@ PAM_DraftTeams()
         }
         //update player list
         PAM_DraftUpdateDraftees();
-        team1captain setClientCvar("ui_draftphase", 1);
-        team2captain setClientCvar("ui_draftphase", 1);
         //clear out any extra slots
-        for(index = 0; index < 10; index++)
-        {
-            team1captain setClientCvar("ui_scoreboard" + index + "_active", 0);
-            team2captain setClientCvar("ui_scoreboard" + index + "_active", 0);
-        }
+        //for(index = 0; index < 10; index++)
+        //{
+        //    team1captain setClientCvar("ui_scoreboard" + index + "_active", 0);
+        //    team2captain setClientCvar("ui_scoreboard" + index + "_active", 0);
+        //}
         //wait until next draft stage
         while(level.pam_draft == 1)
             wait level.frametime;
+        team1captain setClientCvar("ui_draftphase", 1);
+        team2captain setClientCvar("ui_draftphase", 1);
         //wait until both teams are ready
         while(!isDefined(team1captain.teamReady) || !isDefined(team2captain.teamReady))
             wait level.frametime;
@@ -800,8 +801,9 @@ PAM_DraftRotateDraftees(dir, offset)
         offset = offset * -1;
 
     level.pam_draftees = maps\mp\uox\_uox_arrays::arrayOffset(level.pam_draftees, offset);
-    for(index = 0; index < level.pam_draftees; index++)
+    for(index = 0; index < level.pam_draftees.size; index++)
     {
+        player = level.pam_draftees[index];
         if(index < 10)
         {
             level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
@@ -889,6 +891,8 @@ PAM_DraftRotateDraftees(dir, offset)
 PAM_DraftUpdateDraftees()
 {
     level.pam_draftees = [];
+
+    players = getentarray("player", "classname");
     for( i = 0; i < players.size; i++) 
     {
         player = players[i];
