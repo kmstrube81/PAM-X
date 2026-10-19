@@ -482,12 +482,12 @@ handleDraftMenuResponse(response, optional)
                     if(maps\mp\uox\_uox_utils::findStr("option", response, "start") > -1)
                     {
                         action = "option";
-                        player = (int)maps\mp\uox\_uox_utils::subString(response, 6) - 1;
+                        player = (int)maps\mp\uox\_uox_utils::subStr(response, 6) - 1;
                     }
                     else if(maps\mp\uox\_uox_utils::findStr("cut", response, "start") > -1)
                     {//if chose cut
                         action = "cut";
-                        player = (int)maps\mp\uox\_uox_utils::subString(response, 3) - 1;
+                        player = (int)maps\mp\uox\_uox_utils::subStr(response, 3) - 1;
                     }
                     else
                         return;
