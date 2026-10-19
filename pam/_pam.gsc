@@ -991,7 +991,7 @@ PAM_DraftIsCaptain(player)
     team1id = getCvar("pam_team1_captain");
     team2id = getCvar("pam_team2_captain");
     
-    dedicated = getCvar("dedicated");
+    dedicated = (int)getCvar("dedicated");
     //check if captain
     switch(dedicated)
     {
