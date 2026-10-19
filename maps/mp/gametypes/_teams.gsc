@@ -4465,7 +4465,7 @@ isweaponavailable(team)
 			break;
 		}
 	}
-	else if(self.pers["team"] == "axis")
+	else if(team == "axis")
 	{
 		switch(game["axis"])		
 		{
