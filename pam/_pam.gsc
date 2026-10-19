@@ -392,7 +392,7 @@ handleDraftMenuResponse(response, optional)
         
     switch(level.pam_draft) //response depends on stage
     {
-        case -1:
+        case "-1":
             return;
         case 0:
         case 1:
