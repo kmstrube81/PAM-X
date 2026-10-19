@@ -625,7 +625,7 @@ PAM_DraftTeams()
     //if one of the captains are invalid
     if(!isDefined(team1captain) || !isDefined(team2captain))
     {
-        level iprintlnbold("Captains not present. Game will start without draft");
+        iprintlnbold("Captains not present. Game will start without draft");
         //clear team names
         setCvar("pam_team1_name", "");
         setCvar("pam_team2_name", "");
@@ -647,7 +647,7 @@ PAM_DraftTeams()
         PAM_DraftAddPlayerToRoster(team1captain, team1captain);
         PAM_DraftAddPlayerToRoster(team2captain, team2captain);
         //kick others to spec
-        level iprintlnbold("Captains picking teams. Game will start shortly");
+        iprintlnbold("Captains picking teams. Game will start shortly");
         level.lockteams = true;
         for( i = 0; i < players.size; i++) //kick all others to spec
         {
@@ -786,7 +786,7 @@ PAM_DraftTeams()
             
         level.pam_draft = -1;
 
-        level iprintlnbold("Both Teams Ready. Game Starting...");
+        iprintlnbold("Both Teams Ready. Game Starting...");
         game["drafted"] = true;
         level.roundended = false;
         maps\mp\uox\_uox::endRound("reset"); 
@@ -998,9 +998,15 @@ PAM_DraftIsCaptain(player)
         case 0:
         case 1:
             pid = player getEntityNumber();
+            maps\mp\uox\_uox_debug::debugLog("info", player.name + " checking if captain via ent number, player ent number is: "
+                                              + pid + ". captain 1 ent number is: " + team1id + ". captain 2 ent number is: "
+                                             + team2id + ".");
             break;
         default:
             pid = player getGuid();
+            maps\mp\uox\_uox_debug::debugLog("info", player.name + " checking if captain via guid, player guid is: "
+                                              + pid + ". captain 1 guid is: " + team1id + ". captain 2 guid is: "
+                                             + team2id + ".");
     }
     if(pid == team1id && pid != team2id)
         return 1;
