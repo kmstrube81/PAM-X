@@ -30,7 +30,8 @@ PAM_Vars()
     maps\mp\uox\_uox_vars::varDef("pam", "exploitblocker", "bool", false, false, "", "", "Fix Exploits");
     level.pam_dropweapon = maps\mp\uox\_uox_vars::varDef("pam", "dropweapon", "bool", true, false, "", "",
                                                          "Allow Manual Weapon Drop", ::PAM_UpdateDropWeapon);
-    maps\mp\uox\_uox_vars::varDef("pam", "draft_teams", "bool", false, false, "", "", "Draft Teams at Start"); 
+    maps\mp\uox\_uox_vars::varDef("pam", "draft_teams", "bool", false, false, "", "", "Draft Teams at Start");
+    maps\mp\uox\_uox_vars::varDef("pam", "allow_casters", "bool", false, false, "", "", "Allow Casters");  
 }
 
 PAM_Rules()
@@ -360,7 +361,7 @@ PAM_SetupMenuHandlers()
     if(!isDefined(level.menuHandlers))
         level.menuHandlers = maps\mp\uox\_uox_arrays::superArray();
 
-    maps\mp\uox\_uox_menus::registerMenu(game["menu_draft"], ::handleDraftMenuResponse, true);
+    maps\mp\uox\_uox_menus::registerMenu(game["menu_draft"], ::PAM_handleDraftMenuResponse, true);
     //override weapon select handling
     //handle weapons - all
     maps\mp\uox\_uox_menus::registerMenu(game["menu_weapon_all"], ::PAM_handleWeaponMenu, false);
@@ -385,7 +386,7 @@ PAM_handleWeaponMenu(response, weapon)
     return weapon;
 }
 
-handleDraftMenuResponse(response, optional)
+PAM_handleDraftMenuResponse(response, optional)
 {
     if(level.pam_draft_picking != self)
         return;
@@ -636,7 +637,7 @@ PAM_DraftTeams()
         level.roundended = false;
         maps\mp\uox\_uox::endRound("reset");
     }
-    else
+    else //Start Draft
     {
         //set team names
         setCvar("pam_team1_name", team1captain.name);
@@ -651,24 +652,20 @@ PAM_DraftTeams()
         level.lockteams = true;
         for( i = 0; i < players.size; i++) //kick all others to spec
         {
-            player = players[i];
-            if(player == team1captain || player == team2captain)
-                continue;
-            else
-            {
-                player.pers["team"] = "spectator";
-                player.pers["teamTime"] = 1000000;
-                player.pers["weapon"] = undefined;
-                player.pers["weapon1"] = undefined;
-                player.pers["weapon2"] = undefined;
-                player.pers["spawnweapon"] = undefined;
-                player.pers["savedmodel"] = undefined;
-                
-                player.sessionteam = "spectator";
-                player setClientCvar("g_scriptMainMenu", game["menu_team"]);
-                player setClientCvar("ui_weapontab", "0");
-                player maps\mp\uox\_uox_respawns::spawnSpectator();
-            } 
+            
+            player.pers["team"] = "spectator";
+            player.pers["teamTime"] = 1000000;
+            player.pers["weapon"] = undefined;
+            player.pers["weapon1"] = undefined;
+            player.pers["weapon2"] = undefined;
+            player.pers["spawnweapon"] = undefined;
+            player.pers["savedmodel"] = undefined;
+            
+            player.sessionteam = "spectator";
+            player setClientCvar("g_scriptMainMenu", game["menu_team"]);
+            player setClientCvar("ui_weapontab", "0");
+            player maps\mp\uox\_uox_respawns::spawnSpectator();
+             
         }
         //set draft stage
         level.pam_draft = 0;
@@ -1116,6 +1113,60 @@ PAM_CheckRoster(player)
         player.pers["savedmodel"] = undefined;
         if(level.uox_teamplay) // update spectator permissions immediately on change of team
             player maps\mp\gametypes\_teams::SetSpectatePermissions();
+    }
+}
+
+PAM_CasterUpdate()
+{
+    /* team 1 players 0, 1, 2, 3, 4
+       team 2 players 5, 6, 7, 8, 9
+       ui cvars ui_scoreboardX_name
+                ui_scoreboardX_a blank means not visible otherwise kills / death
+                ui_scoreboardX_b -1 means not visible otherwise the health value
+                ui_scoreboardX_c blank means not visible otherwise 1 means player has a nade 
+                ui_scoreboardX_d blank means not visible otherwise 1 means player has a smoke */
+    //init caster hud
+    if(!isDefined(level.casterHud))
+    {
+        level.casterHud = maps\mp\uox\_uox_arrays::superArray();
+        //player0_weapon
+        hudElem = [];
+        hudElem["options"] = [];
+        hudElem["type"] = "shader";
+        hudElem["value"] = "";
+        hudElem["operation"] = "update";
+    }
+    //get players
+    team1 = []; team2 = [];
+    players = getentarray("player", "classname");
+    for( i = 0; i < players.size; i++) 
+    {
+        player = players[i];
+        if(player.pers["team"] == game["team1"])
+            team1[team1.size] = player;
+        else if(player.pers["team"] == game["team2"])
+            team2[team2.size] = player;
+    }
+    //sore team 1 by score
+    // bubble sort using manual string comparison
+	for(i = 0; i < team1.size; i++)
+	{
+		for(j = i + 1; j < team1.size; j++)
+		{
+			if(team1[j].score < team1[i].score)
+			{
+				temp = team1[i];
+				team1[i] = team1[j];
+				team1[j] = temp;
+			}
+		}
+	}
+    //update top 5 players
+    for(i = 0; i < team1.size; i++)
+    {
+        if(i >= 5)
+            break;
+
     }
 }
 

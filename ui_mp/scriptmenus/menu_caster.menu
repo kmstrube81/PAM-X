@@ -325,7 +325,7 @@
 	itemDef
 	{
 		name "caster2_smoke"
-		cvarTest "ui_scoreboard2_c"
+		cvarTest "ui_scoreboard2_d"
 		showCvar { "1" }
 		rect 120 94 10 10
 		forecolor 1.0 1.0 1.0 1.0
@@ -363,7 +363,234 @@
 		name "caster2team_br"
 		cvarTest "ui_scoreboard2_c"
 		showCvar { "russian" }
-		rect 134 58 10 10
+		rect 134 82 10 10
+		forecolor 1.0 1.0 1.0 1.0
+		background "gfx/hud/hud@ctf_russian.dds"
+		ownerdraw CG_DRAW_SHADER
+		visible MENU_TRUE
+		decoration
+	}
+	
+
+
+	itemDef
+	{
+		name "caster3_name"
+		cvar "ui_scoreboard3_name"
+		cvarTest "ui_casterhud"
+		showCvar { "1" }
+		rect 633 82 64 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 0
+		textaligny 10
+		textscale .22
+		textstyle ITEM_TEXTSTYLE_SHADOWED
+		textfont UI_FONT_NORMAL
+		forecolor 1.0 1.0 1.0 1.0
+		visible MENU_TRUE
+		decoration
+	}
+	
+	itemDef
+	{
+		name "caster3_score"
+		cvar "ui_scoreboard1_a"
+		cvarTest "ui_casterhud"
+		showCvar { "1" }
+		rect 565 82 64 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 0
+		textaligny 10
+		textscale .18
+		textstyle ITEM_TEXTSTYLE_SHADOWED
+		textfont UI_FONT_NORMAL
+		forecolor 1.0 1.0 1.0 0.7
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster3_health"
+		cvar "ui_scoreboard3_b"
+		cvarTest "ui_casterhud"
+		showCvar { "1" }
+		rect 550 82 64 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 0
+		textaligny 10
+		textscale .18
+		textstyle ITEM_TEXTSTYLE_SHADOWED
+		textfont UI_FONT_NORMAL
+		forecolor 1.0 1.0 1.0 0.7
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster3_frag"
+		cvarTest "ui_scoreboard3_c"
+		showCvar { "german" }
+		rect 510 94 10 10
+		forecolor 1.0 1.0 1.0 1.0
+		background "gfx/icons/hud@steilhandgrenate.tga"
+		ownerdraw CG_DRAW_SHADER
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster3_smoke"
+		cvarTest "ui_scoreboard3_d"
+		showCvar { "1" }
+		rect 524 94 10 10
+		forecolor 1.0 1.0 1.0 1.0
+		background "gfx/icons/hud@us_smokegrenade.tga"
+		ownerdraw CG_DRAW_SHADER
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster3_team"
+		cvarTest "ui_scoreboard3_c"
+		showCvar { "german" }
+		rect 496 94 10 10
+		forecolor 1.0 1.0 1.0 0.5
+		background "gfx/hud/hud@ctf_german.dds"
+		ownerdraw CG_DRAW_SHADER
+		visible MENU_TRUE
+		decoration
+	}
+
+	itemDef
+	{
+		name "caster4_name"
+		cvar "ui_scoreboard4_name"
+		cvarTest "ui_casterhud"
+		showCvar { "1" }
+		rect 7 106 64 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 0
+		textaligny 10
+		textscale .22
+		textstyle ITEM_TEXTSTYLE_SHADOWED
+		textfont UI_FONT_NORMAL
+		forecolor 1.0 1.0 1.0 1.0
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster4_score"
+		cvar "ui_scoreboard4_a"
+		cvarTest "ui_casterhud"
+		showCvar { "1" }
+		rect 75 106 64 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 0
+		textaligny 10
+		textscale .18
+		textstyle ITEM_TEXTSTYLE_SHADOWED
+		textfont UI_FONT_NORMAL
+		forecolor 1.0 1.0 1.0 0.7
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster4_health"
+		cvar "ui_scoreboard4_b"
+		cvarTest "ui_casterhud"
+		showCvar { "1" }
+		rect 90 106 64 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 0
+		textaligny 10
+		textscale .18
+		textstyle ITEM_TEXTSTYLE_SHADOWED
+		textfont UI_FONT_NORMAL
+		forecolor 1.0 1.0 1.0 1.0
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster4_frag_us"
+		cvarTest "ui_scoreboard4_c"
+		showCvar { "us" }
+		rect 106 118 10 10
+		forecolor 1.0 1.0 1.0 1.0
+		background "gfx/icons/hud@us_grenade.tga"
+		ownerdraw CG_DRAW_SHADER
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster4_frag_br"
+		cvarTest "ui_scoreboard4_c"
+		showCvar { "british" }
+		rect 106 118 10 10
+		forecolor 1.0 1.0 1.0 1.0
+		background "gfx/icons/hud@british_grenade.tga"
+		ownerdraw CG_DRAW_SHADER
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster4_frag_ru"
+		cvarTest "ui_scoreboard4_c"
+		showCvar { "russian" }
+		rect 106 118 10 10
+		forecolor 1.0 1.0 1.0 1.0
+		background "gfx/icons/hud@russian_grenade.tga"
+		ownerdraw CG_DRAW_SHADER
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster4_smoke"
+		cvarTest "ui_scoreboard2_d"
+		showCvar { "1" }
+		rect 120 118 10 10
+		forecolor 1.0 1.0 1.0 1.0
+		background "gfx/icons/hud@us_smokegrenade.tga"
+		ownerdraw CG_DRAW_SHADER
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster4_team_us"
+		cvarTest "ui_scoreboard4_c"
+		showCvar { "american" }
+		rect 134 106 10 10
+		forecolor 1.0 1.0 1.0 1.0
+		background "gfx/hud/hud@ctf_american.dds"
+		ownerdraw CG_DRAW_SHADER
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster4_team_br"
+		cvarTest "ui_scoreboard4_c"
+		showCvar { "british" }
+		rect 134 106 10 10
+		forecolor 1.0 1.0 1.0 1.0
+		background "gfx/hud/hud@ctf_british.dds"
+		ownerdraw CG_DRAW_SHADER
+		visible MENU_TRUE
+		decoration
+	}
+	itemDef
+	{
+		name "caster4team_br"
+		cvarTest "ui_scoreboard4_c"
+		showCvar { "russian" }
+		rect 134 106 10 10
 		forecolor 1.0 1.0 1.0 1.0
 		background "gfx/hud/hud@ctf_russian.dds"
 		ownerdraw CG_DRAW_SHADER
