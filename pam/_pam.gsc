@@ -34,6 +34,49 @@ PAM_Vars()
     level.pam_allow_casters = maps\mp\uox\_uox_vars::varDef("pam", "allow_casters", "bool", false, false, "", "", "Allow Casters");  
 }
 
+PAM_Precache()
+{
+
+    precacheShader("ui_mp/assets/hud@bar.tga");
+    precacheShader("gfx/icons/hud@bazooka.dds");
+    precacheShader("gfx/icons/hud@bino.dds");
+    precacheShader("ui_mp/assets/hud@colt45.tga");
+    precacheShader("ui_mp/assets/hud@bren.tga");
+    precacheShader("ui_mp/assets/hud@dp28.dds");
+    precacheShader("ui_mp/assets/hud@enfield.tga");
+    precacheShader("ui_mp/assets/hud@fg42.tga");
+    precacheShader("gfx/icons/flame.dds");
+    precacheShader("ui_mp/assets/hud@us_grenade.dds");
+    precacheShader("ui_mp/assets/hud@G43.dds");
+    precacheShader("ui_mp/assets/hud@kar98.tga");
+    precacheShader("ui_mp/assets/hud@kar98scoped.tga");
+    precacheShader("ui_mp/assets/hud@luger.tga");
+    precacheShader("ui_mp/assets/hud@m1garand.tga");
+    precacheShader("ui_mp/assets/hud@m1carbine.tga");
+    precacheShader("ui_mp/assets/hud@mg34.dds");
+    precacheShader("ui_mp/assets/hud@30cal.dds");
+    precacheShader("ui_mp/assets/hud@british_grenade.dds");
+    precacheShader("gfx/hud/death_mg42.dds");
+    precacheShader("ui_mp/assets/hud@nagant.tga");
+    precacheShader("ui_mp/assets/hud@nagantscoped.tga");
+    precacheShader("ui_mp/assets/hud@mp40.tga");
+    precacheShader("ui_mp/assets/hud@mp44.tga");
+    precacheShader("gfx/icons/hud@panzerfaust.dds");
+    precacheShader("gfx/icons/hud@panzerschreck.dds");
+    precacheShader("ui_mp/assets/hud@ppsh.tga");
+    precacheShader("ui_mp/assets/hud@russian_grenade.dds");
+    precacheShader("gfx/icons/hud@satchel.dds");
+    precacheShader("gfx/icons/hud@us_smokegrenade.dds");
+    precacheShader("ui_mp/assets/hud@springfield.tga");
+    precacheShader("ui_mp/assets/hud@sten.tga");
+    precacheShader("gfx/icons/hud@sten_silent.dds");
+    precacheShader("gfx/icons/hud@steilhandgrenate.dds");
+    precacheShader("ui_mp/assets/hud@svt40.dds");
+    precacheShader("ui_mp/assets/hud@thompson.tga");
+    precacheShader("gfx/icons/hud@tt33.dds");
+    precacheShader("gfx/icons/hud@webly.dds");
+}
+
 PAM_Rules()
 {
 
@@ -352,6 +395,7 @@ PAM_DefineMenus()
         game["menu_caster"] = "menu_caster";
         precacheMenu(game["menu_caster"]);
         game["PAM_gamestarted"] = true;
+        PAM_Precache();
     }
 
     PAM_SetupMenuHandlers();
