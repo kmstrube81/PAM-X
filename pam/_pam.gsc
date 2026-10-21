@@ -766,6 +766,7 @@ PAM_DraftTeams()
         setCvar("pam_team1_roster", "");
         setCvar("pam_team2_roster", "");
         game["drafted"] = false;
+        level thread maps\mp\uox\_uox_killcam::finalKillcamListener();
         level.roundended = false;
         maps\mp\uox\_uox::endRound("reset");
     }
@@ -918,6 +919,7 @@ PAM_DraftTeams()
 
         iprintlnbold("Both Teams Ready. Game Starting...");
         game["drafted"] = true;
+        level thread maps\mp\uox\_uox_killcam::finalKillcamListener();
         level.roundended = false;
         maps\mp\uox\_uox::endRound("reset"); 
     }        
