@@ -31,7 +31,7 @@ PAM_Vars()
     level.pam_dropweapon = maps\mp\uox\_uox_vars::varDef("pam", "dropweapon", "bool", true, false, "", "",
                                                          "Allow Manual Weapon Drop", ::PAM_UpdateDropWeapon);
     maps\mp\uox\_uox_vars::varDef("pam", "draft_teams", "bool", false, false, "", "", "Draft Teams at Start");
-    maps\mp\uox\_uox_vars::varDef("pam", "allow_casters", "bool", false, false, "", "", "Allow Casters");  
+    level.pam_allow_casters = maps\mp\uox\_uox_vars::varDef("pam", "allow_casters", "bool", false, false, "", "", "Allow Casters");  
 }
 
 PAM_Rules()
@@ -349,6 +349,8 @@ PAM_DefineMenus()
     {
         game["menu_draft"] = "menu_draft";
         precacheMenu(game["menu_draft"]);
+        game["menu_caster"] = "menu_caster";
+        precacheMenu(game["menu_caster"]);
         game["PAM_gamestarted"] = true;
     }
 
@@ -362,6 +364,7 @@ PAM_SetupMenuHandlers()
         level.menuHandlers = maps\mp\uox\_uox_arrays::superArray();
 
     maps\mp\uox\_uox_menus::registerMenu(game["menu_draft"], ::PAM_handleDraftMenuResponse, true);
+    maps\mp\uox\_uox_menus::registerMenu(game["menu_caster"], ::PAM_CasterHandleMenuResponse, true);
     //override weapon select handling
     //handle weapons - all
     maps\mp\uox\_uox_menus::registerMenu(game["menu_weapon_all"], ::PAM_handleWeaponMenu, false);
@@ -575,9 +578,16 @@ PAM_StartGameType()
 
     game["headerL"] = game["leaguestring"];
 
+    if(level.pam_allow_casters)
+    {
+        maps\mp\uox\_uox_loops:addToLoop(level, "medium", ::PAM_CasterUpdate, "PAM_CasterUpdate");
+    }
+
+
     thread PAM_CheckPK3Files();
     thread PAM_AfterActionReport();
     thread PAM_DraftTeams();
+    thread PAM_UpdateGameString();
 }
 
 PAM_AfterActionReport()
@@ -595,6 +605,77 @@ PAM_AfterActionReport()
     level waittill("postround");
 
     pam\_pam_afteractionreport::printToAll();
+}
+
+PAM_UpdateGameString()
+{
+    if(!game["matchstarted"])
+        return;
+
+    level waittill("postround");
+
+    if(!level.uox_teamplay || ![[level.getVars]]("scr_score_rounds"))
+        return;
+
+    if(!isDefined(game["pam_gamestring"]))
+        game["pam_gamestring"] = "";
+    if(!isDefined(game["pam_gamestring_team1rounds"]))
+        game["pam_gamestring_team1rounds"] = 0;
+    if(!isDefined(game["pam_gamestring_team2rounds"]))
+        game["pam_gamestring_team2rounds"] = 0;
+    if(!isDefined(game["pam_gamestring_rounds"]))
+        game["pam_gamestring_rounds"] = 0;
+
+    //if the round counted
+    if(game["roundsplayed"] > game["pam_gamestring_rounds"])
+    {
+        if(maps\mp\uox\_uox::getTeam1Score() > game["pam_gamestring_team1rounds"])
+        { //if team1 has more rounds won than previous
+            game["pam_gamestring"]+= "#";
+            game["pam_gamestring_team1rounds"] = maps\mp\uox\_uox::getTeam1Score();
+        }
+        else if(maps\mp\uox\_uox::getTeam2Score() > game["pam_gamestring_team2rounds"])
+        { //if team2 has more rounds won than previous
+            game["pam_gamestring"]+= "*";
+            game["pam_gamestring_team2rounds"] = maps\mp\uox\_uox::getTeam2Score();
+        }
+        else if(maps\mp\uox\_uox::getTeam1Score() > game["pam_gamestring_team1rounds"] && maps\mp\uox\_uox::getTeam2Score() > game["pam_gamestring_team2rounds"])
+        {
+            game["pam_gamestring"]+= "-";
+        }
+        game["pam_gamestring_rounds"] = game["roundsplayed"];
+    }
+    round = game["roundsplayed"];
+    //check for halftime - in OT
+    if(maps\mp\uox\_uox::isOvertime())
+    {
+        //if the number of rounds over regulation divided by the rounds per OT has a remainder
+		if((game["roundsplayed"] - [[level.getVars]]("scr_roundlimit")) % [[level.getVars]]("scr_ot_roundlimit"))
+			//then the next OT is in progress (rounds played over limit divided by round per OT plus 1)
+			OT = ((game["roundsplayed"] - [[level.getVars]]("scr_roundlimit")) / [[level.getVars]]("scr_ot_roundlimit")) + 1;
+		else //if the number over rounds over regulation divided by rounds per OT divides cleanly
+			//then the OT that we are in is that number
+			OT = (game["roundsplayed"] - [[level.getVars]]("scr_roundlimit")) / [[level.getVars]]("scr_ot_roundlimit");
+		//get the round limit for the current overtime
+		roundlimit = [[level.getVars]]("scr_roundlimit") + ([[level.getVars]]("scr_ot_roundlimit") * OT);
+		//get the halftime round number for current overtime
+		//if number of OT rounds is odd
+		if([[level.getVars]]("scr_ot_roundlimit") % 2) 
+			//then half round is rounded up to the nearest whole number
+			halfround = (roundlimit - [[level.getVars]]("scr_ot_roundlimit")) + (([[level.getVars]]("scr_ot_roundlimit") / 2) + 1);
+		else //if the number of OT rounds is even
+			//then half round is half the number of rounds per OT
+			halfround = (roundlimit - [[level.getVars]]("scr_ot_roundlimit")) + ([[level.getVars]]("scr_ot_roundlimit") / 2);
+    }
+    else
+    {
+        roundlimit = [[level.getVars]]("scr_roundlimit"); //round limit
+		halfround = level.halfround; //halftime round
+    }
+    if(maps\mp\uox\_uox::checkHalftime(true, round, halfround, roundlimit))
+    {
+        game["pam_gamestring"]+= "|";
+    }
 }
 
 PAM_DraftTeams()
@@ -1120,21 +1201,150 @@ PAM_CasterUpdate()
 {
     /* team 1 players 0, 1, 2, 3, 4
        team 2 players 5, 6, 7, 8, 9
-       ui cvars ui_scoreboardX_name
+       ui cvars ui_scoreboardX_name blank means not visible otherwise name
                 ui_scoreboardX_a blank means not visible otherwise kills / death
                 ui_scoreboardX_b -1 means not visible otherwise the health value
-                ui_scoreboardX_c blank means not visible otherwise 1 means player has a nade 
+                ui_scoreboardX_c blank means not visible otherwise team name means player has a nade 
                 ui_scoreboardX_d blank means not visible otherwise 1 means player has a smoke */
     //init caster hud
     if(!isDefined(level.casterHud))
     {
         level.casterHud = maps\mp\uox\_uox_arrays::superArray();
         //player0_weapon
+        options = [];
+        options["x"] = 106;
+        options["y"] = 58;
+        options["width"] = 20;
+        options["height"] = 10;
         hudElem = [];
-        hudElem["options"] = [];
+        hudElem["options"] = options;
         hudElem["type"] = "shader";
-        hudElem["value"] = "";
-        hudElem["operation"] = "update";
+        hudElem["weapon"] = "";
+        hudElem["operation"] = "none";
+        hudElem["name"] = "";
+        hudElem["kd"] = "";
+        hudElem["health"] = -1;
+        hudElem["hasSmoke"] = "";
+        hudElem["hasFrag"] = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::arrayPush(level.casterHud, hudElem, "player0");
+        //player1_weapon
+        options["y"] = 82;
+        hudElem = [];
+        hudElem["options"] = options;
+        hudElem["type"] = "shader";
+        hudElem["weapon"] = "";
+        hudElem["operation"] = "none";
+        hudElem["name"] = "";
+        hudElem["kd"] = "";
+        hudElem["health"] = -1;
+        hudElem["hasSmoke"] = "";
+        hudElem["hasFrag"] = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::arrayPush(level.casterHud, hudElem, "player1");
+         //player2_weapon
+        options["y"] = 106;
+        hudElem = [];
+        hudElem["options"] = options;
+        hudElem["type"] = "shader";
+        hudElem["weapon"] = "";
+        hudElem["operation"] = "none";
+        hudElem["name"] = "";
+        hudElem["kd"] = "";
+        hudElem["health"] = -1;
+        hudElem["hasSmoke"] = "";
+        hudElem["hasFrag"] = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::arrayPush(level.casterHud, hudElem, "player2");
+         //player3_weapon
+        options["y"] = 130;
+        hudElem = [];
+        hudElem["options"] = options;
+        hudElem["type"] = "shader";
+        hudElem["weapon"] = "";
+        hudElem["operation"] = "none";
+        hudElem["name"] = "";
+        hudElem["kd"] = "";
+        hudElem["health"] = -1;
+        hudElem["hasSmoke"] = "";
+        hudElem["hasFrag"] = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::arrayPush(level.casterHud, hudElem, "player3");
+         //player4_weapon
+        options["y"] = 154;
+        hudElem = [];
+        hudElem["options"] = options;
+        hudElem["type"] = "shader";
+        hudElem["weapon"] = "";
+        hudElem["operation"] = "none";
+        hudElem["name"] = "";
+        hudElem["kd"] = "";
+        hudElem["health"] = -1;
+        hudElem["hasSmoke"] = "";
+        hudElem["hasFrag"] = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::arrayPush(level.casterHud, hudElem, "player4");
+        //player5_weapon
+        options = [];
+        options["x"] = 510;
+        options["y"] = 58;
+        hudElem["options"] = options;
+        hudElem["type"] = "shader";
+        hudElem["weapon"] = "";
+        hudElem["operation"] = "none";
+        hudElem["name"] = "";
+        hudElem["kd"] = "";
+        hudElem["health"] = -1;
+        hudElem["hasSmoke"] = "";
+        hudElem["hasFrag"] = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::arrayPush(level.casterHud, hudElem, "player5");
+        //player6_weapon
+        options["y"] = 82;
+        hudElem = [];
+        hudElem["options"] = options;
+        hudElem["type"] = "shader";
+        hudElem["weapon"] = "";
+        hudElem["operation"] = "none";
+        hudElem["name"] = "";
+        hudElem["kd"] = "";
+        hudElem["health"] = -1;
+        hudElem["hasSmoke"] = "";
+        hudElem["hasFrag"] = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::arrayPush(level.casterHud, hudElem, "player6");
+         //player7_weapon
+        options["y"] = 106;
+        hudElem = [];
+        hudElem["options"] = options;
+        hudElem["type"] = "shader";
+        hudElem["weapon"] = "";
+        hudElem["operation"] = "none";
+        hudElem["name"] = "";
+        hudElem["kd"] = "";
+        hudElem["health"] = -1;
+        hudElem["hasSmoke"] = "";
+        hudElem["hasFrag"] = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::arrayPush(level.casterHud, hudElem, "player7");
+         //player8_weapon
+        options["y"] = 130;
+        hudElem = [];
+        hudElem["options"] = options;
+        hudElem["type"] = "shader";
+        hudElem["weapon"] = "";
+        hudElem["operation"] = "none";
+        hudElem["name"] = "";
+        hudElem["kd"] = "";
+        hudElem["health"] = -1;
+        hudElem["hasSmoke"] = "";
+        hudElem["hasFrag"] = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::arrayPush(level.casterHud, hudElem, "player8");
+         //player9_weapon
+        options["y"] = 154;
+        hudElem = [];
+        hudElem["options"] = options;
+        hudElem["type"] = "shader";
+        hudElem["weapon"] = "";
+        hudElem["operation"] = "none";
+        hudElem["name"] = "";
+        hudElem["kd"] = "";
+        hudElem["health"] = -1;
+        hudElem["hasSmoke"] = "";
+        hudElem["hasFrag"] = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::arrayPush(level.casterHud, hudElem, "player9");
     }
     //get players
     team1 = []; team2 = [];
@@ -1146,6 +1356,115 @@ PAM_CasterUpdate()
             team1[team1.size] = player;
         else if(player.pers["team"] == game["team2"])
             team2[team2.size] = player;
+    }
+    //sort team 1 by score
+    // bubble sort using manual string comparison
+	for(i = 0; i < team1.size; i++)
+	{
+		for(j = i + 1; j < team1.size; j++)
+		{
+			if(team1[j].score < team1[i].score)
+			{
+				temp = team1[i];
+				team1[i] = team1[j];
+				team1[j] = temp;
+			}
+		}
+	}
+    //update top 5 players (that are alive)
+    index = 0;
+    for(i = 0; i < team1.size; i++)
+    {
+        if(index >= 5)
+            break;
+        player = team1[i];
+        if(player.sessionstate != "playing")
+            continue;
+        // set name, set health, set frag, set smoke, set current weapon
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "name", player.name);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "kd", player.score + " - " + player.deaths);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "health", player.health);
+        if(player getweaponslotweapon("smokegrenade") != "none")
+            hasSmoke = "smoke";
+        else
+            hasSmoke = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "hasSmoke", hasSmoke);
+        if(player getweaponslotweapon("grenade") != "none")
+        {
+            if(player.pers["team"] == "allies")            
+                hasFrag = game["allies"];
+            else
+                hasFrag = "german";         
+        }
+        else
+            hasFrag = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "hasFrag", hasFrag);
+        currentweapon = maps\mp\uox\_uox_arrays::getValue(level.casterHud, "player" + index)["weapon"];
+        newweapon = player getcurrentweapon();
+        if(newweapon = "none")
+            newweapon = "";
+        if(currentweapon != newweapon && newweapon != "")
+            operation = "update";
+        else if(currentweapon != newweapon && newweapon == "")
+            operation = "delete";
+        else
+            operation = "none";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "weapon", newweapon);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "operation", operation);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "entNo", player getEntityNumber());
+        index++;
+    }
+    //if there are no more alive players but still slots available
+    for(i = 0; i < team1.size; i++)
+    {
+        if(index >= 5)
+            break;
+        player = team1[i];
+        if(player.sessionstate == "playing")
+            continue;
+        // set name, set health, set frag, set smoke, set current weapon
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "name", player.name);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "kd", player.score + " - " + player.deaths);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "health", 0);
+        hasSmoke = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "hasSmoke", hasSmoke);
+        hasFrag = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "hasFrag", hasFrag);
+        currentweapon = maps\mp\uox\_uox_arrays::getValue(level.casterHud, "player" + index)["weapon"];
+        newweapon = "";
+        if(currentweapon != newweapon && newweapon != "")
+            operation = "update";
+        else if(currentweapon != newweapon && newweapon == "")
+            operation = "delete";
+        else
+            operation = "none";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "weapon", newweapon);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "operation", operation);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "entNo", -1);
+        index++;
+    }
+    //if there are no more alive players or dead players then clear out the values
+    while(index < 5)
+    {
+        if(index >= 5)
+            break;
+        
+        // set name, set health, set frag, set smoke, set current weapon
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "name", "");
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "kd", "");
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "health", "");
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "hasSmoke", "");
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "hasFrag", "");
+        currentweapon = maps\mp\uox\_uox_arrays::getValue(level.casterHud, "player" + index)["weapon"];
+        newweapon = "";
+        if(currentweapon != newweapon && newweapon == "")
+            operation = "delete";
+        else
+            operation = "none";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "weapon", "");
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "operation", operation);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "entNo", -1);
+        index++;
     }
     //sore team 1 by score
     // bubble sort using manual string comparison
@@ -1161,12 +1480,240 @@ PAM_CasterUpdate()
 			}
 		}
 	}
-    //update top 5 players
-    for(i = 0; i < team1.size; i++)
+    //update top 5 players (that are alive)
+    index = 5;
+    for(i = 0; i < team2.size; i++)
     {
-        if(i >= 5)
+        if(index >= 10)
             break;
+        player = team2[i];
+        if(player.sessionstate != "playing")
+            continue;
+        // set name, set health, set frag, set smoke, set current weapon
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "name", player.name);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "kd", player.score + " - " + player.deaths);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "health", player.health);
+        if(player getweaponslotweapon("smokegrenade") != "none")
+            hasSmoke = "smoke";
+        else
+            hasSmoke = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "hasSmoke", hasSmoke);
+        if(player getweaponslotweapon("grenade") != "none")
+        {
+            if(player.pers["team"] == "allies")            
+                hasFrag = game["allies"];
+            else
+                hasFrag = "german";         
+        }
+        else
+            hasFrag = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "hasFrag", hasFrag);
+        currentweapon = maps\mp\uox\_uox_arrays::getValue(level.casterHud, "player" + index)["weapon"];
+        newweapon = player getcurrentweapon();
+        if(newweapon = "none")
+            newweapon = "";
+        if(currentweapon != newweapon && newweapon != "")
+            operation = "update";
+        else if(currentweapon != newweapon && newweapon == "")
+            operation = "delete";
+        else
+            operation = "none";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "weapon", newweapon);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "operation", operation);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "entNo", player getEntityNumber());
+        index++;
+    }
+    //if there are no more alive players but still slots available
+    for(i = 0; i < team2.size; i++)
+    {
+        if(index >= 10)
+            break;
+        player = team2[i];
+        if(player.sessionstate == "playing")
+            continue;
+        // set name, set health, set frag, set smoke, set current weapon
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "name", player.name);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "kd", player.score + " - " + player.deaths);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "health", 0);
+        hasSmoke = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "hasSmoke", hasSmoke);
+        hasFrag = "";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "hasFrag", hasFrag);
+        currentweapon = maps\mp\uox\_uox_arrays::getValue(level.casterHud, "player" + index)["weapon"];
+        newweapon = "";
+        if(currentweapon != newweapon && newweapon != "")
+            operation = "update";
+        else if(currentweapon != newweapon && newweapon == "")
+            operation = "delete";
+        else
+            operation = "none";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "weapon", newweapon);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "operation", operation);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "entNo", -1);
+        index++;
+    }
+    //if there are no more alive players or dead players then clear out the values
+    while(index < 10)
+    {
+        if(index >= 10)
+            break;
+        
+        // set name, set health, set frag, set smoke, set current weapon
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "name", "");
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "kd", "");
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "health", "");
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "hasSmoke", "");
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "hasFrag", "");
+        currentweapon = maps\mp\uox\_uox_arrays::getValue(level.casterHud, "player" + index)["weapon"];
+        newweapon = "";
+        if(currentweapon != newweapon && newweapon == "")
+            operation = "delete";
+        else
+            operation = "none";
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "weapon", "");
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "operation", operation);
+        level.casterHud = maps\mp\uox\_uox_arrays::updateProperty(level.casterHud, "player" + index, "entNo", -1);
+        index++;
+    }
 
+    //update team names
+    team1name = getcvar("pam_team1_name");
+    if(getcvar(team1name != "")
+    setcvar("g_TeamName_Allies", team1name);
+    team2name = getcvar("pam_team2_name");
+    if(getcvar(team2name != "")
+    setcvar("g_TeamName_Allies", team2name);
+}
+
+PAM_CasterHUD()
+{
+    if(self.pers["team"] != "spectator" || !isDefined(level.casterHud))
+        self.pers["casterHud"] = false;
+    if(!self.pers["casterHud"])
+    {
+        for(index = 0; index < 10; index ++)
+            self maps\mp\uox\_uox_hud::deleteClientHUDElement("player" + index + "_weapon");
+        self closeMenu(game["menu_caster"]);
+        return;
+    }
+    
+    //update ui cvar and draw current weapon
+    for(index = 0; index < 10; index ++)
+    {
+        value = maps\mp\uox\_uox_arrays::getValue(level.casterHud, "player" + index);
+        self setClientCvar("ui_scoreboard" + index + "_name", value["name"]);
+        self setClientCvar("ui_scoreboard" + index + "_a", value["kd"]);
+        self setClientCvar("ui_scoreboard" + index + "_b", value["health"]);
+        self setClientCvar("ui_scoreboard" + index + "_c", value["hasFrag"]);
+        self setClientCvar("ui_scoreboard" + index + "_d", value["hasSmoke"]);
+        if(value["operation"] == "update")
+        {
+            options = value["options"];
+            if(maps\mp\uox\_uox::getWeaponProperty(value["weapon"], "shaderAspectRatio") > 1)
+                options["width"] = 20;
+            else
+                options["width"] = 10;
+            self maps\mp\uox\_uox_hud::updateClientHUDElement("player" + index + "_weapon", "shader", maps\mp\uox\_uox::getWeaponProperty(value["weapon"], "shader"), options);
+        }
+        else if (value["operation"] == "delete")
+            self maps\mp\uox\_uox_hud::deleteClientHUDElement("player" + index + "_weapon");
+    }
+    team1name = getcvar("pam_team1_name");
+    team2name = getcvar("pam_team2_name");
+    if(team1name != "")
+        self setClientCvar("ui_scoreboard_team1_name", team1name);
+    else
+    {
+        if(game["team1"] == "allies")
+        {
+            switch(game["allies"])
+        	{
+            	case "american":
+            		self setClientCvar("ui_scoreboard_team1_name", &"MPSCRIPT_AMERICAN");
+            		break;
+            	
+            	case "british":
+            		self setClientCvar("ui_scoreboard_team1_name", &"MPSCRIPT_BRITISH");
+            		break;
+            	
+            	case "russian":
+            		self setClientCvar("ui_scoreboard_team1_name", &"MPSCRIPT_RUSSIAN");
+            		break;
+            }
+        }
+        else
+            self setClientCvar("ui_scoreboard_team1_name", &"MPSCRIPT_GERMAN");
+    }
+    if(team2name != "")
+        self setClientCvar("ui_scoreboard_team2_name", team2name);
+    else
+    {
+        if(game["team2"] == "allies")
+        {
+            switch(game["allies"])
+        	{
+            	case "american":
+            		self setClientCvar("ui_scoreboard_team2_name", &"MPSCRIPT_AMERICAN");
+            		break;
+            	
+            	case "british":
+            		self setClientCvar("ui_scoreboard_team2_name", &"MPSCRIPT_BRITISH");
+            		break;
+            	
+            	case "russian":
+            		self setClientCvar("ui_scoreboard_team2_name", &"MPSCRIPT_RUSSIAN");
+            		break;
+            }
+        }
+        else
+            self setClientCvar("ui_scoreboard_team2_name", &"MPSCRIPT_GERMAN");
+    }
+    score = maps\mp\uox\_uox::getTeam1Score() + " - " + maps\mp\uox\_uox::getTeam2Score();
+    gameString = game["pam_gamestring"];
+    self setClientCvar("ui_scoreboard_score", score);
+    self setClientCvar("ui_scoreboard_round", game["roundsPlayed"] + 1);
+    self setClientCvar("ui_scoreboard_gamestring", game["pam_gamestring"]);
+}
+
+PAM_CasterToggle(setting)
+{
+    if(self.pers["team"] != "spectator" || !isDefined(level.casterHud))
+    {
+        self.pers["casterHud"] = false;
+        return;
+    }
+
+    if(!isDefined(setting))
+    {
+        if(self.pers["casterHud"])
+            self.pers["casterHud"] = false;
+        else
+            self.pers["casterHud"] = true;
+    }
+    else
+        self.pers["casterHud"] = setting;
+}
+
+PAM_CasterHandleMenuResponse(response, optional)
+{
+    switch(response)
+    {
+        case "closeCaster":
+            self.pers["casterHud"] = false;
+            return;
+        case "0":
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8":
+        case "9":
+        case "0":
+            self.spectatorclient = maps\mp\uox\_uox_arrays::getValue(level.casterHud, "player" + index)["entNo"];
+            return;
     }
 }
 
@@ -1188,6 +1735,15 @@ PAM_PlayerConnect()
 {
 
     self maps\mp\uox\_uox_loops::addToLoop(self, "fast", ::PAM_BlackoutSpectator, "PAM_BlackoutSpectator");
+
+    if(!isDefined(self.pers["casterHud"]))
+        self.pers["casterHud"] = false;
+
+    if(level.pam_allow_casters)
+    {
+        self maps\mp\uox\_uox_loops::addToLoop(self, "medium", ::PAM_CasterHUD, "PAM_CasterHUD");
+        self maps\mp\uox\_uox_inputs::addInputCombination("use use", ::PAM_CasterToggle, "PAM_CasterToggle");
+    }
 
     if(level.afteractionreport)
         pam\_pam_afteractionreport::onConnected();
