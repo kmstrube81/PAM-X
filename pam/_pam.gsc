@@ -1278,7 +1278,7 @@ PAM_CasterUpdate()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1292,7 +1292,7 @@ PAM_CasterUpdate()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1306,7 +1306,7 @@ PAM_CasterUpdate()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1320,7 +1320,7 @@ PAM_CasterUpdate()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1334,7 +1334,7 @@ PAM_CasterUpdate()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1349,7 +1349,7 @@ PAM_CasterUpdate()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1363,7 +1363,7 @@ PAM_CasterUpdate()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1377,7 +1377,7 @@ PAM_CasterUpdate()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1391,7 +1391,7 @@ PAM_CasterUpdate()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1405,7 +1405,7 @@ PAM_CasterUpdate()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1519,7 +1519,7 @@ PAM_CasterUpdate()
         // set name, set health, set frag, set smoke, set current weapon
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "name", "");
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "kd", "");
-        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "health", -1);
+        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "health", "");
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "hasSmoke", "");
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "hasFrag", "");
         currentweapon = maps\mp\uox\_uox_arrays::getValue(level.casterHudUpdates, "player" + index)["weapon"];
@@ -1631,7 +1631,7 @@ PAM_CasterUpdate()
         // set name, set health, set frag, set smoke, set current weapon
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "name", "");
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "kd", "");
-        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "health", -1);
+        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "health", "");
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "hasSmoke", "");
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "hasFrag", "");
         currentweapon = maps\mp\uox\_uox_arrays::getValue(level.casterHudUpdates, "player" + index)["weapon"];
@@ -1678,7 +1678,7 @@ PAM_CasterHUD()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1692,7 +1692,7 @@ PAM_CasterHUD()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1706,7 +1706,7 @@ PAM_CasterHUD()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1720,7 +1720,7 @@ PAM_CasterHUD()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1734,7 +1734,7 @@ PAM_CasterHUD()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1749,7 +1749,7 @@ PAM_CasterHUD()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1763,7 +1763,7 @@ PAM_CasterHUD()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1777,7 +1777,7 @@ PAM_CasterHUD()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1791,7 +1791,7 @@ PAM_CasterHUD()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
@@ -1805,7 +1805,7 @@ PAM_CasterHUD()
         hudElem["operation"] = "none";
         hudElem["name"] = "";
         hudElem["kd"] = "";
-        hudElem["health"] = -1;
+        hudElem["health"] = "";
         hudElem["hasSmoke"] = "";
         hudElem["hasFrag"] = "";
         hudElem["entNo"] = -1;
