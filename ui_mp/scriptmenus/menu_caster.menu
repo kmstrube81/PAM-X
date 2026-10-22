@@ -1,782 +1,1644 @@
 #include "ui_mp/menudef.h"
+
+// ==========================================================================
+// PAM-X shoutcaster overlay (game["menu_caster"])
+// Non-interactive overlay: cl_bypassMouseInput keeps mouse look with the game.
+//
+// Cvars (as set by PAM_CasterHUD / PAM_CasterUpdateScoreboard):
+//   ui_scoreboard_team1_name / _team2_name / _score / _round / _gamestring
+//   ui_scoreboard<N>_name  player name ("" = empty slot)     N 0-4 left = team1
+//   ui_scoreboard<N>_a     kills/deaths string                 N 5-9 right = team2
+//   ui_scoreboard<N>_b     health 1-100 alive | 0 dead | -1 empty slot (hides row)
+//   ui_scoreboard<N>_c     "" | american | british | russian | german (has frag)
+//   ui_scoreboard<N>_d     "" | "1" (has smoke)
+// HUD elements drawn by GSC: round clock and one weapon icon per slot (see
+// WEAPON notes). Responses: "0"-"9" (keys 1-0, follow slot), "closeCaster"
+// ==========================================================================
+
 {
-    menuDef
-    {
-	name "casternames"
-	fullScreen MENU_FALSE
-	visible MENU_TRUE
-	rect 0 0 640 480
-	
-	itemDef
+	menuDef
 	{
-		name "caster0_name"
-		cvar "ui_scoreboard0_name"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 7 58 64 12
-		textalign ITEM_ALIGN_LEFT
-		textalignx 0
-		textaligny 10
-		textscale .22
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster0_score"
-		cvar "ui_scoreboard0_a"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 75 58 64 12
-		textalign ITEM_ALIGN_RIGHT
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 0.7
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster0_health"
-		cvar "ui_scoreboard0_b"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 90 58 64 12
-		textalign ITEM_ALIGN_RIGHT
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster0_frag_us"
-		cvarTest "ui_scoreboard0_c"
-		showCvar { "us" }
-		rect 106 70 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@us_grenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster0_frag_br"
-		cvarTest "ui_scoreboard0_c"
-		showCvar { "british" }
-		rect 106 70 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@british_grenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster0_frag_ru"
-		cvarTest "ui_scoreboard0_c"
-		showCvar { "russian" }
-		rect 106 70 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@russian_grenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster0_smoke"
-		cvarTest "ui_scoreboard0_c"
-		showCvar { "1" }
-		rect 120 70 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@us_smokegrenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster0_team_us"
-		cvarTest "ui_scoreboard0_c"
-		showCvar { "american" }
-		rect 134 58 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/hud/hud@ctf_american.dds"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster0_team_br"
-		cvarTest "ui_scoreboard0_c"
-		showCvar { "british" }
-		rect 134 58 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/hud/hud@ctf_british.dds"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster0_team_br"
-		cvarTest "ui_scoreboard0_c"
-		showCvar { "russian" }
-		rect 134 58 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/hud/hud@ctf_russian.dds"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	
+		name			"menu_caster"
+		fullscreen		0
+		rect			0 0 640 480
+		focuscolor		1 1 1 1
+		disablecolor	0 0 0 0
+		style			WINDOW_STYLE_EMPTY
+		onOpen
+		{
+			setCvar cl_bypassMouseInput "1"
+		}
+		onClose
+		{
+			setCvar cl_bypassMouseInput "0"
+		}
+		onEsc
+		{
+			scriptMenuResponse "closeCaster";
+			close menu_caster;
+		}
 
+// ---------------- MATCH BAR ----------------
+		itemDef
+		{
+			name			"mb_bg"
+			visible			1
+			rect			192 0 326 58
+			style			WINDOW_STYLE_FILLED
+			backcolor		0 0 0 0.45
+			decoration
+		}
+		itemDef
+		{
+			name			"mb_name1"
+			visible			1
+			rect			200 2 88 16
+			cvar			"ui_scoreboard_team1_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.3
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		88
+			textaligny		13
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"mb_score"
+			visible			1
+			rect			292 2 56 16
+			cvar			"ui_scoreboard_score"
+			textfont		UI_FONT_NORMAL
+			textscale		.3
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_CENTER
+			textalignx		28
+			textaligny		13
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"mb_name2"
+			visible			1
+			rect			348 2 100 16
+			cvar			"ui_scoreboard_team2_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.3
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		13
+			forecolor		1 1 1 1
+			decoration
+		}
+// CLOCK: HUD element centred at x=320 y=28 (alignX "center")
+		itemDef
+		{
+			name			"mb_gamestring"
+			visible			1
+			rect			220 36 200 8
+			cvar			"ui_scoreboard_gamestring"
+			textfont		UI_FONT_NORMAL
+			textscale		.16
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_CENTER
+			textalignx		100
+			textaligny		7
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"mb_round_label"
+			visible			1
+			rect			220 44 99 10
+			text			"ROUND"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		99
+			textaligny		9
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"mb_round"
+			visible			1
+			rect			322 44 98 10
+			cvar			"ui_scoreboard_round"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		9
+			forecolor		1 1 1 1
+			decoration
+		}
 
-	itemDef
-	{
-		name "caster1_name"
-		cvar "ui_scoreboard1_name"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 633 58 64 12
-		textalign ITEM_ALIGN_RIGHT
-		textalignx 0
-		textaligny 10
-		textscale .22
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-	
-	itemDef
-	{
-		name "caster1_score"
-		cvar "ui_scoreboard1_a"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 565 58 64 12
-		textalign ITEM_ALIGN_LEFT
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 0.7
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster1_health"
-		cvar "ui_scoreboard1_b"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 550 58 64 12
-		textalign ITEM_ALIGN_LEFT
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 0.7
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster1_frag"
-		cvarTest "ui_scoreboard1_c"
-		showCvar { "german" }
-		rect 510 70 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@steilhandgrenate.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster1_smoke"
-		cvarTest "ui_scoreboard1_d"
-		showCvar { "1" }
-		rect 524 70 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@us_smokegrenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster1_team"
-		cvarTest "ui_scoreboard1_c"
-		showCvar { "german" }
-		rect 496 58 10 10
-		forecolor 1.0 1.0 1.0 0.5
-		background "gfx/hud/hud@ctf_german.dds"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
+// ---- slot 0 : left column (team1), row 0 ----
+		itemDef
+		{
+			name			"c0_bar"
+			visible			1
+			rect			4 57 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0.8 0.3 0.3 0.75
+			cvartest		"ui_scoreboard0_b"
+			hideCvar		{ "-1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c0_name"
+			visible			1
+			rect			7 57 52 12
+			cvar			"ui_scoreboard0_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.22
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"c0_kd"
+			visible			1
+			rect			56 57 22 12
+			cvar			"ui_scoreboard0_a"
+			textfont		UI_FONT_NORMAL
+			textscale		.18
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		22
+			textaligny		10
+			forecolor		1 1 1 0.7
+			decoration
+		}
+		itemDef
+		{
+			name			"c0_hp"
+			visible			1
+			rect			80 57 18 12
+			cvar			"ui_scoreboard0_b"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		18
+			textaligny		10
+			forecolor		0.45 1 0.45 1
+			cvartest		"ui_scoreboard0_b"
+			hideCvar		{ "-1" "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c0_deadshade"
+			visible			1
+			rect			4 57 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0 0 0 0.5
+			cvartest		"ui_scoreboard0_b"
+			showCvar		{ "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c0_dead"
+			visible			1
+			rect			80 57 18 12
+			text			"DEAD"
+			textfont		UI_FONT_NORMAL
+			textscale		.16
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		18
+			textaligny		10
+			forecolor		0.95 0.3 0.25 1
+			cvartest		"ui_scoreboard0_b"
+			showCvar		{ "0" }
+			decoration
+		}
+// WEAPON 0: HUD element options x=106 y=58, height 10, width 20 (aspect 2) / 10 (aspect 1)
+		itemDef
+		{
+			name			"c0_frag_american"
+			visible			1
+			rect			109 70 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@us_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard0_c"
+			showCvar		{ "american" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c0_frag_british"
+			visible			1
+			rect			109 70 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@british_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard0_c"
+			showCvar		{ "british" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c0_frag_russian"
+			visible			1
+			rect			109 70 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@russian_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard0_c"
+			showCvar		{ "russian" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c0_frag_german"
+			visible			1
+			rect			109 70 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@steilhandgrenate.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard0_c"
+			showCvar		{ "german" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c0_smoke"
+			visible			1
+			rect			121 70 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@us_smokegrenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard0_d"
+			showCvar		{ "1" }
+			decoration
+		}
 
+// ---- slot 1 : left column (team1), row 1 ----
+		itemDef
+		{
+			name			"c1_bar"
+			visible			1
+			rect			4 81 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0.8 0.3 0.3 0.75
+			cvartest		"ui_scoreboard1_b"
+			hideCvar		{ "-1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c1_name"
+			visible			1
+			rect			7 81 52 12
+			cvar			"ui_scoreboard1_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.22
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"c1_kd"
+			visible			1
+			rect			56 81 22 12
+			cvar			"ui_scoreboard1_a"
+			textfont		UI_FONT_NORMAL
+			textscale		.18
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		22
+			textaligny		10
+			forecolor		1 1 1 0.7
+			decoration
+		}
+		itemDef
+		{
+			name			"c1_hp"
+			visible			1
+			rect			80 81 18 12
+			cvar			"ui_scoreboard1_b"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		18
+			textaligny		10
+			forecolor		0.45 1 0.45 1
+			cvartest		"ui_scoreboard1_b"
+			hideCvar		{ "-1" "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c1_deadshade"
+			visible			1
+			rect			4 81 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0 0 0 0.5
+			cvartest		"ui_scoreboard1_b"
+			showCvar		{ "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c1_dead"
+			visible			1
+			rect			80 81 18 12
+			text			"DEAD"
+			textfont		UI_FONT_NORMAL
+			textscale		.16
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		18
+			textaligny		10
+			forecolor		0.95 0.3 0.25 1
+			cvartest		"ui_scoreboard1_b"
+			showCvar		{ "0" }
+			decoration
+		}
+// WEAPON 1: HUD element options x=106 y=82, height 10, width 20 (aspect 2) / 10 (aspect 1)
+		itemDef
+		{
+			name			"c1_frag_american"
+			visible			1
+			rect			109 94 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@us_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard1_c"
+			showCvar		{ "american" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c1_frag_british"
+			visible			1
+			rect			109 94 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@british_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard1_c"
+			showCvar		{ "british" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c1_frag_russian"
+			visible			1
+			rect			109 94 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@russian_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard1_c"
+			showCvar		{ "russian" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c1_frag_german"
+			visible			1
+			rect			109 94 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@steilhandgrenate.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard1_c"
+			showCvar		{ "german" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c1_smoke"
+			visible			1
+			rect			121 94 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@us_smokegrenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard1_d"
+			showCvar		{ "1" }
+			decoration
+		}
 
-	itemDef
-	{
-		name "caster2_name"
-		cvar "ui_scoreboard2_name"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 7 82 64 12
-		textalign ITEM_ALIGN_LEFT
-		textalignx 0
-		textaligny 10
-		textscale .22
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster2_score"
-		cvar "ui_scoreboard2_a"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 75 82 64 12
-		textalign ITEM_ALIGN_RIGHT
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 0.7
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster2_health"
-		cvar "ui_scoreboard2_b"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 90 82 64 12
-		textalign ITEM_ALIGN_RIGHT
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster2_frag_us"
-		cvarTest "ui_scoreboard2_c"
-		showCvar { "us" }
-		rect 106 94 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@us_grenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster2_frag_br"
-		cvarTest "ui_scoreboard2_c"
-		showCvar { "british" }
-		rect 106 94 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@british_grenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster2_frag_ru"
-		cvarTest "ui_scoreboard2_c"
-		showCvar { "russian" }
-		rect 106 94 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@russian_grenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster2_smoke"
-		cvarTest "ui_scoreboard2_d"
-		showCvar { "1" }
-		rect 120 94 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@us_smokegrenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster2_team_us"
-		cvarTest "ui_scoreboard2_c"
-		showCvar { "american" }
-		rect 134 82 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/hud/hud@ctf_american.dds"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster2_team_br"
-		cvarTest "ui_scoreboard2_c"
-		showCvar { "british" }
-		rect 134 82 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/hud/hud@ctf_british.dds"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster2team_br"
-		cvarTest "ui_scoreboard2_c"
-		showCvar { "russian" }
-		rect 134 82 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/hud/hud@ctf_russian.dds"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	
+// ---- slot 2 : left column (team1), row 2 ----
+		itemDef
+		{
+			name			"c2_bar"
+			visible			1
+			rect			4 105 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0.8 0.3 0.3 0.75
+			cvartest		"ui_scoreboard2_b"
+			hideCvar		{ "-1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c2_name"
+			visible			1
+			rect			7 105 52 12
+			cvar			"ui_scoreboard2_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.22
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"c2_kd"
+			visible			1
+			rect			56 105 22 12
+			cvar			"ui_scoreboard2_a"
+			textfont		UI_FONT_NORMAL
+			textscale		.18
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		22
+			textaligny		10
+			forecolor		1 1 1 0.7
+			decoration
+		}
+		itemDef
+		{
+			name			"c2_hp"
+			visible			1
+			rect			80 105 18 12
+			cvar			"ui_scoreboard2_b"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		18
+			textaligny		10
+			forecolor		0.45 1 0.45 1
+			cvartest		"ui_scoreboard2_b"
+			hideCvar		{ "-1" "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c2_deadshade"
+			visible			1
+			rect			4 105 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0 0 0 0.5
+			cvartest		"ui_scoreboard2_b"
+			showCvar		{ "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c2_dead"
+			visible			1
+			rect			80 105 18 12
+			text			"DEAD"
+			textfont		UI_FONT_NORMAL
+			textscale		.16
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		18
+			textaligny		10
+			forecolor		0.95 0.3 0.25 1
+			cvartest		"ui_scoreboard2_b"
+			showCvar		{ "0" }
+			decoration
+		}
+// WEAPON 2: HUD element options x=106 y=106, height 10, width 20 (aspect 2) / 10 (aspect 1)
+		itemDef
+		{
+			name			"c2_frag_american"
+			visible			1
+			rect			109 118 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@us_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard2_c"
+			showCvar		{ "american" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c2_frag_british"
+			visible			1
+			rect			109 118 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@british_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard2_c"
+			showCvar		{ "british" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c2_frag_russian"
+			visible			1
+			rect			109 118 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@russian_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard2_c"
+			showCvar		{ "russian" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c2_frag_german"
+			visible			1
+			rect			109 118 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@steilhandgrenate.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard2_c"
+			showCvar		{ "german" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c2_smoke"
+			visible			1
+			rect			121 118 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@us_smokegrenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard2_d"
+			showCvar		{ "1" }
+			decoration
+		}
 
+// ---- slot 3 : left column (team1), row 3 ----
+		itemDef
+		{
+			name			"c3_bar"
+			visible			1
+			rect			4 129 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0.8 0.3 0.3 0.75
+			cvartest		"ui_scoreboard3_b"
+			hideCvar		{ "-1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c3_name"
+			visible			1
+			rect			7 129 52 12
+			cvar			"ui_scoreboard3_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.22
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"c3_kd"
+			visible			1
+			rect			56 129 22 12
+			cvar			"ui_scoreboard3_a"
+			textfont		UI_FONT_NORMAL
+			textscale		.18
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		22
+			textaligny		10
+			forecolor		1 1 1 0.7
+			decoration
+		}
+		itemDef
+		{
+			name			"c3_hp"
+			visible			1
+			rect			80 129 18 12
+			cvar			"ui_scoreboard3_b"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		18
+			textaligny		10
+			forecolor		0.45 1 0.45 1
+			cvartest		"ui_scoreboard3_b"
+			hideCvar		{ "-1" "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c3_deadshade"
+			visible			1
+			rect			4 129 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0 0 0 0.5
+			cvartest		"ui_scoreboard3_b"
+			showCvar		{ "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c3_dead"
+			visible			1
+			rect			80 129 18 12
+			text			"DEAD"
+			textfont		UI_FONT_NORMAL
+			textscale		.16
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		18
+			textaligny		10
+			forecolor		0.95 0.3 0.25 1
+			cvartest		"ui_scoreboard3_b"
+			showCvar		{ "0" }
+			decoration
+		}
+// WEAPON 3: HUD element options x=106 y=130, height 10, width 20 (aspect 2) / 10 (aspect 1)
+		itemDef
+		{
+			name			"c3_frag_american"
+			visible			1
+			rect			109 142 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@us_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard3_c"
+			showCvar		{ "american" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c3_frag_british"
+			visible			1
+			rect			109 142 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@british_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard3_c"
+			showCvar		{ "british" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c3_frag_russian"
+			visible			1
+			rect			109 142 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@russian_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard3_c"
+			showCvar		{ "russian" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c3_frag_german"
+			visible			1
+			rect			109 142 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@steilhandgrenate.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard3_c"
+			showCvar		{ "german" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c3_smoke"
+			visible			1
+			rect			121 142 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@us_smokegrenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard3_d"
+			showCvar		{ "1" }
+			decoration
+		}
 
-	itemDef
-	{
-		name "caster3_name"
-		cvar "ui_scoreboard3_name"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 633 82 64 12
-		textalign ITEM_ALIGN_RIGHT
-		textalignx 0
-		textaligny 10
-		textscale .22
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-	
-	itemDef
-	{
-		name "caster3_score"
-		cvar "ui_scoreboard1_a"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 565 82 64 12
-		textalign ITEM_ALIGN_LEFT
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 0.7
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster3_health"
-		cvar "ui_scoreboard3_b"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 550 82 64 12
-		textalign ITEM_ALIGN_LEFT
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 0.7
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster3_frag"
-		cvarTest "ui_scoreboard3_c"
-		showCvar { "german" }
-		rect 510 94 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@steilhandgrenate.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster3_smoke"
-		cvarTest "ui_scoreboard3_d"
-		showCvar { "1" }
-		rect 524 94 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@us_smokegrenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster3_team"
-		cvarTest "ui_scoreboard3_c"
-		showCvar { "german" }
-		rect 496 94 10 10
-		forecolor 1.0 1.0 1.0 0.5
-		background "gfx/hud/hud@ctf_german.dds"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
+// ---- slot 4 : left column (team1), row 4 ----
+		itemDef
+		{
+			name			"c4_bar"
+			visible			1
+			rect			4 153 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0.8 0.3 0.3 0.75
+			cvartest		"ui_scoreboard4_b"
+			hideCvar		{ "-1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c4_name"
+			visible			1
+			rect			7 153 52 12
+			cvar			"ui_scoreboard4_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.22
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"c4_kd"
+			visible			1
+			rect			56 153 22 12
+			cvar			"ui_scoreboard4_a"
+			textfont		UI_FONT_NORMAL
+			textscale		.18
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		22
+			textaligny		10
+			forecolor		1 1 1 0.7
+			decoration
+		}
+		itemDef
+		{
+			name			"c4_hp"
+			visible			1
+			rect			80 153 18 12
+			cvar			"ui_scoreboard4_b"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		18
+			textaligny		10
+			forecolor		0.45 1 0.45 1
+			cvartest		"ui_scoreboard4_b"
+			hideCvar		{ "-1" "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c4_deadshade"
+			visible			1
+			rect			4 153 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0 0 0 0.5
+			cvartest		"ui_scoreboard4_b"
+			showCvar		{ "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c4_dead"
+			visible			1
+			rect			80 153 18 12
+			text			"DEAD"
+			textfont		UI_FONT_NORMAL
+			textscale		.16
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		18
+			textaligny		10
+			forecolor		0.95 0.3 0.25 1
+			cvartest		"ui_scoreboard4_b"
+			showCvar		{ "0" }
+			decoration
+		}
+// WEAPON 4: HUD element options x=106 y=154, height 10, width 20 (aspect 2) / 10 (aspect 1)
+		itemDef
+		{
+			name			"c4_frag_american"
+			visible			1
+			rect			109 166 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@us_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard4_c"
+			showCvar		{ "american" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c4_frag_british"
+			visible			1
+			rect			109 166 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@british_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard4_c"
+			showCvar		{ "british" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c4_frag_russian"
+			visible			1
+			rect			109 166 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@russian_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard4_c"
+			showCvar		{ "russian" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c4_frag_german"
+			visible			1
+			rect			109 166 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@steilhandgrenate.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard4_c"
+			showCvar		{ "german" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c4_smoke"
+			visible			1
+			rect			121 166 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@us_smokegrenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard4_d"
+			showCvar		{ "1" }
+			decoration
+		}
 
-	itemDef
-	{
-		name "caster4_name"
-		cvar "ui_scoreboard4_name"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 7 106 64 12
-		textalign ITEM_ALIGN_LEFT
-		textalignx 0
-		textaligny 10
-		textscale .22
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster4_score"
-		cvar "ui_scoreboard4_a"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 75 106 64 12
-		textalign ITEM_ALIGN_RIGHT
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 0.7
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster4_health"
-		cvar "ui_scoreboard4_b"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 90 106 64 12
-		textalign ITEM_ALIGN_RIGHT
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster4_frag_us"
-		cvarTest "ui_scoreboard4_c"
-		showCvar { "us" }
-		rect 106 118 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@us_grenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster4_frag_br"
-		cvarTest "ui_scoreboard4_c"
-		showCvar { "british" }
-		rect 106 118 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@british_grenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster4_frag_ru"
-		cvarTest "ui_scoreboard4_c"
-		showCvar { "russian" }
-		rect 106 118 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@russian_grenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster4_smoke"
-		cvarTest "ui_scoreboard2_d"
-		showCvar { "1" }
-		rect 120 118 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@us_smokegrenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster4_team_us"
-		cvarTest "ui_scoreboard4_c"
-		showCvar { "american" }
-		rect 134 106 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/hud/hud@ctf_american.dds"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster4_team_br"
-		cvarTest "ui_scoreboard4_c"
-		showCvar { "british" }
-		rect 134 106 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/hud/hud@ctf_british.dds"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster4team_br"
-		cvarTest "ui_scoreboard4_c"
-		showCvar { "russian" }
-		rect 134 106 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/hud/hud@ctf_russian.dds"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	
+// ---- slot 5 : right column (team2), row 0 ----
+		itemDef
+		{
+			name			"c5_bar"
+			visible			1
+			rect			541 57 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0.4 0.58 0.85 0.75
+			cvartest		"ui_scoreboard5_b"
+			hideCvar		{ "-1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c5_kd"
+			visible			1
+			rect			563 57 22 12
+			cvar			"ui_scoreboard5_a"
+			textfont		UI_FONT_NORMAL
+			textscale		.18
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		1 1 1 0.7
+			decoration
+		}
+		itemDef
+		{
+			name			"c5_name"
+			visible			1
+			rect			583 57 50 12
+			cvar			"ui_scoreboard5_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.22
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		50
+			textaligny		10
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"c5_hp"
+			visible			1
+			rect			543 57 18 12
+			cvar			"ui_scoreboard5_b"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		0.45 1 0.45 1
+			cvartest		"ui_scoreboard5_b"
+			hideCvar		{ "-1" "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c5_deadshade"
+			visible			1
+			rect			541 57 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0 0 0 0.5
+			cvartest		"ui_scoreboard5_b"
+			showCvar		{ "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c5_dead"
+			visible			1
+			rect			543 57 18 12
+			text			"DEAD"
+			textfont		UI_FONT_NORMAL
+			textscale		.16
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		0.95 0.3 0.25 1
+			cvartest		"ui_scoreboard5_b"
+			showCvar		{ "0" }
+			decoration
+		}
+// WEAPON 5: HUD element options x=510 y=58, height 10, width 20 (aspect 2) / 10 (aspect 1)
+		itemDef
+		{
+			name			"c5_frag_american"
+			visible			1
+			rect			513 70 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@us_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard5_c"
+			showCvar		{ "american" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c5_frag_british"
+			visible			1
+			rect			513 70 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@british_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard5_c"
+			showCvar		{ "british" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c5_frag_russian"
+			visible			1
+			rect			513 70 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@russian_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard5_c"
+			showCvar		{ "russian" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c5_frag_german"
+			visible			1
+			rect			513 70 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@steilhandgrenate.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard5_c"
+			showCvar		{ "german" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c5_smoke"
+			visible			1
+			rect			525 70 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@us_smokegrenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard5_d"
+			showCvar		{ "1" }
+			decoration
+		}
 
+// ---- slot 6 : right column (team2), row 1 ----
+		itemDef
+		{
+			name			"c6_bar"
+			visible			1
+			rect			541 81 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0.4 0.58 0.85 0.75
+			cvartest		"ui_scoreboard6_b"
+			hideCvar		{ "-1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c6_kd"
+			visible			1
+			rect			563 81 22 12
+			cvar			"ui_scoreboard6_a"
+			textfont		UI_FONT_NORMAL
+			textscale		.18
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		1 1 1 0.7
+			decoration
+		}
+		itemDef
+		{
+			name			"c6_name"
+			visible			1
+			rect			583 81 50 12
+			cvar			"ui_scoreboard6_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.22
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		50
+			textaligny		10
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"c6_hp"
+			visible			1
+			rect			543 81 18 12
+			cvar			"ui_scoreboard6_b"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		0.45 1 0.45 1
+			cvartest		"ui_scoreboard6_b"
+			hideCvar		{ "-1" "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c6_deadshade"
+			visible			1
+			rect			541 81 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0 0 0 0.5
+			cvartest		"ui_scoreboard6_b"
+			showCvar		{ "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c6_dead"
+			visible			1
+			rect			543 81 18 12
+			text			"DEAD"
+			textfont		UI_FONT_NORMAL
+			textscale		.16
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		0.95 0.3 0.25 1
+			cvartest		"ui_scoreboard6_b"
+			showCvar		{ "0" }
+			decoration
+		}
+// WEAPON 6: HUD element options x=510 y=82, height 10, width 20 (aspect 2) / 10 (aspect 1)
+		itemDef
+		{
+			name			"c6_frag_american"
+			visible			1
+			rect			513 94 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@us_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard6_c"
+			showCvar		{ "american" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c6_frag_british"
+			visible			1
+			rect			513 94 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@british_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard6_c"
+			showCvar		{ "british" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c6_frag_russian"
+			visible			1
+			rect			513 94 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@russian_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard6_c"
+			showCvar		{ "russian" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c6_frag_german"
+			visible			1
+			rect			513 94 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@steilhandgrenate.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard6_c"
+			showCvar		{ "german" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c6_smoke"
+			visible			1
+			rect			525 94 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@us_smokegrenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard6_d"
+			showCvar		{ "1" }
+			decoration
+		}
 
-	itemDef
-	{
-		name "caster3_name"
-		cvar "ui_scoreboard3_name"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 633 82 64 12
-		textalign ITEM_ALIGN_RIGHT
-		textalignx 0
-		textaligny 10
-		textscale .22
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-	
-	itemDef
-	{
-		name "caster3_score"
-		cvar "ui_scoreboard1_a"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 565 82 64 12
-		textalign ITEM_ALIGN_LEFT
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 0.7
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster3_health"
-		cvar "ui_scoreboard3_b"
-		cvarTest "ui_casterhud"
-		showCvar { "1" }
-		rect 550 82 64 12
-		textalign ITEM_ALIGN_LEFT
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 0.7
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster3_frag"
-		cvarTest "ui_scoreboard3_c"
-		showCvar { "german" }
-		rect 510 94 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@steilhandgrenate.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster3_smoke"
-		cvarTest "ui_scoreboard3_d"
-		showCvar { "1" }
-		rect 524 94 10 10
-		forecolor 1.0 1.0 1.0 1.0
-		background "gfx/icons/hud@us_smokegrenade.tga"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "caster3_team"
-		cvarTest "ui_scoreboard3_c"
-		showCvar { "german" }
-		rect 496 94 10 10
-		forecolor 1.0 1.0 1.0 0.5
-		background "gfx/hud/hud@ctf_german.dds"
-		ownerdraw CG_DRAW_SHADER
-		visible MENU_TRUE
-		decoration
-	}
+// ---- slot 7 : right column (team2), row 2 ----
+		itemDef
+		{
+			name			"c7_bar"
+			visible			1
+			rect			541 105 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0.4 0.58 0.85 0.75
+			cvartest		"ui_scoreboard7_b"
+			hideCvar		{ "-1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c7_kd"
+			visible			1
+			rect			563 105 22 12
+			cvar			"ui_scoreboard7_a"
+			textfont		UI_FONT_NORMAL
+			textscale		.18
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		1 1 1 0.7
+			decoration
+		}
+		itemDef
+		{
+			name			"c7_name"
+			visible			1
+			rect			583 105 50 12
+			cvar			"ui_scoreboard7_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.22
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		50
+			textaligny		10
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"c7_hp"
+			visible			1
+			rect			543 105 18 12
+			cvar			"ui_scoreboard7_b"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		0.45 1 0.45 1
+			cvartest		"ui_scoreboard7_b"
+			hideCvar		{ "-1" "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c7_deadshade"
+			visible			1
+			rect			541 105 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0 0 0 0.5
+			cvartest		"ui_scoreboard7_b"
+			showCvar		{ "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c7_dead"
+			visible			1
+			rect			543 105 18 12
+			text			"DEAD"
+			textfont		UI_FONT_NORMAL
+			textscale		.16
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		0.95 0.3 0.25 1
+			cvartest		"ui_scoreboard7_b"
+			showCvar		{ "0" }
+			decoration
+		}
+// WEAPON 7: HUD element options x=510 y=106, height 10, width 20 (aspect 2) / 10 (aspect 1)
+		itemDef
+		{
+			name			"c7_frag_american"
+			visible			1
+			rect			513 118 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@us_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard7_c"
+			showCvar		{ "american" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c7_frag_british"
+			visible			1
+			rect			513 118 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@british_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard7_c"
+			showCvar		{ "british" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c7_frag_russian"
+			visible			1
+			rect			513 118 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@russian_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard7_c"
+			showCvar		{ "russian" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c7_frag_german"
+			visible			1
+			rect			513 118 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@steilhandgrenate.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard7_c"
+			showCvar		{ "german" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c7_smoke"
+			visible			1
+			rect			525 118 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@us_smokegrenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard7_d"
+			showCvar		{ "1" }
+			decoration
+		}
 
-		// match bar: team names and scores, one hash mark per round in the
-	// winner's colour and the round number; the clock is a HUD element
-	itemDef
-	{
-		name "mb_score"
-		cvar "ui_mb_score"
-		cvarTest "ui_matchbar"
-		showCvar { "1" }
-		rect 190 0 260 58
-		style WINDOW_STYLE_SHADER
-		background "gfx/pam/matchbar.dds"
-		textalign ITEM_ALIGN_CENTER
-		textalignx 130
-		textaligny 14
-		textscale .3
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
+// ---- slot 8 : right column (team2), row 3 ----
+		itemDef
+		{
+			name			"c8_bar"
+			visible			1
+			rect			541 129 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0.4 0.58 0.85 0.75
+			cvartest		"ui_scoreboard8_b"
+			hideCvar		{ "-1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c8_kd"
+			visible			1
+			rect			563 129 22 12
+			cvar			"ui_scoreboard8_a"
+			textfont		UI_FONT_NORMAL
+			textscale		.18
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		1 1 1 0.7
+			decoration
+		}
+		itemDef
+		{
+			name			"c8_name"
+			visible			1
+			rect			583 129 50 12
+			cvar			"ui_scoreboard8_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.22
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		50
+			textaligny		10
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"c8_hp"
+			visible			1
+			rect			543 129 18 12
+			cvar			"ui_scoreboard8_b"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		0.45 1 0.45 1
+			cvartest		"ui_scoreboard8_b"
+			hideCvar		{ "-1" "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c8_deadshade"
+			visible			1
+			rect			541 129 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0 0 0 0.5
+			cvartest		"ui_scoreboard8_b"
+			showCvar		{ "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c8_dead"
+			visible			1
+			rect			543 129 18 12
+			text			"DEAD"
+			textfont		UI_FONT_NORMAL
+			textscale		.16
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		0.95 0.3 0.25 1
+			cvartest		"ui_scoreboard8_b"
+			showCvar		{ "0" }
+			decoration
+		}
+// WEAPON 8: HUD element options x=510 y=130, height 10, width 20 (aspect 2) / 10 (aspect 1)
+		itemDef
+		{
+			name			"c8_frag_american"
+			visible			1
+			rect			513 142 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@us_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard8_c"
+			showCvar		{ "american" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c8_frag_british"
+			visible			1
+			rect			513 142 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@british_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard8_c"
+			showCvar		{ "british" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c8_frag_russian"
+			visible			1
+			rect			513 142 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@russian_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard8_c"
+			showCvar		{ "russian" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c8_frag_german"
+			visible			1
+			rect			513 142 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@steilhandgrenate.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard8_c"
+			showCvar		{ "german" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c8_smoke"
+			visible			1
+			rect			525 142 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@us_smokegrenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard8_d"
+			showCvar		{ "1" }
+			decoration
+		}
+
+// ---- slot 9 : right column (team2), row 4 ----
+		itemDef
+		{
+			name			"c9_bar"
+			visible			1
+			rect			541 153 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0.4 0.58 0.85 0.75
+			cvartest		"ui_scoreboard9_b"
+			hideCvar		{ "-1" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c9_kd"
+			visible			1
+			rect			563 153 22 12
+			cvar			"ui_scoreboard9_a"
+			textfont		UI_FONT_NORMAL
+			textscale		.18
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		1 1 1 0.7
+			decoration
+		}
+		itemDef
+		{
+			name			"c9_name"
+			visible			1
+			rect			583 153 50 12
+			cvar			"ui_scoreboard9_name"
+			textfont		UI_FONT_NORMAL
+			textscale		.22
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_RIGHT
+			textalignx		50
+			textaligny		10
+			forecolor		1 1 1 1
+			decoration
+		}
+		itemDef
+		{
+			name			"c9_hp"
+			visible			1
+			rect			543 153 18 12
+			cvar			"ui_scoreboard9_b"
+			textfont		UI_FONT_NORMAL
+			textscale		.2
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		0.45 1 0.45 1
+			cvartest		"ui_scoreboard9_b"
+			hideCvar		{ "-1" "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c9_deadshade"
+			visible			1
+			rect			541 153 95 12
+			style			WINDOW_STYLE_FILLED
+			backcolor		0 0 0 0.5
+			cvartest		"ui_scoreboard9_b"
+			showCvar		{ "0" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c9_dead"
+			visible			1
+			rect			543 153 18 12
+			text			"DEAD"
+			textfont		UI_FONT_NORMAL
+			textscale		.16
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textalign		ITEM_ALIGN_LEFT
+			textalignx		0
+			textaligny		10
+			forecolor		0.95 0.3 0.25 1
+			cvartest		"ui_scoreboard9_b"
+			showCvar		{ "0" }
+			decoration
+		}
+// WEAPON 9: HUD element options x=510 y=154, height 10, width 20 (aspect 2) / 10 (aspect 1)
+		itemDef
+		{
+			name			"c9_frag_american"
+			visible			1
+			rect			513 166 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@us_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard9_c"
+			showCvar		{ "american" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c9_frag_british"
+			visible			1
+			rect			513 166 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@british_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard9_c"
+			showCvar		{ "british" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c9_frag_russian"
+			visible			1
+			rect			513 166 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"ui_mp/assets/hud@russian_grenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard9_c"
+			showCvar		{ "russian" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c9_frag_german"
+			visible			1
+			rect			513 166 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@steilhandgrenate.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard9_c"
+			showCvar		{ "german" }
+			decoration
+		}
+		itemDef
+		{
+			name			"c9_smoke"
+			visible			1
+			rect			525 166 8 8
+			style			WINDOW_STYLE_SHADER
+			background		"gfx/icons/hud@us_smokegrenade.dds"
+			forecolor		1 1 1 1
+			cvartest		"ui_scoreboard9_d"
+			showCvar		{ "1" }
+			decoration
+		}
+
+		execKey "1" { scriptMenuResponse "0" }
+		execKey "2" { scriptMenuResponse "1" }
+		execKey "3" { scriptMenuResponse "2" }
+		execKey "4" { scriptMenuResponse "3" }
+		execKey "5" { scriptMenuResponse "4" }
+		execKey "6" { scriptMenuResponse "5" }
+		execKey "7" { scriptMenuResponse "6" }
+		execKey "8" { scriptMenuResponse "7" }
+		execKey "9" { scriptMenuResponse "8" }
+		execKey "0" { scriptMenuResponse "9" }
 	}
-	itemDef
-	{
-		name "mb_left"
-		cvar "ui_mb_left"
-		cvarTest "ui_matchbar"
-		showCvar { "1" }
-		rect 292 4 64 12
-		textalign ITEM_ALIGN_RIGHT
-		textalignx 0
-		textaligny 10
-		textscale .3
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "mb_right"
-		cvar "ui_mb_right"
-		cvarTest "ui_matchbar"
-		showCvar { "1" }
-		rect 348 4 64 12
-		textalign ITEM_ALIGN_LEFT
-		textalignx 0
-		textaligny 10
-		textscale .3
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "mb_hash"
-		cvar "ui_mb_hash"
-		cvarTest "ui_matchbar"
-		showCvar { "1" }
-		rect 320 35 64 12
-		textalign ITEM_ALIGN_CENTER
-		textalignx 0
-		textaligny 10
-		textscale .18
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-	itemDef
-	{
-		name "mb_rounds"
-		cvar "ui_mb_rounds"
-		cvarTest "ui_matchbar"
-		showCvar { "1" }
-		rect 320 44 64 12
-		textalign ITEM_ALIGN_CENTER
-		textalignx 0
-		textaligny 10
-		textscale .2
-		textstyle ITEM_TEXTSTYLE_SHADOWED
-		textfont UI_FONT_NORMAL
-		forecolor 1.0 1.0 1.0 1.0
-		visible MENU_TRUE
-		decoration
-	}
-    }
 }
