@@ -651,12 +651,10 @@ PAM_AfterActionReport()
 
 PAM_UpdateGameString()
 {
-    if(!game["matchstarted"])
-        return;
 
     level waittill("postround");
 
-    if(!level.uox_teamplay || ![[level.getVars]]("scr_score_rounds"))
+    if(!game["matchstarted"] || !level.uox_teamplay || ![[level.getVars]]("scr_score_rounds"))
         return;
 
     if(!isDefined(game["pam_gamestring"]))
