@@ -727,6 +727,7 @@ PAM_UpdateGameString()
 
         if(player.pers["casterHud"])
             player PAM_CasterUpdateScoreboard();
+    }
 }
 
 PAM_DraftTeams()
