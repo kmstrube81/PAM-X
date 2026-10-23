@@ -1651,22 +1651,28 @@ PAM_CasterHUD()
 {
     if(self.pers["team"] != "spectator" || !isDefined(level.casterHudUpdates))
         self.pers["casterHud"] = false;
-    if(isDefined(self.casterHud) && !self.pers["casterHud"])
+    
+    if(!self.pers["casterHud"])
     {
-        for(index = 0; index < 10; index ++)
-            self maps\mp\uox\_uox_hud::deleteClientHUDElement("player" + index + "_weapon");
-        self closeMenu(game["menu_caster"]);
-        self.casterHud = undefined;
+        if(isDefined(self.casterHud) || isDefined(self.casterMenuPending))
+        {
+            for(index = 0; index < 10; index ++)
+                self maps\mp\uox\_uox_hud::deleteClientHUDElement("player" + index + "_weapon");
+            self closeMenu(game["menu_caster"]);
+            self.casterHud = undefined;
+            self.casterMenuPending = undefined;
+        }
         return;
     }
-    else if(!isDefined(self.casterHud))
+
+    if(!isDefined(self.casterHud))
     {
         if(!isDefined(self.casterMenuPending))
         {
             self openMenu(game["menu_caster"]);
             self.casterMenuPending = true;
         }
-        return;   // wait for "open"
+        return;   // wait for "openCaster"
     }
 
     self.casterBudget = 8;
@@ -1803,8 +1809,6 @@ PAM_CasterToggle(setting)
     else
         self.pers["casterHud"] = setting;
 
-    if(self.pers["casterHud"])
-        self openMenu(game["menu_caster"]);
 }
 
 PAM_CasterHandleMenuResponse(response, optional)
@@ -1814,7 +1818,7 @@ PAM_CasterHandleMenuResponse(response, optional)
         case "closeCaster":
             self.pers["casterHud"] = false;
             return;
-        case "openCaseter":
+        case "openCaster":
             //init clientCasterHud
             if(!isDefined(self.casterHud))
             {
@@ -1967,6 +1971,7 @@ PAM_CasterHandleMenuResponse(response, optional)
 
                 self PAM_CasterUpdateScoreboard();
             }
+            return;
         case "0":
         case "1":
         case "2":

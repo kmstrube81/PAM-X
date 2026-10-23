@@ -26,7 +26,7 @@
 		style			WINDOW_STYLE_EMPTY
 		onOpen
 		{
-			setCvar cl_bypassMouseInput "1"
+			setCvar cl_bypassMouseInput "1";
 			scriptMenuResponse "openCaster";
 		}
 		onClose
