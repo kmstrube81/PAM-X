@@ -154,7 +154,7 @@ Rules()
 	setcvar("g_weaponrespawn", "5"); // Weapons on the ground in maps will respawn after this many seconds
 
 	// Force Bolt-Action Rifles Only
-	setcvar("scr_force_bolt_rifles" , "0"); -- Not implemented in CODUOX
+	setcvar("scr_force_bolt_rifles" , "0"); //-- Not implemented in CODUOX
 
 	// Rifles 
 	setcvar("scr_allow_enfield" , "1");
