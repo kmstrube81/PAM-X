@@ -27,6 +27,7 @@
 		onOpen
 		{
 			setCvar cl_bypassMouseInput "1"
+			scriptMenuResponse "openCaster";
 		}
 		onClose
 		{
