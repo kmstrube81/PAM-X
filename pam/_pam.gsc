@@ -31,7 +31,16 @@ PAM_Vars()
     level.pam_dropweapon = maps\mp\uox\_uox_vars::varDef("pam", "dropweapon", "bool", true, false, "", "",
                                                          "Allow Manual Weapon Drop", ::PAM_UpdateDropWeapon);
     maps\mp\uox\_uox_vars::varDef("pam", "draft_teams", "bool", false, false, "", "", "Draft Teams at Start");
-    level.pam_allow_casters = maps\mp\uox\_uox_vars::varDef("pam", "allow_casters", "bool", false, false, "", "", "Allow Casters");  
+    level.pam_allow_casters = maps\mp\uox\_uox_vars::varDef("pam", "allow_casters", "bool", false, false, "", "", "Allow Casters");
+
+    if(!isDefined(game["pam_gamestring"]))
+        game["pam_gamestring"] = "";
+    if(!isDefined(game["pam_gamestring_team1rounds"]))
+        game["pam_gamestring_team1rounds"] = 0;
+    if(!isDefined(game["pam_gamestring_team2rounds"]))
+        game["pam_gamestring_team2rounds"] = 0;
+    if(!isDefined(game["pam_gamestring_rounds"]))
+        game["pam_gamestring_rounds"] = 0;
 }
 
 PAM_Precache()
@@ -656,15 +665,6 @@ PAM_UpdateGameString()
 
     if(!game["matchstarted"] || !level.uox_teamplay || ![[level.getVars]]("scr_score_rounds"))
         return;
-
-    if(!isDefined(game["pam_gamestring"]))
-        game["pam_gamestring"] = "";
-    if(!isDefined(game["pam_gamestring_team1rounds"]))
-        game["pam_gamestring_team1rounds"] = 0;
-    if(!isDefined(game["pam_gamestring_team2rounds"]))
-        game["pam_gamestring_team2rounds"] = 0;
-    if(!isDefined(game["pam_gamestring_rounds"]))
-        game["pam_gamestring_rounds"] = 0;
 
     //if the round counted
     if(game["roundsplayed"] > game["pam_gamestring_rounds"])
