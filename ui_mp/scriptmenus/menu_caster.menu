@@ -44,7 +44,7 @@
 		{
 			name			"mb_bg"
 			visible			1
-			rect			150 0 368 58
+			rect			150 0 340 58
 			style			WINDOW_STYLE_FILLED
 			backcolor		0 0 0 0.45
 			decoration
@@ -114,13 +114,13 @@
 		{
 			name			"mb_round_label"
 			visible			1
-			rect			220 44 99 10
+			rect			320 44 50 10
 			text			"ROUND"
 			textfont		UI_FONT_NORMAL
 			textscale		.2
 			textstyle		ITEM_TEXTSTYLE_SHADOWED
-			textalign		ITEM_ALIGN_RIGHT
-			textalignx		99
+			textalign		ITEM_ALIGN_CENTER
+			textalignx		0
 			textaligny		9
 			forecolor		1 1 1 1
 			decoration
@@ -129,7 +129,7 @@
 		{
 			name			"mb_round"
 			visible			1
-			rect			322 44 98 10
+			rect			372 44 98 10
 			cvar			"ui_scoreboard_round"
 			textfont		UI_FONT_NORMAL
 			textscale		.2

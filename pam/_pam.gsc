@@ -1270,6 +1270,7 @@ PAM_CasterUpdate()
         options["y"] = 58;
         options["width"] = 20;
         options["height"] = 10;
+        options["archived"] = false;
         hudElem = [];
         hudElem["options"] = options;
         hudElem["type"] = "shader";
