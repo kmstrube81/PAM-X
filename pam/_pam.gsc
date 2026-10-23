@@ -1702,7 +1702,7 @@ PAM_CasterHUD()
                     options["width"] = 20;
                 else
                     options["width"] = 10;
-                self maps\mp\uox\_uox_hud::updateClientHUDElement("player" + index + "_weapon", "shader", weapon, options);
+                self maps\mp\uox\_uox_hud::updateClientHUDElement("player" + index + "_weapon", "shader", weaponshader, options);
             }
             self.casterHud = maps\mp\uox\_uox_arrays::updateProperty(self.casterHud, "player" + index, "weapon", weapon);
         }
