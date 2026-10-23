@@ -146,7 +146,7 @@
 		{
 			name			"c0_bar"
 			visible			1
-			rect			4 57 95 12
+			rect			4 105 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0.8 0.3 0.3 0.75
 			cvartest		"ui_scoreboard0_b"
@@ -157,7 +157,7 @@
 		{
 			name			"c0_name"
 			visible			1
-			rect			7 57 52 12
+			rect			7 105 52 12
 			cvar			"ui_scoreboard0_name"
 			textfont		UI_FONT_NORMAL
 			textscale		.22
@@ -172,7 +172,7 @@
 		{
 			name			"c0_kd"
 			visible			1
-			rect			56 57 22 12
+			rect			56 105 22 12
 			cvar			"ui_scoreboard0_a"
 			textfont		UI_FONT_NORMAL
 			textscale		.18
@@ -187,7 +187,7 @@
 		{
 			name			"c0_hp"
 			visible			1
-			rect			80 57 18 12
+			rect			80 105 18 12
 			cvar			"ui_scoreboard0_b"
 			textfont		UI_FONT_NORMAL
 			textscale		.2
@@ -204,7 +204,7 @@
 		{
 			name			"c0_deadshade"
 			visible			1
-			rect			4 57 95 12
+			rect			4 105 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0 0 0 0.5
 			cvartest		"ui_scoreboard0_b"
@@ -215,7 +215,7 @@
 		{
 			name			"c0_dead"
 			visible			1
-			rect			80 57 18 12
+			rect			80 105 18 12
 			text			"DEAD"
 			textfont		UI_FONT_NORMAL
 			textscale		.16
@@ -228,12 +228,12 @@
 			showCvar		{ "0" }
 			decoration
 		}
-// WEAPON 0: HUD element options x=106 y=58, height 10, width 20 (aspect 2) / 10 (aspect 1)
+// WEAPON 0: HUD element options x=106 y=106, height 10, width 20 (aspect 2) / 10 (aspect 1)
 		itemDef
 		{
 			name			"c0_frag_american"
 			visible			1
-			rect			109 70 8 8
+			rect			109 118 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
@@ -245,7 +245,7 @@
 		{
 			name			"c0_frag_british"
 			visible			1
-			rect			109 70 8 8
+			rect			109 118 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
@@ -257,7 +257,7 @@
 		{
 			name			"c0_frag_russian"
 			visible			1
-			rect			109 70 8 8
+			rect			109 118 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
@@ -269,7 +269,7 @@
 		{
 			name			"c0_frag_german"
 			visible			1
-			rect			109 70 8 8
+			rect			109 118 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@steilhandgrenate.dds"
 			forecolor		1 1 1 1
@@ -281,7 +281,7 @@
 		{
 			name			"c0_smoke"
 			visible			1
-			rect			121 70 8 8
+			rect			121 118 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_smokegrenade.dds"
 			forecolor		1 1 1 1
@@ -295,7 +295,7 @@
 		{
 			name			"c1_bar"
 			visible			1
-			rect			4 81 95 12
+			rect			4 129 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0.8 0.3 0.3 0.75
 			cvartest		"ui_scoreboard1_b"
@@ -306,7 +306,7 @@
 		{
 			name			"c1_name"
 			visible			1
-			rect			7 81 52 12
+			rect			7 129 52 12
 			cvar			"ui_scoreboard1_name"
 			textfont		UI_FONT_NORMAL
 			textscale		.22
@@ -321,7 +321,7 @@
 		{
 			name			"c1_kd"
 			visible			1
-			rect			56 81 22 12
+			rect			56 129 22 12
 			cvar			"ui_scoreboard1_a"
 			textfont		UI_FONT_NORMAL
 			textscale		.18
@@ -336,7 +336,7 @@
 		{
 			name			"c1_hp"
 			visible			1
-			rect			80 81 18 12
+			rect			80 129 18 12
 			cvar			"ui_scoreboard1_b"
 			textfont		UI_FONT_NORMAL
 			textscale		.2
@@ -353,7 +353,7 @@
 		{
 			name			"c1_deadshade"
 			visible			1
-			rect			4 81 95 12
+			rect			4 129 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0 0 0 0.5
 			cvartest		"ui_scoreboard1_b"
@@ -364,7 +364,7 @@
 		{
 			name			"c1_dead"
 			visible			1
-			rect			80 81 18 12
+			rect			80 129 18 12
 			text			"DEAD"
 			textfont		UI_FONT_NORMAL
 			textscale		.16
@@ -377,12 +377,12 @@
 			showCvar		{ "0" }
 			decoration
 		}
-// WEAPON 1: HUD element options x=106 y=82, height 10, width 20 (aspect 2) / 10 (aspect 1)
+// WEAPON 1: HUD element options x=106 y=130, height 10, width 20 (aspect 2) / 10 (aspect 1)
 		itemDef
 		{
 			name			"c1_frag_american"
 			visible			1
-			rect			109 94 8 8
+			rect			109 142 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
@@ -394,7 +394,7 @@
 		{
 			name			"c1_frag_british"
 			visible			1
-			rect			109 94 8 8
+			rect			109 142 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
@@ -406,7 +406,7 @@
 		{
 			name			"c1_frag_russian"
 			visible			1
-			rect			109 94 8 8
+			rect			109 142 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
@@ -418,7 +418,7 @@
 		{
 			name			"c1_frag_german"
 			visible			1
-			rect			109 94 8 8
+			rect			109 142 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@steilhandgrenate.dds"
 			forecolor		1 1 1 1
@@ -430,7 +430,7 @@
 		{
 			name			"c1_smoke"
 			visible			1
-			rect			121 94 8 8
+			rect			121 142 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_smokegrenade.dds"
 			forecolor		1 1 1 1
@@ -444,7 +444,7 @@
 		{
 			name			"c2_bar"
 			visible			1
-			rect			4 105 95 12
+			rect			4 153 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0.8 0.3 0.3 0.75
 			cvartest		"ui_scoreboard2_b"
@@ -455,7 +455,7 @@
 		{
 			name			"c2_name"
 			visible			1
-			rect			7 105 52 12
+			rect			7 153 52 12
 			cvar			"ui_scoreboard2_name"
 			textfont		UI_FONT_NORMAL
 			textscale		.22
@@ -470,7 +470,7 @@
 		{
 			name			"c2_kd"
 			visible			1
-			rect			56 105 22 12
+			rect			56 153 22 12
 			cvar			"ui_scoreboard2_a"
 			textfont		UI_FONT_NORMAL
 			textscale		.18
@@ -485,7 +485,7 @@
 		{
 			name			"c2_hp"
 			visible			1
-			rect			80 105 18 12
+			rect			80 153 18 12
 			cvar			"ui_scoreboard2_b"
 			textfont		UI_FONT_NORMAL
 			textscale		.2
@@ -502,7 +502,7 @@
 		{
 			name			"c2_deadshade"
 			visible			1
-			rect			4 105 95 12
+			rect			4 153 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0 0 0 0.5
 			cvartest		"ui_scoreboard2_b"
@@ -513,7 +513,7 @@
 		{
 			name			"c2_dead"
 			visible			1
-			rect			80 105 18 12
+			rect			80 153 18 12
 			text			"DEAD"
 			textfont		UI_FONT_NORMAL
 			textscale		.16
@@ -526,12 +526,12 @@
 			showCvar		{ "0" }
 			decoration
 		}
-// WEAPON 2: HUD element options x=106 y=106, height 10, width 20 (aspect 2) / 10 (aspect 1)
+// WEAPON 2: HUD element options x=106 y=154, height 10, width 20 (aspect 2) / 10 (aspect 1)
 		itemDef
 		{
 			name			"c2_frag_american"
 			visible			1
-			rect			109 118 8 8
+			rect			109 166 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
@@ -543,7 +543,7 @@
 		{
 			name			"c2_frag_british"
 			visible			1
-			rect			109 118 8 8
+			rect			109 166 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
@@ -555,7 +555,7 @@
 		{
 			name			"c2_frag_russian"
 			visible			1
-			rect			109 118 8 8
+			rect			109 166 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
@@ -567,7 +567,7 @@
 		{
 			name			"c2_frag_german"
 			visible			1
-			rect			109 118 8 8
+			rect			109 166 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@steilhandgrenate.dds"
 			forecolor		1 1 1 1
@@ -579,7 +579,7 @@
 		{
 			name			"c2_smoke"
 			visible			1
-			rect			121 118 8 8
+			rect			121 166 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_smokegrenade.dds"
 			forecolor		1 1 1 1
@@ -593,7 +593,7 @@
 		{
 			name			"c3_bar"
 			visible			1
-			rect			4 129 95 12
+			rect			4 177 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0.8 0.3 0.3 0.75
 			cvartest		"ui_scoreboard3_b"
@@ -604,7 +604,7 @@
 		{
 			name			"c3_name"
 			visible			1
-			rect			7 129 52 12
+			rect			7 177 52 12
 			cvar			"ui_scoreboard3_name"
 			textfont		UI_FONT_NORMAL
 			textscale		.22
@@ -619,7 +619,7 @@
 		{
 			name			"c3_kd"
 			visible			1
-			rect			56 129 22 12
+			rect			56 177 22 12
 			cvar			"ui_scoreboard3_a"
 			textfont		UI_FONT_NORMAL
 			textscale		.18
@@ -634,7 +634,7 @@
 		{
 			name			"c3_hp"
 			visible			1
-			rect			80 129 18 12
+			rect			80 177 18 12
 			cvar			"ui_scoreboard3_b"
 			textfont		UI_FONT_NORMAL
 			textscale		.2
@@ -651,7 +651,7 @@
 		{
 			name			"c3_deadshade"
 			visible			1
-			rect			4 129 95 12
+			rect			4 177 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0 0 0 0.5
 			cvartest		"ui_scoreboard3_b"
@@ -662,7 +662,7 @@
 		{
 			name			"c3_dead"
 			visible			1
-			rect			80 129 18 12
+			rect			80 177 18 12
 			text			"DEAD"
 			textfont		UI_FONT_NORMAL
 			textscale		.16
@@ -675,12 +675,12 @@
 			showCvar		{ "0" }
 			decoration
 		}
-// WEAPON 3: HUD element options x=106 y=130, height 10, width 20 (aspect 2) / 10 (aspect 1)
+// WEAPON 3: HUD element options x=106 y=178, height 10, width 20 (aspect 2) / 10 (aspect 1)
 		itemDef
 		{
 			name			"c3_frag_american"
 			visible			1
-			rect			109 142 8 8
+			rect			109 190 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
@@ -692,7 +692,7 @@
 		{
 			name			"c3_frag_british"
 			visible			1
-			rect			109 142 8 8
+			rect			109 190 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
@@ -704,7 +704,7 @@
 		{
 			name			"c3_frag_russian"
 			visible			1
-			rect			109 142 8 8
+			rect			109 190 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
@@ -716,7 +716,7 @@
 		{
 			name			"c3_frag_german"
 			visible			1
-			rect			109 142 8 8
+			rect			109 190 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@steilhandgrenate.dds"
 			forecolor		1 1 1 1
@@ -728,7 +728,7 @@
 		{
 			name			"c3_smoke"
 			visible			1
-			rect			121 142 8 8
+			rect			121 190 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_smokegrenade.dds"
 			forecolor		1 1 1 1
@@ -742,7 +742,7 @@
 		{
 			name			"c4_bar"
 			visible			1
-			rect			4 153 95 12
+			rect			4 201 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0.8 0.3 0.3 0.75
 			cvartest		"ui_scoreboard4_b"
@@ -753,7 +753,7 @@
 		{
 			name			"c4_name"
 			visible			1
-			rect			7 153 52 12
+			rect			7 201 52 12
 			cvar			"ui_scoreboard4_name"
 			textfont		UI_FONT_NORMAL
 			textscale		.22
@@ -768,7 +768,7 @@
 		{
 			name			"c4_kd"
 			visible			1
-			rect			56 153 22 12
+			rect			56 201 22 12
 			cvar			"ui_scoreboard4_a"
 			textfont		UI_FONT_NORMAL
 			textscale		.18
@@ -783,7 +783,7 @@
 		{
 			name			"c4_hp"
 			visible			1
-			rect			80 153 18 12
+			rect			80 201 18 12
 			cvar			"ui_scoreboard4_b"
 			textfont		UI_FONT_NORMAL
 			textscale		.2
@@ -800,7 +800,7 @@
 		{
 			name			"c4_deadshade"
 			visible			1
-			rect			4 153 95 12
+			rect			4 201 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0 0 0 0.5
 			cvartest		"ui_scoreboard4_b"
@@ -811,7 +811,7 @@
 		{
 			name			"c4_dead"
 			visible			1
-			rect			80 153 18 12
+			rect			80 201 18 12
 			text			"DEAD"
 			textfont		UI_FONT_NORMAL
 			textscale		.16
@@ -824,12 +824,12 @@
 			showCvar		{ "0" }
 			decoration
 		}
-// WEAPON 4: HUD element options x=106 y=154, height 10, width 20 (aspect 2) / 10 (aspect 1)
+// WEAPON 4: HUD element options x=106 y=202, height 10, width 20 (aspect 2) / 10 (aspect 1)
 		itemDef
 		{
 			name			"c4_frag_american"
 			visible			1
-			rect			109 166 8 8
+			rect			109 214 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
@@ -841,7 +841,7 @@
 		{
 			name			"c4_frag_british"
 			visible			1
-			rect			109 166 8 8
+			rect			109 214 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
@@ -853,7 +853,7 @@
 		{
 			name			"c4_frag_russian"
 			visible			1
-			rect			109 166 8 8
+			rect			109 214 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
@@ -865,7 +865,7 @@
 		{
 			name			"c4_frag_german"
 			visible			1
-			rect			109 166 8 8
+			rect			109 214 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@steilhandgrenate.dds"
 			forecolor		1 1 1 1
@@ -877,7 +877,7 @@
 		{
 			name			"c4_smoke"
 			visible			1
-			rect			121 166 8 8
+			rect			121 214 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_smokegrenade.dds"
 			forecolor		1 1 1 1
@@ -891,7 +891,7 @@
 		{
 			name			"c5_bar"
 			visible			1
-			rect			541 57 95 12
+			rect			541 105 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0.4 0.58 0.85 0.75
 			cvartest		"ui_scoreboard5_b"
@@ -902,7 +902,7 @@
 		{
 			name			"c5_kd"
 			visible			1
-			rect			563 57 22 12
+			rect			563 105 22 12
 			cvar			"ui_scoreboard5_a"
 			textfont		UI_FONT_NORMAL
 			textscale		.18
@@ -917,7 +917,7 @@
 		{
 			name			"c5_name"
 			visible			1
-			rect			583 57 50 12
+			rect			583 105 50 12
 			cvar			"ui_scoreboard5_name"
 			textfont		UI_FONT_NORMAL
 			textscale		.22
@@ -932,7 +932,7 @@
 		{
 			name			"c5_hp"
 			visible			1
-			rect			543 57 18 12
+			rect			543 105 18 12
 			cvar			"ui_scoreboard5_b"
 			textfont		UI_FONT_NORMAL
 			textscale		.2
@@ -949,7 +949,7 @@
 		{
 			name			"c5_deadshade"
 			visible			1
-			rect			541 57 95 12
+			rect			541 105 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0 0 0 0.5
 			cvartest		"ui_scoreboard5_b"
@@ -960,7 +960,7 @@
 		{
 			name			"c5_dead"
 			visible			1
-			rect			543 57 18 12
+			rect			543 105 18 12
 			text			"DEAD"
 			textfont		UI_FONT_NORMAL
 			textscale		.16
@@ -973,12 +973,12 @@
 			showCvar		{ "0" }
 			decoration
 		}
-// WEAPON 5: HUD element options x=510 y=58, height 10, width 20 (aspect 2) / 10 (aspect 1)
+// WEAPON 5: HUD element options x=510 y=106, height 10, width 20 (aspect 2) / 10 (aspect 1)
 		itemDef
 		{
 			name			"c5_frag_american"
 			visible			1
-			rect			513 70 8 8
+			rect			513 118 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
@@ -990,7 +990,7 @@
 		{
 			name			"c5_frag_british"
 			visible			1
-			rect			513 70 8 8
+			rect			513 118 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
@@ -1002,7 +1002,7 @@
 		{
 			name			"c5_frag_russian"
 			visible			1
-			rect			513 70 8 8
+			rect			513 118 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
@@ -1014,7 +1014,7 @@
 		{
 			name			"c5_frag_german"
 			visible			1
-			rect			513 70 8 8
+			rect			513 118 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@steilhandgrenate.dds"
 			forecolor		1 1 1 1
@@ -1026,7 +1026,7 @@
 		{
 			name			"c5_smoke"
 			visible			1
-			rect			525 70 8 8
+			rect			525 118 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_smokegrenade.dds"
 			forecolor		1 1 1 1
@@ -1040,7 +1040,7 @@
 		{
 			name			"c6_bar"
 			visible			1
-			rect			541 81 95 12
+			rect			541 129 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0.4 0.58 0.85 0.75
 			cvartest		"ui_scoreboard6_b"
@@ -1051,7 +1051,7 @@
 		{
 			name			"c6_kd"
 			visible			1
-			rect			563 81 22 12
+			rect			563 129 22 12
 			cvar			"ui_scoreboard6_a"
 			textfont		UI_FONT_NORMAL
 			textscale		.18
@@ -1066,7 +1066,7 @@
 		{
 			name			"c6_name"
 			visible			1
-			rect			583 81 50 12
+			rect			583 129 50 12
 			cvar			"ui_scoreboard6_name"
 			textfont		UI_FONT_NORMAL
 			textscale		.22
@@ -1081,7 +1081,7 @@
 		{
 			name			"c6_hp"
 			visible			1
-			rect			543 81 18 12
+			rect			543 129 18 12
 			cvar			"ui_scoreboard6_b"
 			textfont		UI_FONT_NORMAL
 			textscale		.2
@@ -1098,7 +1098,7 @@
 		{
 			name			"c6_deadshade"
 			visible			1
-			rect			541 81 95 12
+			rect			541 129 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0 0 0 0.5
 			cvartest		"ui_scoreboard6_b"
@@ -1109,7 +1109,7 @@
 		{
 			name			"c6_dead"
 			visible			1
-			rect			543 81 18 12
+			rect			543 129 18 12
 			text			"DEAD"
 			textfont		UI_FONT_NORMAL
 			textscale		.16
@@ -1122,12 +1122,12 @@
 			showCvar		{ "0" }
 			decoration
 		}
-// WEAPON 6: HUD element options x=510 y=82, height 10, width 20 (aspect 2) / 10 (aspect 1)
+// WEAPON 6: HUD element options x=510 y=130, height 10, width 20 (aspect 2) / 10 (aspect 1)
 		itemDef
 		{
 			name			"c6_frag_american"
 			visible			1
-			rect			513 94 8 8
+			rect			513 142 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
@@ -1139,7 +1139,7 @@
 		{
 			name			"c6_frag_british"
 			visible			1
-			rect			513 94 8 8
+			rect			513 142 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
@@ -1151,7 +1151,7 @@
 		{
 			name			"c6_frag_russian"
 			visible			1
-			rect			513 94 8 8
+			rect			513 142 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
@@ -1163,7 +1163,7 @@
 		{
 			name			"c6_frag_german"
 			visible			1
-			rect			513 94 8 8
+			rect			513 142 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@steilhandgrenate.dds"
 			forecolor		1 1 1 1
@@ -1175,7 +1175,7 @@
 		{
 			name			"c6_smoke"
 			visible			1
-			rect			525 94 8 8
+			rect			525 142 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_smokegrenade.dds"
 			forecolor		1 1 1 1
@@ -1189,7 +1189,7 @@
 		{
 			name			"c7_bar"
 			visible			1
-			rect			541 105 95 12
+			rect			541 153 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0.4 0.58 0.85 0.75
 			cvartest		"ui_scoreboard7_b"
@@ -1200,7 +1200,7 @@
 		{
 			name			"c7_kd"
 			visible			1
-			rect			563 105 22 12
+			rect			563 153 22 12
 			cvar			"ui_scoreboard7_a"
 			textfont		UI_FONT_NORMAL
 			textscale		.18
@@ -1215,7 +1215,7 @@
 		{
 			name			"c7_name"
 			visible			1
-			rect			583 105 50 12
+			rect			583 153 50 12
 			cvar			"ui_scoreboard7_name"
 			textfont		UI_FONT_NORMAL
 			textscale		.22
@@ -1230,7 +1230,7 @@
 		{
 			name			"c7_hp"
 			visible			1
-			rect			543 105 18 12
+			rect			543 153 18 12
 			cvar			"ui_scoreboard7_b"
 			textfont		UI_FONT_NORMAL
 			textscale		.2
@@ -1247,7 +1247,7 @@
 		{
 			name			"c7_deadshade"
 			visible			1
-			rect			541 105 95 12
+			rect			541 153 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0 0 0 0.5
 			cvartest		"ui_scoreboard7_b"
@@ -1258,7 +1258,7 @@
 		{
 			name			"c7_dead"
 			visible			1
-			rect			543 105 18 12
+			rect			543 153 18 12
 			text			"DEAD"
 			textfont		UI_FONT_NORMAL
 			textscale		.16
@@ -1271,12 +1271,12 @@
 			showCvar		{ "0" }
 			decoration
 		}
-// WEAPON 7: HUD element options x=510 y=106, height 10, width 20 (aspect 2) / 10 (aspect 1)
+// WEAPON 7: HUD element options x=510 y=154, height 10, width 20 (aspect 2) / 10 (aspect 1)
 		itemDef
 		{
 			name			"c7_frag_american"
 			visible			1
-			rect			513 118 8 8
+			rect			513 166 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
@@ -1288,7 +1288,7 @@
 		{
 			name			"c7_frag_british"
 			visible			1
-			rect			513 118 8 8
+			rect			513 166 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
@@ -1300,7 +1300,7 @@
 		{
 			name			"c7_frag_russian"
 			visible			1
-			rect			513 118 8 8
+			rect			513 166 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
@@ -1312,7 +1312,7 @@
 		{
 			name			"c7_frag_german"
 			visible			1
-			rect			513 118 8 8
+			rect			513 166 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@steilhandgrenate.dds"
 			forecolor		1 1 1 1
@@ -1324,7 +1324,7 @@
 		{
 			name			"c7_smoke"
 			visible			1
-			rect			525 118 8 8
+			rect			525 166 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_smokegrenade.dds"
 			forecolor		1 1 1 1
@@ -1338,7 +1338,7 @@
 		{
 			name			"c8_bar"
 			visible			1
-			rect			541 129 95 12
+			rect			541 177 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0.4 0.58 0.85 0.75
 			cvartest		"ui_scoreboard8_b"
@@ -1349,7 +1349,7 @@
 		{
 			name			"c8_kd"
 			visible			1
-			rect			563 129 22 12
+			rect			563 177 22 12
 			cvar			"ui_scoreboard8_a"
 			textfont		UI_FONT_NORMAL
 			textscale		.18
@@ -1364,7 +1364,7 @@
 		{
 			name			"c8_name"
 			visible			1
-			rect			583 129 50 12
+			rect			583 177 50 12
 			cvar			"ui_scoreboard8_name"
 			textfont		UI_FONT_NORMAL
 			textscale		.22
@@ -1379,7 +1379,7 @@
 		{
 			name			"c8_hp"
 			visible			1
-			rect			543 129 18 12
+			rect			543 177 18 12
 			cvar			"ui_scoreboard8_b"
 			textfont		UI_FONT_NORMAL
 			textscale		.2
@@ -1396,7 +1396,7 @@
 		{
 			name			"c8_deadshade"
 			visible			1
-			rect			541 129 95 12
+			rect			541 177 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0 0 0 0.5
 			cvartest		"ui_scoreboard8_b"
@@ -1407,7 +1407,7 @@
 		{
 			name			"c8_dead"
 			visible			1
-			rect			543 129 18 12
+			rect			543 177 18 12
 			text			"DEAD"
 			textfont		UI_FONT_NORMAL
 			textscale		.16
@@ -1420,12 +1420,12 @@
 			showCvar		{ "0" }
 			decoration
 		}
-// WEAPON 8: HUD element options x=510 y=130, height 10, width 20 (aspect 2) / 10 (aspect 1)
+// WEAPON 8: HUD element options x=510 y=178, height 10, width 20 (aspect 2) / 10 (aspect 1)
 		itemDef
 		{
 			name			"c8_frag_american"
 			visible			1
-			rect			513 142 8 8
+			rect			513 190 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
@@ -1437,7 +1437,7 @@
 		{
 			name			"c8_frag_british"
 			visible			1
-			rect			513 142 8 8
+			rect			513 190 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
@@ -1449,7 +1449,7 @@
 		{
 			name			"c8_frag_russian"
 			visible			1
-			rect			513 142 8 8
+			rect			513 190 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
@@ -1461,7 +1461,7 @@
 		{
 			name			"c8_frag_german"
 			visible			1
-			rect			513 142 8 8
+			rect			513 190 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@steilhandgrenate.dds"
 			forecolor		1 1 1 1
@@ -1473,7 +1473,7 @@
 		{
 			name			"c8_smoke"
 			visible			1
-			rect			525 142 8 8
+			rect			525 190 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_smokegrenade.dds"
 			forecolor		1 1 1 1
@@ -1487,7 +1487,7 @@
 		{
 			name			"c9_bar"
 			visible			1
-			rect			541 153 95 12
+			rect			541 201 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0.4 0.58 0.85 0.75
 			cvartest		"ui_scoreboard9_b"
@@ -1498,7 +1498,7 @@
 		{
 			name			"c9_kd"
 			visible			1
-			rect			563 153 22 12
+			rect			563 201 22 12
 			cvar			"ui_scoreboard9_a"
 			textfont		UI_FONT_NORMAL
 			textscale		.18
@@ -1513,7 +1513,7 @@
 		{
 			name			"c9_name"
 			visible			1
-			rect			583 153 50 12
+			rect			583 201 50 12
 			cvar			"ui_scoreboard9_name"
 			textfont		UI_FONT_NORMAL
 			textscale		.22
@@ -1528,7 +1528,7 @@
 		{
 			name			"c9_hp"
 			visible			1
-			rect			543 153 18 12
+			rect			543 201 18 12
 			cvar			"ui_scoreboard9_b"
 			textfont		UI_FONT_NORMAL
 			textscale		.2
@@ -1545,7 +1545,7 @@
 		{
 			name			"c9_deadshade"
 			visible			1
-			rect			541 153 95 12
+			rect			541 201 95 12
 			style			WINDOW_STYLE_FILLED
 			backcolor		0 0 0 0.5
 			cvartest		"ui_scoreboard9_b"
@@ -1556,7 +1556,7 @@
 		{
 			name			"c9_dead"
 			visible			1
-			rect			543 153 18 12
+			rect			543 201 18 12
 			text			"DEAD"
 			textfont		UI_FONT_NORMAL
 			textscale		.16
@@ -1569,12 +1569,12 @@
 			showCvar		{ "0" }
 			decoration
 		}
-// WEAPON 9: HUD element options x=510 y=154, height 10, width 20 (aspect 2) / 10 (aspect 1)
+// WEAPON 9: HUD element options x=510 y=202, height 10, width 20 (aspect 2) / 10 (aspect 1)
 		itemDef
 		{
 			name			"c9_frag_american"
 			visible			1
-			rect			513 166 8 8
+			rect			513 214 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
@@ -1586,7 +1586,7 @@
 		{
 			name			"c9_frag_british"
 			visible			1
-			rect			513 166 8 8
+			rect			513 214 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
@@ -1598,7 +1598,7 @@
 		{
 			name			"c9_frag_russian"
 			visible			1
-			rect			513 166 8 8
+			rect			513 214 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
@@ -1610,7 +1610,7 @@
 		{
 			name			"c9_frag_german"
 			visible			1
-			rect			513 166 8 8
+			rect			513 214 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@steilhandgrenate.dds"
 			forecolor		1 1 1 1
@@ -1622,7 +1622,7 @@
 		{
 			name			"c9_smoke"
 			visible			1
-			rect			525 166 8 8
+			rect			525 214 8 8
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/icons/hud@us_smokegrenade.dds"
 			forecolor		1 1 1 1

@@ -22,7 +22,7 @@ PAM_Init()
 PAM_Vars()
 {
     //set up PAM version string
-    game["headerR"] = &"PAM-X 20260901";
+    game["headerR"] = &"PAM-X 20261001";
     maps\mp\uox\_uox_vars::varDef("pam", "mode", "string", true, "pub", "", "", "PAM Mode", ::PAM_Restart);
     maps\mp\uox\_uox_vars::varDef("pam", "blackoutspectators", "bool", true, false, "", "", "Black Out Spectators");
     maps\mp\uox\_uox_vars::varDef("pam", "custom_maps", "string", true, "", "", "", "Server Custom Maps");
@@ -262,6 +262,18 @@ PAM_Rules()
         break;
     case "na_comp_pub":
         thread pam\rules\_na_comp_pub_rules::Rules();
+        break;
+    case "na_comp_pug":
+        thread pam\rules\_na_comp_pug_rules::Rules();
+        break;
+    case "na_comp_rifles":
+        thread pam\rules\_na_comp_rifles_rules::Rules();
+        break;
+    case "na_comp_pub_rifles":
+        thread pam\rules\_na_comp_pub_rifles_rules::Rules();
+        break;
+    case "na_comp_pug_rifles":
+        thread pam\rules\_na_comp_pug_rifles_rules::Rules();
         break;
     case "lan":
         thread pam\rules\_lan_rules::Rules();
@@ -639,6 +651,22 @@ PAM_StartGameType()
     thread PAM_AfterActionReport();
     thread PAM_DraftTeams();
     thread PAM_UpdateGameString();
+    thread PAM_Postgame();
+}
+
+PAM_Postgame()
+{
+    level waittill("map_ended");
+
+    //clear out captain and roster cvars
+    setCvar("pam_team1_name", "");
+    setCvar("pam_team2_name", "");
+    //clear team players
+    setCvar("pam_team1_roster", "");
+    setCvar("pam_team2_roster", "");
+    //clear captains
+    setCvar("pam_team1_captain", "");
+    setCvar("pam_team2_captain", "");
 }
 
 PAM_AfterActionReport()
@@ -939,8 +967,8 @@ PAM_DraftRotateDraftees(dir, offset)
         {
             level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
             level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 1);
-            level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", maps\mp\uox\_uox_utils::subStr(player.name, 0, undefined));
-            level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", maps\mp\uox\_uox_utils::subStr(player.name, 0, undefined));
+            level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", player.pers["pam_shortname"]);
+            level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", player.pers["pam_shortname"]);
 
             if(player.pers["team"] == "spectator")
             {
@@ -1038,8 +1066,8 @@ PAM_DraftUpdateDraftees()
             {
                 level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
                 level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 1);
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", maps\mp\uox\_uox_utils::subStr(player.name, 0, undefined));
-                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", maps\mp\uox\_uox_utils::subStr(player.name, 0, undefined));
+                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", player.pers["pam_shortname"]);
+                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", player.pers["pam_shortname"]);
 
                 if(player.pers["team"] == "spectator")
                 {
@@ -1416,6 +1444,14 @@ PAM_CasterUpdate()
     for( i = 0; i < players.size; i++) 
     {
         player = players[i];
+
+        //check for short name updates
+        if(player.pers["pam_shortsrc"] != player.name)
+        {
+            player.pers["pam_shortsrc"] = player.name;
+            player.pers["pam_shortname"] = maps\mp\uox\_uox_utils::shortName(player.name);
+        }
+
         if(player.pers["team"] == game["team1"])
             team1[team1.size] = player;
         else if(player.pers["team"] == game["team2"])
@@ -1445,7 +1481,7 @@ PAM_CasterUpdate()
         if(player.sessionstate != "playing")
             continue;
         // set name, set health, set frag, set smoke, set current weapon
-        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "name", player.name);
+        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "name", player.pers["pam_shortname"]);
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "kd", player.score + " - " + player.deaths);
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "health", player.health);
         if(player getWeaponSlotAmmo("smokegrenade") > 0)
@@ -1488,7 +1524,7 @@ PAM_CasterUpdate()
         if(player.sessionstate == "playing")
             continue;
         // set name, set health, set frag, set smoke, set current weapon
-        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "name", player.name);
+        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "name", player.pers["pam_shortname"]);
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "kd", player.score + " - " + player.deaths);
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "health", 0);
         hasSmoke = "";
@@ -1557,7 +1593,7 @@ PAM_CasterUpdate()
         if(player.sessionstate != "playing")
             continue;
         // set name, set health, set frag, set smoke, set current weapon
-        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "name", player.name);
+        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "name", player.pers["pam_shortname"]);
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "kd", player.score + " / " + player.deaths);
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "health", player.health);
         if(player getWeaponSlotAmmo("smokegrenade") > 0)
@@ -1600,7 +1636,7 @@ PAM_CasterUpdate()
         if(player.sessionstate == "playing")
             continue;
         // set name, set health, set frag, set smoke, set current weapon
-        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "name", player.name);
+        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "name", player.pers["pam_shortname"]);
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "kd", player.score + " / " + player.deaths);
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "health", 0);
         hasSmoke = "";
@@ -2004,6 +2040,9 @@ PAM_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sH
 
 PAM_PlayerConnect()
 {
+    //determine shortname
+    self.pers["pam_shortsrc"] = self.name;
+    self.pers["pam_shortname"] = maps\mp\uox\_uox_utils::shortName(self.name);
 
     self maps\mp\uox\_uox_loops::addToLoop(self, "fast", ::PAM_BlackoutSpectator, "PAM_BlackoutSpectator");
 

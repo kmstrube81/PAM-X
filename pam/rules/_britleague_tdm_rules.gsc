@@ -62,6 +62,19 @@ Rules()
 	maps\mp\uox\_uox_vars::updateCvar("scr","forcerank", "0");
 	maps\mp\uox\_uox_vars::updateCvar("scr","rank_ppr" , "10"); //Sets the Points Per Rank
 
+    //After Action Report
+    maps\mp\uox\_uox_vars::updateCvar("pam","afteractionreport" , false);
+    //Black Out Spectators
+    maps\mp\uox\_uox_vars::updateCvar("pam","blackoutspectators", false);
+    //Fix Exploits
+    maps\mp\uox\_uox_vars::updateCvar("pam","exploitblocker", true);
+    //Allow Casters
+    maps\mp\uox\_uox_vars::updateCvar("pam","allow_casters", false);
+    //Draft Teams
+    maps\mp\uox\_uox_vars::updateCvar("pam","draft_teams", false);
+    //Drop Weapon
+    maps\mp\uox\_uox_vars::updateCvar("pam","dropweapon", false);
+
 
 	//Auto-Demos & Auto-Screenies
 	setcvar("g_autoscreenshot" , "1");
@@ -92,7 +105,7 @@ Rules()
 	setcvar("scr_tdm_clearscoreeachhalf", "1");	// Re-set Players Score / Battlerank at halftime? 1=Yes 0=No
 
 	// Weapon Settings
-	/*setcvar("sv_noDropSniper", "1");	// 1=can't drop sniper rifle, 0=Sniper Rifle Drops
+	setcvar("sv_noDropSniper", "1");	// 1=can't drop sniper rifle, 0=Sniper Rifle Drops
 	setcvar("sv_alliedSniperLimit", "1");	// allied sniper limit
 	setcvar("sv_alliedSMGLimit", "99");	// allied smg limit
 	setcvar("sv_alliedMGLimit", "99");	// allied mg limit
@@ -101,7 +114,7 @@ Rules()
 	setcvar("sv_axisSMGLimit", "99");	// axis smg limit
 	setcvar("sv_axisMGLimit", "99");	// axis mg limit
 	setcvar("sv_axisDMGLimit", "99"); // axis deployable mg limit
-    */
+    
 
 	// Allow Voting 
 	setcvar("scr_allow_vote" , "0");
@@ -120,7 +133,7 @@ Rules()
 	setcvar("g_weaponrespawn", "5");
 
 	// Force Bolt-Action Rifles Only
-	//setcvar("scr_force_bolt_rifles" , "0");
+	setcvar("scr_force_bolt_rifles" , "0");
 
 	// Weapons 
 	setcvar("scr_allow_bar" , "1");

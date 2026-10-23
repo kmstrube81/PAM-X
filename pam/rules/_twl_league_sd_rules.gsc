@@ -61,6 +61,19 @@ Rules()
 	maps\mp\uox\_uox_vars::updateCvar("scr","forcerank", "0");
 	maps\mp\uox\_uox_vars::updateCvar("scr","rank_ppr" , "10"); //Sets the Points Per Rank
 
+    //After Action Report
+    maps\mp\uox\_uox_vars::updateCvar("pam","afteractionreport" , false);
+    //Black Out Spectators
+    maps\mp\uox\_uox_vars::updateCvar("pam","blackoutspectators", false);
+    //Fix Exploits
+    maps\mp\uox\_uox_vars::updateCvar("pam","exploitblocker", true);
+    //Allow Casters
+    maps\mp\uox\_uox_vars::updateCvar("pam","allow_casters", false);
+    //Draft Teams
+    maps\mp\uox\_uox_vars::updateCvar("pam","draft_teams", false);
+    //Drop Weapon
+    maps\mp\uox\_uox_vars::updateCvar("pam","dropweapon", false);
+
 	// *****************************************************
 	// ********** PAM UO Match Config Cvars ****************
 	// *****************************************************

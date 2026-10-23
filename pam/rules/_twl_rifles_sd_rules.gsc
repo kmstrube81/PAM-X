@@ -62,6 +62,19 @@ Rules()
 	maps\mp\uox\_uox_vars::updateCvar("scr","forcerank", "0");
 	maps\mp\uox\_uox_vars::updateCvar("scr","rank_ppr" , "10"); //Sets the Points Per Rank
 
+    //After Action Report
+    maps\mp\uox\_uox_vars::updateCvar("pam","afteractionreport" , false);
+    //Black Out Spectators
+    maps\mp\uox\_uox_vars::updateCvar("pam","blackoutspectators", false);
+    //Fix Exploits
+    maps\mp\uox\_uox_vars::updateCvar("pam","exploitblocker", true);
+    //Allow Casters
+    maps\mp\uox\_uox_vars::updateCvar("pam","allow_casters", false);
+    //Draft Teams
+    maps\mp\uox\_uox_vars::updateCvar("pam","draft_teams", false);
+    //Drop Weapon
+    maps\mp\uox\_uox_vars::updateCvar("pam","dropweapon", false);
+
 	// *****************************************************
 	// ********** PAM UO Match Config Cvars ****************
 	// *****************************************************
@@ -141,7 +154,7 @@ Rules()
 	setcvar("g_weaponrespawn", "5"); // Weapons on the ground in maps will respawn after this many seconds
 
 	// Force Bolt-Action Rifles Only
-	//setcvar("scr_force_bolt_rifles" , "1");
+	setcvar("scr_force_bolt_rifles" , "1");
 
 	// Rifles 
 	setcvar("scr_allow_enfield" , "1");
@@ -152,9 +165,9 @@ Rules()
 
 
 	//Snipers
-	//setcvar("sv_noDropSniper", "0");	// 1=can't drop sniper rifle, 0=Sniper Rifle Drops
-	//setcvar("sv_alliedSniperLimit", "0");	// allied sniper limit
-	//setcvar("sv_axisSniperLimit", "0");	// axis sniper limit
+	setcvar("sv_noDropSniper", "0");	// 1=can't drop sniper rifle, 0=Sniper Rifle Drops
+	setcvar("sv_alliedSniperLimit", "0");	// allied sniper limit
+	setcvar("sv_axisSniperLimit", "0");	// axis sniper limit
 
 	setcvar("scr_allow_kar98ksniper" , "0");
 	setcvar("scr_allow_nagantsniper" , "0");
@@ -163,8 +176,8 @@ Rules()
 	setcvar("scr_allow_fg42" , "0");
 
 	// MGs
-	//setcvar("sv_alliedMGLimit", "0");	// allied mg limit
-	//setcvar("sv_axisMGLimit", "0");	// axis mg limit
+	setcvar("sv_alliedMGLimit", "0");	// allied mg limit
+	setcvar("sv_axisMGLimit", "0");	// axis mg limit
 
 	setcvar("scr_allow_bar" , "0");
 	setcvar("scr_allow_bren" , "0");
@@ -172,8 +185,8 @@ Rules()
 	setcvar("scr_allow_ppsh" , "0");
 
 	//SMGs
-	//setcvar("sv_alliedSMGLimit", "0");	// allied smg limit
-	//setcvar("sv_axisSMGLimit", "0");	// axis smg limit
+	setcvar("sv_alliedSMGLimit", "0");	// allied smg limit
+	setcvar("sv_axisSMGLimit", "0");	// axis smg limit
 
 	setcvar("scr_allow_sten" , "0");
 	setcvar("scr_allow_mp40" , "0");
@@ -186,9 +199,9 @@ Rules()
 	setcvar("scr_allow_bazooka" , "0");
 
 	// Deployable Machine Guns
-	//setcvar("sv_noDropDMG", "0");	// 1=can't drop Deployable MG, 0=DMG Drops
-	//setcvar("sv_alliedDMGLimit", "0"); // allied deployable mg limit
-	//setcvar("sv_axisDMGLimit", "0"); // axis deployable mg limit
+	setcvar("sv_noDropDMG", "0");	// 1=can't drop Deployable MG, 0=DMG Drops
+	setcvar("sv_alliedDMGLimit", "0"); // allied deployable mg limit
+	setcvar("sv_axisDMGLimit", "0"); // axis deployable mg limit
 
 	setcvar("scr_allow_mg34" , "0");
 	setcvar("scr_allow_dp28" , "0");

@@ -12,6 +12,19 @@ Rules()
     maps\mp\uox\_uox_vars::updateCvar("scr","halftime", "1", "sd");
     maps\mp\uox\_uox_vars::updateCvar("scr","overtime", "1", "sd");
 
+    //After Action Report
+    maps\mp\uox\_uox_vars::updateCvar("pam","afteractionreport" , false);
+    //Black Out Spectators
+    maps\mp\uox\_uox_vars::updateCvar("pam","blackoutspectators", false);
+    //Fix Exploits
+    maps\mp\uox\_uox_vars::updateCvar("pam","exploitblocker", true);
+    //Allow Casters
+    maps\mp\uox\_uox_vars::updateCvar("pam","allow_casters", false);
+    //Draft Teams
+    maps\mp\uox\_uox_vars::updateCvar("pam","draft_teams", false);
+    //Drop Weapon
+    maps\mp\uox\_uox_vars::updateCvar("pam","dropweapon", false);
+
     maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "sd");
     maps\mp\uox\_uox_vars::updateCvar("scr","ot_roundlimit", "6", "sd");
     maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "20", "sd");
@@ -185,7 +198,7 @@ Rules()
 	//Misc
 	setcvar("sv_reconnectlimit", "5");
 
-	/* pam mod cvars 	
+	
 	setcvar("sv_scoreboard", "tiny");			// Use BIG Scoreboard
 	setcvar("g_matchwarmuptime", "10");			// match warmup time					
 	setcvar("g_roundwarmuptime", "7");			// round warmup time
@@ -201,7 +214,7 @@ Rules()
 	setcvar("sv_axisDMGLimit", "99"); // axis deployable mg limit
 	setcvar("g_ot", "1");					// overtime off/on
 	setcvar("g_allowtie" , "0");				// allow tie after 1st overtime
-	*/
+	
 
 	//Misc
 	setcvar("sv_reconnectlimit", "99");

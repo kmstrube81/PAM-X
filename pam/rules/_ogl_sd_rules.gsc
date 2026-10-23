@@ -12,6 +12,19 @@ Rules()
     maps\mp\uox\_uox_vars::updateCvar("scr","halftime", "1", "sd");
     maps\mp\uox\_uox_vars::updateCvar("scr","overtime", "1", "sd");
 
+    //After Action Report
+    maps\mp\uox\_uox_vars::updateCvar("pam","afteractionreport" , false);
+    //Black Out Spectators
+    maps\mp\uox\_uox_vars::updateCvar("pam","blackoutspectators", false);
+    //Fix Exploits
+    maps\mp\uox\_uox_vars::updateCvar("pam","exploitblocker", true);
+    //Allow Casters
+    maps\mp\uox\_uox_vars::updateCvar("pam","allow_casters", false);
+    //Draft Teams
+    maps\mp\uox\_uox_vars::updateCvar("pam","draft_teams", false);
+    //Drop Weapon
+    maps\mp\uox\_uox_vars::updateCvar("pam","dropweapon", false);
+
     // SD Settings 
     maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "sd");
     maps\mp\uox\_uox_vars::updateCvar("scr","ot_roundlimit", "0", "sd");
@@ -75,16 +88,16 @@ Rules()
 	setcvar("scr_sd_clearscoreeachhalf", "1");	// Re-set Players Score at halftime? 1=Yes 0=No  Used to reset battlerank if it is on.
 
 	// Weapon Settings
-	//setcvar("sv_noDropSniper", "0");	// 1=can't drop sniper rifle, 0=Sniper Rifle Drops
-	//setcvar("sv_noDropDMG", "0");	// 1=can't drop Deployable MG, 0=DMG Drops
-	//setcvar("sv_alliedSniperLimit", "99");	// allied sniper limit
-	//setcvar("sv_alliedSMGLimit", "99");	// allied smg limit
-	//setcvar("sv_alliedMGLimit", "99");	// allied mg limit
-	//setcvar("sv_alliedDMGLimit", "99"); // allied deployable mg limit
-	//setcvar("sv_axisSniperLimit", "99");	// axis sniper limit
-	//setcvar("sv_axisSMGLimit", "99");	// axis smg limit
-	//setcvar("sv_axisMGLimit", "99");	// axis mg limit
-	//setcvar("sv_axisDMGLimit", "99"); // axis deployable mg limit
+	setcvar("sv_noDropSniper", "0");	// 1=can't drop sniper rifle, 0=Sniper Rifle Drops
+	setcvar("sv_noDropDMG", "0");	// 1=can't drop Deployable MG, 0=DMG Drops
+	setcvar("sv_alliedSniperLimit", "99");	// allied sniper limit
+	setcvar("sv_alliedSMGLimit", "99");	// allied smg limit
+	setcvar("sv_alliedMGLimit", "99");	// allied mg limit
+	setcvar("sv_alliedDMGLimit", "99"); // allied deployable mg limit
+	setcvar("sv_axisSniperLimit", "99");	// axis sniper limit
+	setcvar("sv_axisSMGLimit", "99");	// axis smg limit
+	setcvar("sv_axisMGLimit", "99");	// axis mg limit
+	setcvar("sv_axisDMGLimit", "99"); // axis deployable mg limit
 
 	setcvar("sv_warmupmines", "1"); //Leave this on for now. Mines need to be re-worked.
 
@@ -132,7 +145,7 @@ Rules()
 	setcvar("g_weaponrespawn", "5");
 
 	// Force Bolt-Action Rifles Only
-	//setcvar("scr_force_bolt_rifles" , "0");
+	setcvar("scr_force_bolt_rifles" , "0");
 
 	// Weapons 
 	setcvar("scr_allow_bar" , "1");

@@ -60,6 +60,14 @@ Rules()
     setCvar("com_maxfps", "333");
     maps\mp\uox\_uox_vars::updateCvar("sv","enforcedClientCvars", "com_maxfps");
 
+    //After Action Report
+    //Fix Exploits
+    maps\mp\uox\_uox_vars::updateCvar("pam","exploitblocker", true);
+    //Allow Casters
+    maps\mp\uox\_uox_vars::updateCvar("pam","allow_casters", false);
+    //Draft Teams
+    maps\mp\uox\_uox_vars::updateCvar("pam","draft_teams", false);
+
     //*****************************************************
     // *********** Gametype Config Cvars ****************
     // *****************************************************

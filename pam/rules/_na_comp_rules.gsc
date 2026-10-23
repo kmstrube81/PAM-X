@@ -51,6 +51,14 @@ Rules()
     maps\mp\uox\_uox_vars::updateCvar("pam","afteractionreport" , false);
     //Black Out Spectators
     maps\mp\uox\_uox_vars::updateCvar("pam","blackoutspectators", false);
+    //Fix Exploits
+    maps\mp\uox\_uox_vars::updateCvar("pam","exploitblocker", true);
+    //Allow Casters
+    maps\mp\uox\_uox_vars::updateCvar("pam","allow_casters", true);
+    //Draft Teams
+    maps\mp\uox\_uox_vars::updateCvar("pam","draft_teams", false);
+    //Drop Weapon
+    maps\mp\uox\_uox_vars::updateCvar("pam","dropweapon", true);
 
     //*****************************************************
 	// *********** Gametype Config Cvars ****************

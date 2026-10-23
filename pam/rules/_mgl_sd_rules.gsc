@@ -12,6 +12,19 @@ Rules()
     maps\mp\uox\_uox_vars::updateCvar("scr","halftime", "1", "sd");
     maps\mp\uox\_uox_vars::updateCvar("scr","overtime", "0", "sd");
 
+    //After Action Report
+    maps\mp\uox\_uox_vars::updateCvar("pam","afteractionreport" , false);
+    //Black Out Spectators
+    maps\mp\uox\_uox_vars::updateCvar("pam","blackoutspectators", false);
+    //Fix Exploits
+    maps\mp\uox\_uox_vars::updateCvar("pam","exploitblocker", true);
+    //Allow Casters
+    maps\mp\uox\_uox_vars::updateCvar("pam","allow_casters", false);
+    //Draft Teams
+    maps\mp\uox\_uox_vars::updateCvar("pam","draft_teams", false);
+    //Drop Weapon
+    maps\mp\uox\_uox_vars::updateCvar("pam","dropweapon", false);
+
 	// SD Settings 
     maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "sd");
     maps\mp\uox\_uox_vars::updateCvar("scr","ot_roundlimit", "0", "sd");
@@ -130,7 +143,7 @@ Rules()
 	setcvar("g_weaponrespawn", "5");
 
 	// Force Bolt-Action Rifles Only
-	//setcvar("scr_force_bolt_rifles" , "0");
+	setcvar("scr_force_bolt_rifles" , "0");
 
 	// Weapons 
 	setcvar("scr_allow_bar" , "1");
