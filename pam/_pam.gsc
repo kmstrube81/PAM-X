@@ -1913,7 +1913,7 @@ PAM_CasterUpdateScoreboard()
     score = maps\mp\uox\_uox::getTeam1Score() + " - " + maps\mp\uox\_uox::getTeam2Score();
     gameString = game["pam_gamestring"];
     self setClientCvar("ui_scoreboard_score", score);
-    self setClientCvar("ui_scoreboard_round", game["roundsPlayed"] + 1);
+    self setClientCvar("ui_scoreboard_round", game["roundsplayed"] + 1);
     self setClientCvar("ui_scoreboard_gamestring", game["pam_gamestring"]);
 }
 
