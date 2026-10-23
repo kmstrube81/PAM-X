@@ -762,9 +762,15 @@ PAM_DraftTeams()
     
     if([[ level.getVars ]]("pam_draft_teams") && !game["matchstarted"]
         && !isDefined(game["drafted"]))
+    {
+        maps\mp\uox\_uox_debug::debugLog("info", "No draft, starting game");
         level notify("kill_endround"); //interrupt roundend for draft
+    }
     else
+    {
+        maps\mp\uox\_uox_debug::debugLog("info", "No draft, starting game");
         return;
+    }
         
     //check that team captains are valid
     players = getentarray("player", "classname");
