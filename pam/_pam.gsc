@@ -1826,7 +1826,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 //player0_weapon
                 options = [];
                 options["x"] = 106;
-                options["y"] = 58;
+                options["y"] = 106;
                 options["width"] = 20;
                 options["height"] = 10;
                 hudElem = [];
@@ -1842,7 +1842,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 hudElem["entNo"] = -1;
                 self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player0");
                 //player1_weapon
-                options["y"] = 82;
+                options["y"] = 130;
                 hudElem = [];
                 hudElem["options"] = options;
                 hudElem["type"] = "shader";
@@ -1856,7 +1856,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 hudElem["entNo"] = -1;
                 self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player1");
                  //player2_weapon
-                options["y"] = 106;
+                options["y"] = 154;
                 hudElem = [];
                 hudElem["options"] = options;
                 hudElem["type"] = "shader";
@@ -1870,7 +1870,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 hudElem["entNo"] = -1;
                 self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player2");
                  //player3_weapon
-                options["y"] = 130;
+                options["y"] = 176;
                 hudElem = [];
                 hudElem["options"] = options;
                 hudElem["type"] = "shader";
@@ -1884,7 +1884,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 hudElem["entNo"] = -1;
                 self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player3");
                  //player4_weapon
-                options["y"] = 154;
+                options["y"] = 202;
                 hudElem = [];
                 hudElem["options"] = options;
                 hudElem["type"] = "shader";
@@ -1900,7 +1900,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 //player5_weapon
                 options = [];
                 options["x"] = 510;
-                options["y"] = 58;
+                options["y"] = 106;
                 hudElem["options"] = options;
                 hudElem["type"] = "shader";
                 hudElem["weapon"] = "";
@@ -1913,7 +1913,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 hudElem["entNo"] = -1;
                 self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player5");
                 //player6_weapon
-                options["y"] = 82;
+                options["y"] = 130;
                 hudElem = [];
                 hudElem["options"] = options;
                 hudElem["type"] = "shader";
@@ -1927,7 +1927,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 hudElem["entNo"] = -1;
                 self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player6");
                  //player7_weapon
-                options["y"] = 106;
+                options["y"] = 154;
                 hudElem = [];
                 hudElem["options"] = options;
                 hudElem["type"] = "shader";
@@ -1941,7 +1941,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 hudElem["entNo"] = -1;
                 self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player7");
                  //player8_weapon
-                options["y"] = 130;
+                options["y"] = 178;
                 hudElem = [];
                 hudElem["options"] = options;
                 hudElem["type"] = "shader";
@@ -1955,7 +1955,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 hudElem["entNo"] = -1;
                 self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player8");
                  //player9_weapon
-                options["y"] = 154;
+                options["y"] = 202;
                 hudElem = [];
                 hudElem["options"] = options;
                 hudElem["type"] = "shader";
