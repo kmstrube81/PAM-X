@@ -1659,159 +1659,18 @@ PAM_CasterHUD()
         self.casterHud = undefined;
         return;
     }
-
-    //init clientCasterHud
-    if(!isDefined(self.casterHud))
+    else if(!isDefined(self.casterHud))
     {
-        self.casterHud = maps\mp\uox\_uox_arrays::superArray();
-        //player0_weapon
-        options = [];
-        options["x"] = 106;
-        options["y"] = 58;
-        options["width"] = 20;
-        options["height"] = 10;
-        hudElem = [];
-        hudElem["options"] = options;
-        hudElem["type"] = "shader";
-        hudElem["weapon"] = "";
-        hudElem["operation"] = "none";
-        hudElem["name"] = "init";
-        hudElem["kd"] = "init";
-        hudElem["health"] = "init";
-        hudElem["hasSmoke"] = "init";
-        hudElem["hasFrag"] = "init";
-        hudElem["entNo"] = -1;
-        self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player0");
-        //player1_weapon
-        options["y"] = 82;
-        hudElem = [];
-        hudElem["options"] = options;
-        hudElem["type"] = "shader";
-        hudElem["weapon"] = "";
-        hudElem["operation"] = "none";
-        hudElem["name"] = "init";
-        hudElem["kd"] = "init";
-        hudElem["health"] = "init";
-        hudElem["hasSmoke"] = "init";
-        hudElem["hasFrag"] = "init";
-        hudElem["entNo"] = -1;
-        self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player1");
-         //player2_weapon
-        options["y"] = 106;
-        hudElem = [];
-        hudElem["options"] = options;
-        hudElem["type"] = "shader";
-        hudElem["weapon"] = "";
-        hudElem["operation"] = "none";
-        hudElem["name"] = "init";
-        hudElem["kd"] = "init";
-        hudElem["health"] = "init";
-        hudElem["hasSmoke"] = "init";
-        hudElem["hasFrag"] = "init";
-        hudElem["entNo"] = -1;
-        self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player2");
-         //player3_weapon
-        options["y"] = 130;
-        hudElem = [];
-        hudElem["options"] = options;
-        hudElem["type"] = "shader";
-        hudElem["weapon"] = "";
-        hudElem["operation"] = "none";
-        hudElem["name"] = "init";
-        hudElem["kd"] = "init";
-        hudElem["health"] = "init";
-        hudElem["hasSmoke"] = "init";
-        hudElem["hasFrag"] = "init";
-        hudElem["entNo"] = -1;
-        self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player3");
-         //player4_weapon
-        options["y"] = 154;
-        hudElem = [];
-        hudElem["options"] = options;
-        hudElem["type"] = "shader";
-        hudElem["weapon"] = "";
-        hudElem["operation"] = "none";
-        hudElem["name"] = "init";
-        hudElem["kd"] = "init";
-        hudElem["health"] = "init";
-        hudElem["hasSmoke"] = "init";
-        hudElem["hasFrag"] = "init";
-        hudElem["entNo"] = -1;
-        self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player4");
-        //player5_weapon
-        options = [];
-        options["x"] = 510;
-        options["y"] = 58;
-        hudElem["options"] = options;
-        hudElem["type"] = "shader";
-        hudElem["weapon"] = "";
-        hudElem["operation"] = "none";
-        hudElem["name"] = "init";
-        hudElem["kd"] = "init";
-        hudElem["health"] = "init";
-        hudElem["hasSmoke"] = "init";
-        hudElem["hasFrag"] = "init";
-        hudElem["entNo"] = -1;
-        self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player5");
-        //player6_weapon
-        options["y"] = 82;
-        hudElem = [];
-        hudElem["options"] = options;
-        hudElem["type"] = "shader";
-        hudElem["weapon"] = "";
-        hudElem["operation"] = "none";
-        hudElem["name"] = "init";
-        hudElem["kd"] = "init";
-        hudElem["health"] = "init";
-        hudElem["hasSmoke"] = "init";
-        hudElem["hasFrag"] = "init";
-        hudElem["entNo"] = -1;
-        self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player6");
-         //player7_weapon
-        options["y"] = 106;
-        hudElem = [];
-        hudElem["options"] = options;
-        hudElem["type"] = "shader";
-        hudElem["weapon"] = "";
-        hudElem["operation"] = "none";
-        hudElem["name"] = "init";
-        hudElem["kd"] = "init";
-        hudElem["health"] = "init";
-        hudElem["hasSmoke"] = "init";
-        hudElem["hasFrag"] = "init";
-        hudElem["entNo"] = -1;
-        self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player7");
-         //player8_weapon
-        options["y"] = 130;
-        hudElem = [];
-        hudElem["options"] = options;
-        hudElem["type"] = "shader";
-        hudElem["weapon"] = "";
-        hudElem["operation"] = "none";
-        hudElem["name"] = "init";
-        hudElem["kd"] = "init";
-        hudElem["health"] = "init";
-        hudElem["hasSmoke"] = "init";
-        hudElem["hasFrag"] = "init";
-        hudElem["entNo"] = -1;
-        self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player8");
-         //player9_weapon
-        options["y"] = 154;
-        hudElem = [];
-        hudElem["options"] = options;
-        hudElem["type"] = "shader";
-        hudElem["weapon"] = "";
-        hudElem["operation"] = "none";
-        hudElem["name"] = "init";
-        hudElem["kd"] = "init";
-        hudElem["health"] = "init";
-        hudElem["hasSmoke"] = "init";
-        hudElem["hasFrag"] = "init";
-        hudElem["entNo"] = -1;
-        self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player9");
-
-        self PAM_CasterUpdateScoreboard();
+        if(!isDefined(self.casterMenuPending))
+        {
+            self openMenu(game["menu_caster"]);
+            self.casterMenuPending = true;
+        }
+        return;   // wait for "open"
     }
+
+    self.casterBudget = 8;
+
     //update ui cvar and draw current weapon
     for(index = 0; index < 10; index ++)
     {
@@ -1919,11 +1778,11 @@ PAM_CasterUpdateScoreboard()
 
 PAM_CasterUpdateUI(cvarname, key, property, new, old)
 {
-    if(new[property] != old[property])
-    {
-        self setClientCvar(cvarname, new[property]);
-        self.casterHud = maps\mp\uox\_uox_arrays::updateProperty(self.casterHud, key, property, new[property]);
-    }
+    if(new[property] == old[property] || self.casterBudget <= 0)
+        return;
+    self.casterBudget--;
+    self setClientCvar(cvarname, new[property]);
+    self.casterHud = maps\mp\uox\_uox_arrays::updateProperty(self.casterHud, key, property, new[property]);
 }
 
 PAM_CasterToggle(setting)
@@ -1955,6 +1814,159 @@ PAM_CasterHandleMenuResponse(response, optional)
         case "closeCaster":
             self.pers["casterHud"] = false;
             return;
+        case "openCaseter":
+            //init clientCasterHud
+            if(!isDefined(self.casterHud))
+            {
+                self.casterHud = maps\mp\uox\_uox_arrays::superArray();
+                //player0_weapon
+                options = [];
+                options["x"] = 106;
+                options["y"] = 58;
+                options["width"] = 20;
+                options["height"] = 10;
+                hudElem = [];
+                hudElem["options"] = options;
+                hudElem["type"] = "shader";
+                hudElem["weapon"] = "";
+                hudElem["operation"] = "none";
+                hudElem["name"] = "init";
+                hudElem["kd"] = "init";
+                hudElem["health"] = "init";
+                hudElem["hasSmoke"] = "init";
+                hudElem["hasFrag"] = "init";
+                hudElem["entNo"] = -1;
+                self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player0");
+                //player1_weapon
+                options["y"] = 82;
+                hudElem = [];
+                hudElem["options"] = options;
+                hudElem["type"] = "shader";
+                hudElem["weapon"] = "";
+                hudElem["operation"] = "none";
+                hudElem["name"] = "init";
+                hudElem["kd"] = "init";
+                hudElem["health"] = "init";
+                hudElem["hasSmoke"] = "init";
+                hudElem["hasFrag"] = "init";
+                hudElem["entNo"] = -1;
+                self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player1");
+                 //player2_weapon
+                options["y"] = 106;
+                hudElem = [];
+                hudElem["options"] = options;
+                hudElem["type"] = "shader";
+                hudElem["weapon"] = "";
+                hudElem["operation"] = "none";
+                hudElem["name"] = "init";
+                hudElem["kd"] = "init";
+                hudElem["health"] = "init";
+                hudElem["hasSmoke"] = "init";
+                hudElem["hasFrag"] = "init";
+                hudElem["entNo"] = -1;
+                self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player2");
+                 //player3_weapon
+                options["y"] = 130;
+                hudElem = [];
+                hudElem["options"] = options;
+                hudElem["type"] = "shader";
+                hudElem["weapon"] = "";
+                hudElem["operation"] = "none";
+                hudElem["name"] = "init";
+                hudElem["kd"] = "init";
+                hudElem["health"] = "init";
+                hudElem["hasSmoke"] = "init";
+                hudElem["hasFrag"] = "init";
+                hudElem["entNo"] = -1;
+                self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player3");
+                 //player4_weapon
+                options["y"] = 154;
+                hudElem = [];
+                hudElem["options"] = options;
+                hudElem["type"] = "shader";
+                hudElem["weapon"] = "";
+                hudElem["operation"] = "none";
+                hudElem["name"] = "init";
+                hudElem["kd"] = "init";
+                hudElem["health"] = "init";
+                hudElem["hasSmoke"] = "init";
+                hudElem["hasFrag"] = "init";
+                hudElem["entNo"] = -1;
+                self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player4");
+                //player5_weapon
+                options = [];
+                options["x"] = 510;
+                options["y"] = 58;
+                hudElem["options"] = options;
+                hudElem["type"] = "shader";
+                hudElem["weapon"] = "";
+                hudElem["operation"] = "none";
+                hudElem["name"] = "init";
+                hudElem["kd"] = "init";
+                hudElem["health"] = "init";
+                hudElem["hasSmoke"] = "init";
+                hudElem["hasFrag"] = "init";
+                hudElem["entNo"] = -1;
+                self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player5");
+                //player6_weapon
+                options["y"] = 82;
+                hudElem = [];
+                hudElem["options"] = options;
+                hudElem["type"] = "shader";
+                hudElem["weapon"] = "";
+                hudElem["operation"] = "none";
+                hudElem["name"] = "init";
+                hudElem["kd"] = "init";
+                hudElem["health"] = "init";
+                hudElem["hasSmoke"] = "init";
+                hudElem["hasFrag"] = "init";
+                hudElem["entNo"] = -1;
+                self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player6");
+                 //player7_weapon
+                options["y"] = 106;
+                hudElem = [];
+                hudElem["options"] = options;
+                hudElem["type"] = "shader";
+                hudElem["weapon"] = "";
+                hudElem["operation"] = "none";
+                hudElem["name"] = "init";
+                hudElem["kd"] = "init";
+                hudElem["health"] = "init";
+                hudElem["hasSmoke"] = "init";
+                hudElem["hasFrag"] = "init";
+                hudElem["entNo"] = -1;
+                self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player7");
+                 //player8_weapon
+                options["y"] = 130;
+                hudElem = [];
+                hudElem["options"] = options;
+                hudElem["type"] = "shader";
+                hudElem["weapon"] = "";
+                hudElem["operation"] = "none";
+                hudElem["name"] = "init";
+                hudElem["kd"] = "init";
+                hudElem["health"] = "init";
+                hudElem["hasSmoke"] = "init";
+                hudElem["hasFrag"] = "init";
+                hudElem["entNo"] = -1;
+                self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player8");
+                 //player9_weapon
+                options["y"] = 154;
+                hudElem = [];
+                hudElem["options"] = options;
+                hudElem["type"] = "shader";
+                hudElem["weapon"] = "";
+                hudElem["operation"] = "none";
+                hudElem["name"] = "init";
+                hudElem["kd"] = "init";
+                hudElem["health"] = "init";
+                hudElem["hasSmoke"] = "init";
+                hudElem["hasFrag"] = "init";
+                hudElem["entNo"] = -1;
+                self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player9");
+
+                self PAM_CasterUpdateScoreboard();
+            }
         case "0":
         case "1":
         case "2":
