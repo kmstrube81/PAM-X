@@ -1340,7 +1340,6 @@ PAM_CasterUpdate()
         hudElem["entNo"] = -1;
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::arrayPush(level.casterHudUpdates, hudElem, "player4");
         //player5_weapon
-        options = [];
         options["x"] = 510;
         options["y"] = 58;
         hudElem["options"] = options;
