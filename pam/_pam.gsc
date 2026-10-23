@@ -1730,20 +1730,20 @@ PAM_CasterUpdateScoreboard()
             switch(game["allies"])
         	{
             	case "american":
-            		self setClientCvar("ui_scoreboard_team1_name", &"MPSCRIPT_AMERICAN");
+            		self setClientCvar("ui_scoreboard_team1_name", "@MPSCRIPT_AMERICAN");
             		break;
             	
             	case "british":
-            		self setClientCvar("ui_scoreboard_team1_name", &"MPSCRIPT_BRITISH");
+            		self setClientCvar("ui_scoreboard_team1_name", "@MPSCRIPT_BRITISH");
             		break;
             	
             	case "russian":
-            		self setClientCvar("ui_scoreboard_team1_name", &"MPSCRIPT_RUSSIAN");
+            		self setClientCvar("ui_scoreboard_team1_name", "@MPSCRIPT_RUSSIAN");
             		break;
             }
         }
         else
-            self setClientCvar("ui_scoreboard_team1_name", &"MPSCRIPT_GERMAN");
+            self setClientCvar("ui_scoreboard_team1_name", "@MPSCRIPT_GERMAN");
     }
     if(team2name != "")
     {
@@ -1760,20 +1760,20 @@ PAM_CasterUpdateScoreboard()
             switch(game["allies"])
         	{
             	case "american":
-            		self setClientCvar("ui_scoreboard_team2_name", &"MPSCRIPT_AMERICAN");
+            		self setClientCvar("ui_scoreboard_team2_name", "@MPSCRIPT_AMERICAN");
             		break;
             	
             	case "british":
-            		self setClientCvar("ui_scoreboard_team2_name", &"MPSCRIPT_BRITISH");
+            		self setClientCvar("ui_scoreboard_team2_name", "@MPSCRIPT_BRITISH");
             		break;
             	
             	case "russian":
-            		self setClientCvar("ui_scoreboard_team2_name", &"MPSCRIPT_RUSSIAN");
+            		self setClientCvar("ui_scoreboard_team2_name", "@MPSCRIPT_RUSSIAN");
             		break;
             }
         }
         else
-            self setClientCvar("ui_scoreboard_team2_name", &"MPSCRIPT_GERMAN");
+            self setClientCvar("ui_scoreboard_team2_name", "@MPSCRIPT_GERMAN");
     }
     score = maps\mp\uox\_uox::getTeam1Score() + " - " + maps\mp\uox\_uox::getTeam2Score();
     gameString = game["pam_gamestring"];

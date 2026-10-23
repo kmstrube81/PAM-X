@@ -44,7 +44,7 @@
 		{
 			name			"mb_bg"
 			visible			1
-			rect			192 0 326 58
+			rect			150 0 368 58
 			style			WINDOW_STYLE_FILLED
 			backcolor		0 0 0 0.45
 			decoration
@@ -68,13 +68,13 @@
 		{
 			name			"mb_score"
 			visible			1
-			rect			292 2 56 16
+			rect			260 2 60 16
 			cvar			"ui_scoreboard_score"
 			textfont		UI_FONT_NORMAL
 			textscale		.3
 			textstyle		ITEM_TEXTSTYLE_SHADOWED
 			textalign		ITEM_ALIGN_CENTER
-			textalignx		28
+			textalignx		60
 			textaligny		13
 			forecolor		1 1 1 1
 			decoration
@@ -99,7 +99,7 @@
 		{
 			name			"mb_gamestring"
 			visible			1
-			rect			220 36 200 8
+			rect			220 36 100 8
 			cvar			"ui_scoreboard_gamestring"
 			textfont		UI_FONT_NORMAL
 			textscale		.16
@@ -235,7 +235,7 @@
 			visible			1
 			rect			109 70 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@us_grenade.dds"
+			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard0_c"
 			showCvar		{ "american" }
@@ -247,7 +247,7 @@
 			visible			1
 			rect			109 70 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@british_grenade.dds"
+			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard0_c"
 			showCvar		{ "british" }
@@ -259,7 +259,7 @@
 			visible			1
 			rect			109 70 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@russian_grenade.dds"
+			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard0_c"
 			showCvar		{ "russian" }
@@ -384,7 +384,7 @@
 			visible			1
 			rect			109 94 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@us_grenade.dds"
+			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard1_c"
 			showCvar		{ "american" }
@@ -396,7 +396,7 @@
 			visible			1
 			rect			109 94 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@british_grenade.dds"
+			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard1_c"
 			showCvar		{ "british" }
@@ -408,7 +408,7 @@
 			visible			1
 			rect			109 94 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@russian_grenade.dds"
+			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard1_c"
 			showCvar		{ "russian" }
@@ -533,7 +533,7 @@
 			visible			1
 			rect			109 118 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@us_grenade.dds"
+			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard2_c"
 			showCvar		{ "american" }
@@ -545,7 +545,7 @@
 			visible			1
 			rect			109 118 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@british_grenade.dds"
+			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard2_c"
 			showCvar		{ "british" }
@@ -557,7 +557,7 @@
 			visible			1
 			rect			109 118 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@russian_grenade.dds"
+			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard2_c"
 			showCvar		{ "russian" }
@@ -682,7 +682,7 @@
 			visible			1
 			rect			109 142 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@us_grenade.dds"
+			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard3_c"
 			showCvar		{ "american" }
@@ -694,7 +694,7 @@
 			visible			1
 			rect			109 142 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@british_grenade.dds"
+			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard3_c"
 			showCvar		{ "british" }
@@ -706,7 +706,7 @@
 			visible			1
 			rect			109 142 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@russian_grenade.dds"
+			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard3_c"
 			showCvar		{ "russian" }
@@ -831,7 +831,7 @@
 			visible			1
 			rect			109 166 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@us_grenade.dds"
+			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard4_c"
 			showCvar		{ "american" }
@@ -843,7 +843,7 @@
 			visible			1
 			rect			109 166 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@british_grenade.dds"
+			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard4_c"
 			showCvar		{ "british" }
@@ -855,7 +855,7 @@
 			visible			1
 			rect			109 166 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@russian_grenade.dds"
+			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard4_c"
 			showCvar		{ "russian" }
@@ -980,7 +980,7 @@
 			visible			1
 			rect			513 70 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@us_grenade.dds"
+			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard5_c"
 			showCvar		{ "american" }
@@ -992,7 +992,7 @@
 			visible			1
 			rect			513 70 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@british_grenade.dds"
+			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard5_c"
 			showCvar		{ "british" }
@@ -1004,7 +1004,7 @@
 			visible			1
 			rect			513 70 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@russian_grenade.dds"
+			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard5_c"
 			showCvar		{ "russian" }
@@ -1129,7 +1129,7 @@
 			visible			1
 			rect			513 94 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@us_grenade.dds"
+			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard6_c"
 			showCvar		{ "american" }
@@ -1141,7 +1141,7 @@
 			visible			1
 			rect			513 94 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@british_grenade.dds"
+			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard6_c"
 			showCvar		{ "british" }
@@ -1153,7 +1153,7 @@
 			visible			1
 			rect			513 94 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@russian_grenade.dds"
+			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard6_c"
 			showCvar		{ "russian" }
@@ -1278,7 +1278,7 @@
 			visible			1
 			rect			513 118 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@us_grenade.dds"
+			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard7_c"
 			showCvar		{ "american" }
@@ -1290,7 +1290,7 @@
 			visible			1
 			rect			513 118 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@british_grenade.dds"
+			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard7_c"
 			showCvar		{ "british" }
@@ -1302,7 +1302,7 @@
 			visible			1
 			rect			513 118 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@russian_grenade.dds"
+			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard7_c"
 			showCvar		{ "russian" }
@@ -1427,7 +1427,7 @@
 			visible			1
 			rect			513 142 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@us_grenade.dds"
+			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard8_c"
 			showCvar		{ "american" }
@@ -1439,7 +1439,7 @@
 			visible			1
 			rect			513 142 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@british_grenade.dds"
+			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard8_c"
 			showCvar		{ "british" }
@@ -1451,7 +1451,7 @@
 			visible			1
 			rect			513 142 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@russian_grenade.dds"
+			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard8_c"
 			showCvar		{ "russian" }
@@ -1576,7 +1576,7 @@
 			visible			1
 			rect			513 166 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@us_grenade.dds"
+			background		"gfx/icons/hud@us_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard9_c"
 			showCvar		{ "american" }
@@ -1588,7 +1588,7 @@
 			visible			1
 			rect			513 166 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@british_grenade.dds"
+			background		"gfx/icons/hud@british_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard9_c"
 			showCvar		{ "british" }
@@ -1600,7 +1600,7 @@
 			visible			1
 			rect			513 166 8 8
 			style			WINDOW_STYLE_SHADER
-			background		"ui_mp/assets/hud@russian_grenade.dds"
+			background		"gfx/icons/hud@russian_grenade.dds"
 			forecolor		1 1 1 1
 			cvartest		"ui_scoreboard9_c"
 			showCvar		{ "russian" }
