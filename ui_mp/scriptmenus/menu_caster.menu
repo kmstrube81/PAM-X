@@ -114,7 +114,7 @@
 		{
 			name			"mb_round_label"
 			visible			1
-			rect			320 44 50 10
+			rect			320 44 25 10
 			text			"ROUND"
 			textfont		UI_FONT_NORMAL
 			textscale		.2
@@ -129,7 +129,7 @@
 		{
 			name			"mb_round"
 			visible			1
-			rect			372 44 98 10
+			rect			348 44 25 10
 			cvar			"ui_scoreboard_round"
 			textfont		UI_FONT_NORMAL
 			textscale		.2

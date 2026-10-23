@@ -1267,7 +1267,7 @@ PAM_CasterUpdate()
         //player0_weapon
         options = [];
         options["x"] = 106;
-        options["y"] = 58;
+        options["y"] = 106;
         options["width"] = 20;
         options["height"] = 10;
         options["archived"] = false;
@@ -1284,7 +1284,7 @@ PAM_CasterUpdate()
         hudElem["entNo"] = -1;
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::arrayPush(level.casterHudUpdates, hudElem, "player0");
         //player1_weapon
-        options["y"] = 82;
+        options["y"] = 130;
         hudElem = [];
         hudElem["options"] = options;
         hudElem["type"] = "shader";
@@ -1298,7 +1298,7 @@ PAM_CasterUpdate()
         hudElem["entNo"] = -1;
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::arrayPush(level.casterHudUpdates, hudElem, "player1");
          //player2_weapon
-        options["y"] = 106;
+        options["y"] = 154;
         hudElem = [];
         hudElem["options"] = options;
         hudElem["type"] = "shader";
@@ -1312,7 +1312,7 @@ PAM_CasterUpdate()
         hudElem["entNo"] = -1;
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::arrayPush(level.casterHudUpdates, hudElem, "player2");
          //player3_weapon
-        options["y"] = 130;
+        options["y"] = 178;
         hudElem = [];
         hudElem["options"] = options;
         hudElem["type"] = "shader";
@@ -1326,7 +1326,7 @@ PAM_CasterUpdate()
         hudElem["entNo"] = -1;
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::arrayPush(level.casterHudUpdates, hudElem, "player3");
          //player4_weapon
-        options["y"] = 154;
+        options["y"] = 202;
         hudElem = [];
         hudElem["options"] = options;
         hudElem["type"] = "shader";
@@ -1341,7 +1341,7 @@ PAM_CasterUpdate()
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::arrayPush(level.casterHudUpdates, hudElem, "player4");
         //player5_weapon
         options["x"] = 510;
-        options["y"] = 58;
+        options["y"] = 106;
         hudElem["options"] = options;
         hudElem["type"] = "shader";
         hudElem["weapon"] = "";
@@ -1354,7 +1354,7 @@ PAM_CasterUpdate()
         hudElem["entNo"] = -1;
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::arrayPush(level.casterHudUpdates, hudElem, "player5");
         //player6_weapon
-        options["y"] = 82;
+        options["y"] = 130;
         hudElem = [];
         hudElem["options"] = options;
         hudElem["type"] = "shader";
@@ -1368,7 +1368,7 @@ PAM_CasterUpdate()
         hudElem["entNo"] = -1;
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::arrayPush(level.casterHudUpdates, hudElem, "player6");
          //player7_weapon
-        options["y"] = 106;
+        options["y"] = 154;
         hudElem = [];
         hudElem["options"] = options;
         hudElem["type"] = "shader";
@@ -1382,7 +1382,7 @@ PAM_CasterUpdate()
         hudElem["entNo"] = -1;
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::arrayPush(level.casterHudUpdates, hudElem, "player7");
          //player8_weapon
-        options["y"] = 130;
+        options["y"] = 178;
         hudElem = [];
         hudElem["options"] = options;
         hudElem["type"] = "shader";
@@ -1396,7 +1396,7 @@ PAM_CasterUpdate()
         hudElem["entNo"] = -1;
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::arrayPush(level.casterHudUpdates, hudElem, "player8");
          //player9_weapon
-        options["y"] = 154;
+        options["y"] = 202;
         hudElem = [];
         hudElem["options"] = options;
         hudElem["type"] = "shader";
