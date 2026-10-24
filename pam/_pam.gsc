@@ -1983,7 +1983,7 @@ PAM_PlayerConnect()
                 self setClientCvar("ui_weapontab", "1");
                 self openMenu(menu);
             }
-            if(self.pers["team"] == "allies" && maps\mp\gametypes\_teams::isweaponavailable(self.pers["team"]))
+            else if(self.pers["team"] == "allies" && maps\mp\gametypes\_teams::isweaponavailable(self.pers["team"]))
             {
                 menu = game["menu_weapon_allies"];
                 self setClientCvar("ui_weapontab", "1");
