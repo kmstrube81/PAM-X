@@ -462,180 +462,68 @@ PAM_handleDraftMenuResponse(response, optional)
 {
     if(level.pam_draft == -1)
         return;
-    if(level.pam_draft_picking != self)
+    if(self != level.pam_draft_picking && self != level.pam_draft_waiting)
         return;
-        
-    switch(level.pam_draft) //response depends on stage
+
+    // either captain may confirm their team during player selection (bug 2)
+    if(response == "readyup")
+    {
+        if(level.pam_draft < 2 || isDefined(self.teamReady))
+            return;
+
+        if(level.objective == "bel")
+            self setClientCvar("g_scriptMainMenu", game["menu_weapon_all"]);
+        else if(self.pers["team"] == "allies")
+            self setClientCvar("g_scriptMainMenu", game["menu_weapon_allies"]);
+        else if(self.pers["team"] == "axis")
+            self setClientCvar("g_scriptMainMenu", game["menu_weapon_axis"]);
+        self.teamReady = 1;
+
+        if(self == level.pam_draft_picking)
+            PAM_DraftPassTurn();
+        else
+            PAM_DraftUpdateUI();
+        return;
+    }
+
+    // everything else is only for the captain whose turn it is
+    if(self != level.pam_draft_picking)
+        return;
+
+    switch(level.pam_draft)
     {
         case 0:
         case 1:
+            // side can only be chosen by a captain who doesn't have one yet (bug 4)
+            if(self.pers["team"] != "spectator")
+                return;
+
             if(response == "option1")
-            { //chose allies
-                level.pam_draft_picking.pers["team"] = "allies";
-                level.pam_draft_picking.pers["teamTime"] = (gettime() / 1000);
-                level.pam_draft_picking.pers["weapon"] = undefined;
-                level.pam_draft_picking.pers["weapon1"] = undefined;
-                level.pam_draft_picking.pers["weapon2"] = undefined;
-                level.pam_draft_picking.pers["spawnweapon"] = undefined;
-                level.pam_draft_picking.pers["savedmodel"] = undefined;
-                
-                if(level.uox_teamplay) // update spectator permissions immediately on change of team
-                    level.pam_draft_picking maps\mp\gametypes\_teams::SetSpectatePermissions();
-                level.pam_draft_waiting.pers["team"] = "axis";
-                level.pam_draft_waiting.pers["teamTime"] = (gettime() / 1000);
-                level.pam_draft_waiting.pers["weapon"] = undefined;
-                level.pam_draft_waiting.pers["weapon1"] = undefined;
-                level.pam_draft_waiting.pers["weapon2"] = undefined;
-                level.pam_draft_waiting.pers["spawnweapon"] = undefined;
-                level.pam_draft_waiting.pers["savedmodel"] = undefined;
-                
-                if(level.uox_teamplay) // update spectator permissions immediately on change of team
-                    level.pam_draft_waiting maps\mp\gametypes\_teams::SetSpectatePermissions();
-                level.pam_draft++; //advance draft stage
-            }
+                PAM_DraftSetSides("allies");
             else if(response == "option2")
-            { //chose defense
-                level.pam_draft_picking.pers["team"] = "axis";
-                level.pam_draft_picking.pers["teamTime"] = (gettime() / 1000);
-                level.pam_draft_picking.pers["weapon"] = undefined;
-                level.pam_draft_picking.pers["weapon1"] = undefined;
-                level.pam_draft_picking.pers["weapon2"] = undefined;
-                level.pam_draft_picking.pers["spawnweapon"] = undefined;
-                level.pam_draft_picking.pers["savedmodel"] = undefined;
-                
-                if(level.uox_teamplay) // update spectator permissions immediately on change of team
-                    level.pam_draft_picking maps\mp\gametypes\_teams::SetSpectatePermissions();
-                level.pam_draft_waiting.pers["team"] = "allies";
-                level.pam_draft_waiting.pers["teamTime"] = (gettime() / 1000);
-                level.pam_draft_waiting.pers["weapon"] = undefined;
-                level.pam_draft_waiting.pers["weapon1"] = undefined;
-                level.pam_draft_waiting.pers["weapon2"] = undefined;
-                level.pam_draft_waiting.pers["spawnweapon"] = undefined;
-                level.pam_draft_waiting.pers["savedmodel"] = undefined;
-                
-                if(level.uox_teamplay) // update spectator permissions immediately on change of team
-                    level.pam_draft_waiting maps\mp\gametypes\_teams::SetSpectatePermissions();
-                level.pam_draft++; //advance draft stage
-            }
-            else if(response == "option3")
-            {
-                if(level.pam_draft == 0)
-                    level.pam_draft++; //advance draft stage
-            }
+                PAM_DraftSetSides("axis");
+            else if(response == "option3" && level.pam_draft == 0)
+                level.pam_draft = 1; // team 1 picks first, team 2 picks side
             break;
+
         default:
-            switch(response)
+            if(response == "next" || response == "previous")
             {
-                case "next":
-                case "previous":
-                    if(level.pam_draftees.size < 10)
-                        return;
+                if(level.pam_draftees.size > 10)
                     PAM_DraftRotateDraftees(response);
-                    break;
-                case "readyup":
-                case "skip":
-                    if(response == "readyup")
-                    {
-                        if(level.objective == "bel")
-                            level.pam_draft_picking setClientCvar("g_scriptMainMenu", game["menu_weapon_all"]);
-                        else if(level.pam_draft_picking.pers["team"] == "allies")
-                            level.pam_draft_picking setClientCvar("g_scriptMainMenu", game["menu_weapon_allies"]);
-                        else if(level.pam_draft_picking.pers["team"] == "axis")
-                            level.pam_draft_picking setClientCvar("g_scriptMainMenu", game["menu_weapon_axis"]);
-                        level.pam_draft_picking.teamReady = 1; 
-                    }
-                    temp1 = level.pam_draft_waiting;
-                    level.pam_draft_waiting = level.pam_draft_picking;
-                    level.pam_draft_picking = temp1;
-                    level.pam_draft_picking setClientCvar("ui_draftbanner", "Pick Next Player.");
-                    level.pam_draft_waiting setClientCvar("ui_draftbanner", "Other Captain is Picking...");
-                    break;
-                default:
-                    //if chose option
-                    if(maps\mp\uox\_uox_utils::findStr("option", response, "start") > -1)
-                    {
-                        action = "option";
-                        player = (int)maps\mp\uox\_uox_utils::subStr(response, 6) - 1;
-                    }
-                    else if(maps\mp\uox\_uox_utils::findStr("cut", response, "start") > -1)
-                    {//if chose cut
-                        action = "cut";
-                        player = (int)maps\mp\uox\_uox_utils::subStr(response, 3) - 1;
-                    }
-                    else
-                        return;
-                    if(action == "option")
-                    { //add player to team
-                        draftee = level.pam_draftees[player];
-                        if(draftee.pers["team"] == "spectator")
-                        {
-                            draftee.pers["team"] = level.pam_draft_picking.pers["team"];
-                            draftee.pers["teamTime"] = (gettime() / 1000);
-                            draftee.pers["weapon"] = undefined;
-                            draftee.pers["weapon1"] = undefined;
-                            draftee.pers["weapon2"] = undefined;
-                            draftee.pers["spawnweapon"] = undefined;
-                            draftee.pers["savedmodel"] = undefined;
-                            if(level.uox_teamplay) // update spectator permissions immediately on change of team
-                                draftee maps\mp\gametypes\_teams::SetSpectatePermissions();
-
-                            if(level.objective == "bel" && ( maps\mp\gametypes\_teams::isweaponavailable("axis")
-                                || maps\mp\gametypes\_teams::isweaponavailable("allies") ))
-                            {
-                                menu = game["menu_weapon_all"];
-                                draftee setClientCvar("ui_weapontab", "1");
-                                draftee openMenu(menu);
-                            }
-                            if(draftee.pers["team"] == "allies" && maps\mp\gametypes\_teams::isweaponavailable(draftee.pers["team"]))
-                            {
-                                menu = game["menu_weapon_allies"];
-                                draftee setClientCvar("ui_weapontab", "1");
-                                draftee openMenu(menu);
-                            }
-                            else if(draftee.pers["team"] == "axis" && maps\mp\gametypes\_teams::isweaponavailable(draftee.pers["team"])) 
-                            {
-                                menu = game["menu_weapon_axis"];
-                                draftee setClientCvar("ui_weapontab", "1");
-                                draftee openMenu(menu);
-                            }
-                            else
-                            {
-                                draftee setClientCvar("ui_weapontab", "0");
-                                draftee maps\mp\uox\_uox_respawns::menu_spawn("none");
-                            }
-                            PAM_DraftAddPlayerToRoster(level.pam_draft_picking, draftee);
-                            temp1 = level.pam_draft_waiting;
-                            level.pam_draft_waiting = level.pam_draft_picking;
-                            level.pam_draft_picking = temp1;
-                            level.pam_draft_picking setClientCvar("ui_draftbanner", "Pick Next Player.");
-                            level.pam_draft_waiting setClientCvar("ui_draftbanner", "Other Captain is Picking...");
-                        }
-                        else
-                            return;
-                    }
-                    else if(action == "cut")
-                    {
-                        draftee = level.pam_draftees[player];
-                        if(draftee.pers["team"] == level.pam_draft_picking.pers["team"])
-                        { //kick to spec
-                            draftee.pers["team"] = "spectator";
-                            draftee.pers["teamTime"] = 1000000;
-                            draftee.pers["weapon"] = undefined;
-                            draftee.pers["weapon1"] = undefined;
-                            draftee.pers["weapon2"] = undefined;
-                            draftee.pers["spawnweapon"] = undefined;
-                            draftee.pers["savedmodel"] = undefined;
-                            
-                            draftee.sessionteam = "spectator";
-                            draftee setClientCvar("g_scriptMainMenu", game["menu_team"]);
-                            draftee setClientCvar("ui_weapontab", "0");
-                            draftee maps\mp\uox\_uox_respawns::spawnSpectator();
-
-                            PAM_DraftCutPlayerFromRoster(level.pam_draft_picking, draftee);
-                        }
-                    }
-            } 
-    } 
+                return;
+            }
+            if(response == "skip")
+            {
+                PAM_DraftPassTurn();
+                return;
+            }
+            if(maps\mp\uox\_uox_utils::findStr("option", response, "start") > -1)
+                PAM_DraftPick((int)maps\mp\uox\_uox_utils::subStr(response, 6) - 1);
+            else if(maps\mp\uox\_uox_utils::findStr("cut", response, "start") > -1)
+                PAM_DraftCut((int)maps\mp\uox\_uox_utils::subStr(response, 3) - 1);
+            break;
+    }
 }
 
 PAM_StartGameType()
@@ -759,203 +647,101 @@ PAM_UpdateGameString()
 PAM_DraftTeams()
 {
     level waittill("postround");
-    
-    if([[ level.getVars ]]("pam_draft_teams") && !game["matchstarted"]
-        && !isDefined(game["drafted"]))
-    {
-        maps\mp\uox\_uox_debug::debugLog("info", "No draft, starting game");
-        level notify("kill_endround"); //interrupt roundend for draft
-    }
-    else
+
+    if(![[ level.getVars ]]("pam_draft_teams") || game["matchstarted"] || isDefined(game["drafted"]))
     {
         maps\mp\uox\_uox_debug::debugLog("info", "No draft, starting game");
         return;
     }
-        
+    maps\mp\uox\_uox_debug::debugLog("info", "Starting draft");
+    level notify("kill_endround"); //interrupt roundend for draft
+    level endon("pam_draft_abort"); //a captain disconnected (bug 6)
+
     //check that team captains are valid
     players = getentarray("player", "classname");
-    for( i = 0; i < players.size; i++)
+    for(i = 0; i < players.size; i++)
     {
-        player = players[i];
-        isCaptain = PAM_DraftIsCaptain(player);
-        if(isCaptain == 0)
-            continue;
-        else if(isCaptain == 1)
-            team1captain = player;
+        isCaptain = PAM_DraftIsCaptain(players[i]);
+        if(isCaptain == 1)
+            team1captain = players[i];
         else if(isCaptain == 2)
-            team2captain = player;
-
-        if(isDefined(team1captain) && isDefined(team2captain))
-            break;
+            team2captain = players[i];
     }
-    //if one of the captains are invalid
     if(!isDefined(team1captain) || !isDefined(team2captain))
     {
         iprintlnbold("Captains not present. Game will start without draft");
-        //clear team names
-        setCvar("pam_team1_name", "");
-        setCvar("pam_team2_name", "");
-        //clear team players
-        setCvar("pam_team1_roster", "");
-        setCvar("pam_team2_roster", "");
-        game["drafted"] = false;
-        level thread maps\mp\uox\_uox_killcam::finalKillcamListener();
-        level.roundended = false;
-        maps\mp\uox\_uox::endRound("reset");
+        PAM_DraftClearRosters();
+        PAM_DraftStartGame(false);
+        return;
     }
-    else //Start Draft
+
+    //set team names and rosters
+    setCvar("pam_team1_name", team1captain.name);
+    setCvar("pam_team2_name", team2captain.name);
+    setCvar("pam_team1_roster", "");
+    setCvar("pam_team2_roster", "");
+    PAM_DraftAddPlayerToRoster(team1captain, team1captain);
+    PAM_DraftAddPlayerToRoster(team2captain, team2captain);
+
+    iprintlnbold("Captains picking teams. Game will start shortly");
+    level.lockteams = true;
+    for(i = 0; i < players.size; i++) //kick everyone (captains included) to spec
+        players[i] PAM_DraftKickToSpec();
+
+    //---- stage 0: team 1 chooses a side or first pick ----
+    level.pam_draft = 0;
+    level.pam_draft_picking = team1captain;
+    level.pam_draft_waiting = team2captain;
+    level.pam_draftees = [];
+    PAM_DraftRefreshSlots(); //clear slots left over from a previous draft
+    PAM_DraftUpdateUI();
+    team1captain PAM_DraftOpenDraftMenu();
+    team2captain PAM_DraftOpenDraftMenu();
+
+    while(level.pam_draft == 0)
+        wait level.frametime;
+
+    //---- stage 1: team 2 chooses a side if team 1 took first pick ----
+    pickFirst = (team1captain.pers["team"] == "spectator");
+    level.pam_draft_picking = team2captain;
+    level.pam_draft_waiting = team1captain;
+    PAM_DraftUpdateUI();
+
+    while(team2captain.pers["team"] == "spectator")
+        wait level.frametime;
+
+    //both captains choose a weapon, whichever path was taken (bug 1)
+    team1captain PAM_DraftOpenWeaponMenu();
+    team2captain PAM_DraftOpenWeaponMenu();
+    while(!isDefined(team1captain.pers["weapon"]) || !isDefined(team2captain.pers["weapon"]))
+        wait level.frametime;
+
+    //---- stage 2: player selection ----
+    if(pickFirst) //team 1 took first pick (bug 1)
     {
-        //set team names
-        setCvar("pam_team1_name", team1captain.name);
-        setCvar("pam_team2_name", team2captain.name);
-        //set team players
-        setCvar("pam_team1_roster", "");
-        setCvar("pam_team2_roster", "");
-        PAM_DraftAddPlayerToRoster(team1captain, team1captain);
-        PAM_DraftAddPlayerToRoster(team2captain, team2captain);
-        //kick others to spec
-        iprintlnbold("Captains picking teams. Game will start shortly");
-        level.lockteams = true;
-        for( i = 0; i < players.size; i++) //kick all others to spec
-        {
-            player = players[i];
-            
-            player.pers["team"] = "spectator";
-            player.pers["teamTime"] = 1000000;
-            player.pers["weapon"] = undefined;
-            player.pers["weapon1"] = undefined;
-            player.pers["weapon2"] = undefined;
-            player.pers["spawnweapon"] = undefined;
-            player.pers["savedmodel"] = undefined;
-            
-            player.sessionteam = "spectator";
-            player setClientCvar("g_scriptMainMenu", game["menu_team"]);
-            player setClientCvar("ui_weapontab", "0");
-            player maps\mp\uox\_uox_respawns::spawnSpectator();
-             
-        }
-        //set draft stage
-        level.pam_draft = 0;
         level.pam_draft_picking = team1captain;
         level.pam_draft_waiting = team2captain;
-        team1captain setClientCvar("ui_draftphase", 0);
-        team2captain setClientCvar("ui_draftphase", 0);
-        //open draft menu for captains
-        team1captain openMenu(game["menu_draft"]);
-        team1captain setClientCvar("g_scriptMainMenu", game["menu_draft"]);
-        team2captain openMenu(game["menu_draft"]);
-        team2captain setClientCvar("g_scriptMainMenu", game["menu_draft"]);
-        //team gets asked pick or side first, set banner ui cvar
-        team1captain setClientCvar("ui_draftbanner", "Pick First or Pick Side?");
-        team2captain setClientCvar("ui_draftbanner", "Other Captain Choosing Pick or Side...");
-        
-        //wait until draft stage 0 is done (team 1 chooses pick or side)
-        while(level.pam_draft == 0)
-            wait level.frametime;
-        //draft stage 1 (team 2 choose team if team 1 chose pick)
+    }
+    else //team 1 took side, team 2 picks first
+    {
         level.pam_draft_picking = team2captain;
         level.pam_draft_waiting = team1captain;
-        if(level.pam_draft_picking.pers["team"] != "spectator") //team 1 chose side
-        {   //make both players pick a weapon
-            // if there are weapons the user can select then open the weapon menu      
-            if(level.objective == "bel" && ( maps\mp\gametypes\_teams::isweaponavailable("axis")
-                || maps\mp\gametypes\_teams::isweaponavailable("allies") ))
-            {
-                menu = game["menu_weapon_all"];
-                level.pam_draft_picking setClientCvar("ui_weapontab", "1");
-                level.pam_draft_picking openMenu(menu);
-                level.pam_draft_waiting setClientCvar("ui_weapontab", "1");
-                level.pam_draft_waiting openMenu(menu);
-            }
-            if(level.pam_draft_picking.pers["team"] == "allies" && maps\mp\gametypes\_teams::isweaponavailable(level.pam_draft_picking.pers["team"]))
-            {
-                menu = game["menu_weapon_allies"];
-                level.pam_draft_picking setClientCvar("ui_weapontab", "1");
-                level.pam_draft_picking openMenu(menu);
-            if(maps\mp\gametypes\_teams::isweaponavailable(level.pam_draft_waiting.pers["team"]))
-                {
-                    menu = game["menu_weapon_axis"];
-                    level.pam_draft_waiting setClientCvar("ui_weapontab", "1");
-                    level.pam_draft_waiting openMenu(menu);
-                }
-                else
-                {
-                    level.pam_draft_waiting setClientCvar("ui_weapontab", "0");
-                    level.pam_draft_waiting maps\mp\uox\_uox_respawns::menu_spawn("none");
-                }
-            }
-            else if(level.pam_draft_picking.pers["team"] == "axis" && maps\mp\gametypes\_teams::isweaponavailable(level.pam_draft_picking.pers["team"])) 
-            {
-                menu = game["menu_weapon_axis"];
-                level.pam_draft_picking setClientCvar("ui_weapontab", "1");
-                level.pam_draft_picking openMenu(menu);
-                if(maps\mp\gametypes\_teams::isweaponavailable(level.pam_draft_waiting.pers["team"]))
-                {
-                    menu = game["menu_weapon_allies"];
-                    level.pam_draft_waiting setClientCvar("ui_weapontab", "1");
-                    level.pam_draft_waiting openMenu(menu);
-                }
-                else
-                {
-                    level.pam_draft_waiting setClientCvar("ui_weapontab", "0");
-                    level.pam_draft_waiting maps\mp\uox\_uox_respawns::menu_spawn("none");
-                }
-            }
-            else
-            {
-                level.pam_draft_picking setClientCvar("ui_weapontab", "0");
-                level.pam_draft_picking maps\mp\uox\_uox_respawns::menu_spawn("none");
-                level.pam_draft_waiting setClientCvar("ui_weapontab", "0");
-                level.pam_draft_waiting maps\mp\uox\_uox_respawns::menu_spawn("none");
-            }
+    }
+    level.pam_draft = 2;
+    PAM_DraftUpdateDraftees(); //builds the list (includes anyone who joined during stages 0-1)
+    PAM_DraftUpdateUI();
+    team1captain PAM_DraftOpenDraftMenu();
+    team2captain PAM_DraftOpenDraftMenu();
 
-            if(!isDefined(menu))
-                menu = game["menu_team"];
-            level.pam_draft_picking setClientCvar("g_scriptMainMenu", menu);
-            
-            while(!isDefined(level.pam_draft_picking.pers["weapon"]) || !isDefined(level.pam_draft_waiting.pers["weapon"]))
-            wait level.frametime;
-            //set main menu back to draft menu
-            //open draft menu for captains
-            team1captain openMenu(game["menu_draft"]);
-            team1captain setClientCvar("g_scriptMainMenu", game["menu_draft"]);
-            team2captain openMenu(game["menu_draft"]);
-            team2captain setClientCvar("g_scriptMainMenu", game["menu_draft"]);
-            //team gets asked pick or side first, set banner ui cvar
-            team2captain setClientCvar("ui_draftbanner", "Please Wait...");
-            team1captain setClientCvar("ui_draftbanner", "Please Wait...");
-            level.pam_draft++;
-        }
-        else //team 1 chose pick
-        {
-            team2captain setClientCvar("ui_draftbanner", "Pick Side.");
-            team1captain setClientCvar("ui_draftbanner", "Other Captain is Choosing Side...");
-        }
-        //update player list
-        PAM_DraftUpdateDraftees();
-        //clear out any extra slots
-        //for(index = 0; index < 10; index++)
-        //{
-        //    team1captain setClientCvar("ui_scoreboard" + index + "_active", 0);
-        //    team2captain setClientCvar("ui_scoreboard" + index + "_active", 0);
-        //}
-        //wait until next draft stage
-        while(level.pam_draft == 1)
-            wait level.frametime;
-        team1captain setClientCvar("ui_draftphase", 1);
-        team2captain setClientCvar("ui_draftphase", 1);
-        //wait until both teams are ready
-        while(!isDefined(team1captain.teamReady) || !isDefined(team2captain.teamReady))
-            wait level.frametime;
-            
-        level.pam_draft = -1;
+    //poll so draftees' weapon icons update when they pick in their own menu
+    while(!isDefined(team1captain.teamReady) || !isDefined(team2captain.teamReady))
+    {
+        PAM_DraftRefreshSlots();
+        wait 0.5;
+    }
 
-        iprintlnbold("Both Teams Ready. Game Starting...");
-        game["drafted"] = true;
-        level thread maps\mp\uox\_uox_killcam::finalKillcamListener();
-        level.roundended = false;
-        maps\mp\uox\_uox::endRound("reset"); 
-    }        
+    iprintlnbold("Both Teams Ready. Game Starting...");
+    PAM_DraftStartGame(true);
 }
 
 PAM_DraftRotateDraftees(dir, offset)
@@ -965,191 +751,23 @@ PAM_DraftRotateDraftees(dir, offset)
     if(dir == "previous")
         offset = offset * -1;
 
-    level.pam_draftees = maps\mp\uox\_uox_arrays::arrayOffset(level.pam_draftees, offset);
-    for(index = 0; index < level.pam_draftees.size; index++)
-    {
-        player = level.pam_draftees[index];
-        if(index < 10)
-        {
-            level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
-            level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 1);
-            level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", player.pers["pam_shortname"]);
-            level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", player.pers["pam_shortname"]);
+    if(offset != 0 && level.pam_draftees.size > 0)
+        level.pam_draftees = maps\mp\uox\_uox_arrays::arrayOffset(level.pam_draftees, offset);
 
-            if(player.pers["team"] == "spectator")
-            {
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "spectator"); //shader for team
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
-            }
-            else if(player.pers["team"] == "allies")
-            {
-                switch(game["allies"])
-                {
-                    case "american":
-                        teamshader = "american";
-                        break;
-                    case "russian":
-                        teamshader = "russian";
-                        break;
-                    case "british":
-                        teamshader = "british";
-                        break;
-                }
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", teamshader); //shader for team
-                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", teamshader); //shader for team
-                if(isDefined(player.pers["weapon"]))
-                {
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
-                }
-                else
-                {
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
-                }
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 2);
-                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
-            }
-            else if(player.pers["team"] == "axis")
-            {
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "german"); //shader for team
-                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", "german"); //shader for team
-                if(isDefined(player.pers["weapon"]))
-                {
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
-                }
-                else
-                {
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
-                }
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 2);
-                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
-            }
-            if(player.pers["team"] == level.pam_draft_picking.pers["team"])
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 1); //should cut be shown
-            else
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
-            level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
-        }
-        else
-            break;
-    }
-    //clear out any extra slots
-    for(; index < 10; index++)
-    {
-        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 0);
-        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
-        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", "");
-        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", "");
-        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0);
-        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_b", 0);
-        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "");
-        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", "");
-        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "");
-        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "");
-    }
+    PAM_DraftRefreshSlots();
 }
 
 PAM_DraftUpdateDraftees()
 {
     level.pam_draftees = [];
-
-    index = 0;
     players = getentarray("player", "classname");
-    for( i = 0; i < players.size; i++) 
+    for(i = 0; i < players.size; i++)
     {
-        player = players[i];
-        if(player == level.pam_draft_picking || player == level.pam_draft_waiting)
+        if(players[i] == level.pam_draft_picking || players[i] == level.pam_draft_waiting)
             continue;
-        else
-        {
-            index = level.pam_draftees.size;
-            level.pam_draftees[index] = player;
-            if(index < 10)
-            {
-                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 1);
-                level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", player.pers["pam_shortname"]);
-                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", player.pers["pam_shortname"]);
-
-                if(player.pers["team"] == "spectator")
-                {
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "spectator"); //shader for team
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
-                }
-                else if(player.pers["team"] == "allies")
-                {
-                    switch(game["allies"])
-                	{
-                    	case "american":
-                    		teamshader = "american";
-                            break;
-                        case "russian":
-                    		teamshader = "russian";
-                            break;
-                        case "british":
-                    		teamshader = "british";
-                            break;
-                    }
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", teamshader); //shader for team
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", teamshader); //shader for team
-                    if(isDefined(player.pers["weapon"]))
-                    {
-                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
-                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
-                    }
-                    else
-                    {
-                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
-                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
-                    }
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 2);
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
-                }
-                else if(player.pers["team"] == "axis")
-                {
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "german"); //shader for team
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", "german"); //shader for team
-                    if(isDefined(player.pers["weapon"]))
-                    {
-                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
-                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "1"); //shader for weapon
-                    }
-                    else
-                    {
-                        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
-                        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "2"); //shader for weapon
-                    }
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 2);
-                    level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 2);
-                }
-                if(player.pers["team"] == level.pam_draft_picking.pers["team"])
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 1); //should cut be shown
-                else
-                    level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
-                level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_b", 0); //should cut be shown
-            }
-        } 
+        level.pam_draftees[level.pam_draftees.size] = players[i];
     }
-
-    //clear out any extra slots
-    for(index++; index < 10; index++)
-    {
-        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_active", 0);
-        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_active", 0);
-        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_name", "");
-        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_name", "");
-        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_b", 0);
-        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_b", 0);
-        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_c", "");
-        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_c", "");
-        level.pam_draft_picking setClientCvar("ui_scoreboard" + index + "_d", "");
-        level.pam_draft_waiting setClientCvar("ui_scoreboard" + index + "_d", "");
-    }
+    PAM_DraftRefreshSlots();
 }
 
 PAM_DraftIsCaptain(player)
@@ -1240,6 +858,280 @@ PAM_DraftCutPlayerFromRoster(captain, player)
 
     setCvar(roster, newroster);
 }
+
+// send a client cvar only when its value changed (keeps the reliable command buffer clear)
+PAM_DraftSetCvar(name, value)
+{
+    value = value + "";
+    if(!isDefined(self.draftCvars))
+        self.draftCvars = [];
+    if(isDefined(self.draftCvars[name]) && self.draftCvars[name] == value)
+        return;
+    self.draftCvars[name] = value;
+    self setClientCvar(name, value);
+}
+
+// writes the 10 visible slots for both captains from level.pam_draftees
+PAM_DraftRefreshSlots()
+{
+    pickTeam = level.pam_draft_picking.pers["team"];
+
+    for(index = 0; index < 10; index++)
+    {
+        name = "";
+        team = "";
+        weapon = "";
+        cut = "0";
+        if(index < level.pam_draftees.size)
+        {
+            player = level.pam_draftees[index];
+            name = (index + 1) + ". " + player.pers["pam_shortname"];
+            if(player.pers["team"] == "allies")
+                team = game["allies"];
+            else if(player.pers["team"] == "axis")
+                team = "german";
+            else
+                team = "spectator";
+
+            if(team != "spectator" && isDefined(player.pers["weapon"]))
+                weapon = "1";
+            else
+                weapon = "2";
+
+            //a spectator captain has no players to cut
+            if(pickTeam != "spectator" && player.pers["team"] == pickTeam)
+                cut = "1";
+        }
+        level.pam_draft_picking PAM_DraftSetCvar("ui_scoreboard" + index + "_name", name);
+        level.pam_draft_picking PAM_DraftSetCvar("ui_scoreboard" + index + "_c", team);
+        level.pam_draft_picking PAM_DraftSetCvar("ui_scoreboard" + index + "_d", weapon);
+        level.pam_draft_picking PAM_DraftSetCvar("ui_scoreboard" + index + "_b", cut);
+        level.pam_draft_waiting PAM_DraftSetCvar("ui_scoreboard" + index + "_name", name);
+        level.pam_draft_waiting PAM_DraftSetCvar("ui_scoreboard" + index + "_c", team);
+        level.pam_draft_waiting PAM_DraftSetCvar("ui_scoreboard" + index + "_d", weapon);
+        level.pam_draft_waiting PAM_DraftSetCvar("ui_scoreboard" + index + "_b", "0");
+    }
+}
+
+// sets ui_draftphase + banner for both captains from the current stage/turn
+PAM_DraftUpdateUI()
+{
+    picking = level.pam_draft_picking;
+    waiting = level.pam_draft_waiting;
+
+    if(level.pam_draft == 0)
+    {
+        picking PAM_DraftSetCvar("ui_draftphase", "0");
+        picking PAM_DraftSetCvar("ui_draftbanner", "Pick First or Pick Side?");
+        waiting PAM_DraftSetCvar("ui_draftphase", "5");
+        waiting PAM_DraftSetCvar("ui_draftbanner", "Other Captain Choosing Pick or Side...");
+        return;
+    }
+    if(level.pam_draft == 1)
+    {
+        if(picking.pers["team"] == "spectator")
+        {
+            picking PAM_DraftSetCvar("ui_draftphase", "4");
+            picking PAM_DraftSetCvar("ui_draftbanner", "Pick Side.");
+            waiting PAM_DraftSetCvar("ui_draftphase", "5");
+            waiting PAM_DraftSetCvar("ui_draftbanner", "Other Captain is Choosing Side...");
+        }
+        else
+        {
+            picking PAM_DraftSetCvar("ui_draftphase", "5");
+            picking PAM_DraftSetCvar("ui_draftbanner", "Please Wait...");
+            waiting PAM_DraftSetCvar("ui_draftphase", "5");
+            waiting PAM_DraftSetCvar("ui_draftbanner", "Please Wait...");
+        }
+        return;
+    }
+    picking PAM_DraftCaptainUI();
+    waiting PAM_DraftCaptainUI();
+    PAM_DraftRefreshSlots();
+}
+
+PAM_DraftCaptainUI()
+{
+    if(isDefined(self.teamReady))
+    {
+        self PAM_DraftSetCvar("ui_draftphase", "3");
+        self PAM_DraftSetCvar("ui_draftbanner", "Team Confirmed. Waiting for Other Captain...");
+    }
+    else if(self == level.pam_draft_picking)
+    {
+        self PAM_DraftSetCvar("ui_draftphase", "1");
+        self PAM_DraftSetCvar("ui_draftbanner", "Pick Next Player.");
+    }
+    else
+    {
+        self PAM_DraftSetCvar("ui_draftphase", "2");
+        self PAM_DraftSetCvar("ui_draftbanner", "Other Captain is Picking...");
+    }
+}
+
+// hand the turn to the other captain unless they have already confirmed their team
+PAM_DraftPassTurn()
+{
+    if(!isDefined(level.pam_draft_waiting.teamReady))
+    {
+        temp = level.pam_draft_waiting;
+        level.pam_draft_waiting = level.pam_draft_picking;
+        level.pam_draft_picking = temp;
+    }
+    PAM_DraftUpdateUI();
+}
+
+PAM_DraftPick(slot)
+{
+    if(slot < 0 || slot > 9 || slot >= level.pam_draftees.size)
+        return;
+    draftee = level.pam_draftees[slot];
+    if(!isDefined(draftee) || draftee.pers["team"] != "spectator")
+        return;
+
+    draftee PAM_DraftSetTeam(level.pam_draft_picking.pers["team"]);
+    draftee PAM_DraftOpenWeaponMenu();
+    PAM_DraftAddPlayerToRoster(level.pam_draft_picking, draftee);
+    PAM_DraftPassTurn();
+}
+
+PAM_DraftCut(slot)
+{
+    if(slot < 0 || slot > 9 || slot >= level.pam_draftees.size)
+        return;
+    draftee = level.pam_draftees[slot];
+    if(!isDefined(draftee) || draftee.pers["team"] != level.pam_draft_picking.pers["team"])
+        return;
+
+    draftee PAM_DraftKickToSpec();
+    PAM_DraftCutPlayerFromRoster(level.pam_draft_picking, draftee);
+    PAM_DraftUpdateUI();
+}
+
+PAM_DraftSetSides(team)
+{
+    other = "axis";
+    if(team == "axis")
+        other = "allies";
+    level.pam_draft_picking PAM_DraftSetTeam(team);
+    level.pam_draft_waiting PAM_DraftSetTeam(other);
+    if(level.pam_draft == 0)
+        level.pam_draft = 1;
+}
+
+PAM_DraftSetTeam(team)
+{
+    self.pers["team"] = team;
+    self.pers["teamTime"] = (gettime() / 1000);
+    self.pers["weapon"] = undefined;
+    self.pers["weapon1"] = undefined;
+    self.pers["weapon2"] = undefined;
+    self.pers["spawnweapon"] = undefined;
+    self.pers["savedmodel"] = undefined;
+
+    if(level.uox_teamplay) // update spectator permissions immediately on change of team
+        self maps\mp\gametypes\_teams::SetSpectatePermissions();
+}
+
+PAM_DraftKickToSpec()
+{
+    self.pers["team"] = "spectator";
+    self.pers["teamTime"] = 1000000;
+    self.pers["weapon"] = undefined;
+    self.pers["weapon1"] = undefined;
+    self.pers["weapon2"] = undefined;
+    self.pers["spawnweapon"] = undefined;
+    self.pers["savedmodel"] = undefined;
+
+    self.sessionteam = "spectator";
+    self setClientCvar("g_scriptMainMenu", game["menu_team"]);
+    self setClientCvar("ui_weapontab", "0");
+    self maps\mp\uox\_uox_respawns::spawnSpectator();
+}
+
+// one else-if chain so BEL doesn't open two menus (bug 3)
+PAM_DraftOpenWeaponMenu()
+{
+    menu = undefined;
+    if(level.objective == "bel")
+    {
+        if(maps\mp\gametypes\_teams::isweaponavailable("axis") || maps\mp\gametypes\_teams::isweaponavailable("allies"))
+            menu = game["menu_weapon_all"];
+    }
+    else if(self.pers["team"] == "allies" && maps\mp\gametypes\_teams::isweaponavailable("allies"))
+        menu = game["menu_weapon_allies"];
+    else if(self.pers["team"] == "axis" && maps\mp\gametypes\_teams::isweaponavailable("axis"))
+        menu = game["menu_weapon_axis"];
+
+    if(isDefined(menu))
+    {
+        self setClientCvar("ui_weapontab", "1");
+        self setClientCvar("g_scriptMainMenu", menu);
+        self openMenu(menu);
+    }
+    else
+    {
+        self setClientCvar("ui_weapontab", "0");
+        self maps\mp\uox\_uox_respawns::menu_spawn("none");
+    }
+}
+
+PAM_DraftOpenDraftMenu()
+{
+    self setClientCvar("g_scriptMainMenu", game["menu_draft"]);
+    self openMenu(game["menu_draft"]);
+}
+
+PAM_DraftClearRosters()
+{
+    setCvar("pam_team1_name", "");
+    setCvar("pam_team2_name", "");
+    setCvar("pam_team1_roster", "");
+    setCvar("pam_team2_roster", "");
+}
+
+PAM_DraftStartGame(drafted)
+{
+    level.pam_draft = -1;
+    game["drafted"] = drafted;
+    level thread maps\mp\uox\_uox_killcam::finalKillcamListener();
+    level.roundended = false;
+    maps\mp\uox\_uox::endRound("reset");
+}
+
+// a captain left mid-draft: start without a draft (bug 6)
+PAM_DraftAbort(leaver)
+{
+    level notify("pam_draft_abort"); //kills PAM_DraftTeams
+    level.pam_draft = -1;            //stops the menu handler
+    iprintlnbold("A captain left. Game will start without draft");
+
+    captains = [];
+    captains[0] = level.pam_draft_picking;
+    captains[1] = level.pam_draft_waiting;
+    for(i = 0; i < captains.size; i++)
+    {
+        if(!isDefined(captains[i]) || captains[i] == leaver)
+            continue;
+        captains[i] closeMenu(game["menu_draft"]);
+        captains[i] setClientCvar("g_scriptMainMenu", game["menu_team"]);
+    }
+    PAM_DraftClearRosters();
+    PAM_DraftStartGame(false);
+}
+
+PAM_DraftRemoveDraftee(player)
+{
+    list = [];
+    for(i = 0; i < level.pam_draftees.size; i++)
+    {
+        if(level.pam_draftees[i] != player)
+            list[list.size] = level.pam_draftees[i];
+    }
+    level.pam_draftees = list;
+    PAM_DraftUpdateUI();
+}
+
 
 PAM_CheckRoster(player)
 {
@@ -2067,12 +1959,14 @@ PAM_PlayerConnect()
     if(level.pam_dropweapon)
        self maps\mp\uox\_uox_inputs::addHoldUse("drop weapon", true, 0, 1, ::PAM_CanDrop, ::PAM_DropWeapon, undefined, false);
 
-    //add to draft pool if drafting
+    //add to draft pool if drafting (players joining in stages 0-1 are picked up when
+    //PAM_DraftTeams builds the list at the start of stage 2)
     if(level.pam_draft >= 2)
     {
-        level.pam_draftees = maps\mp\uox\_uox_arrays::arrayPush(level.pam_draftees, self);
-        PAM_DraftRotateDraftees("none", 0); //update list
+        level.pam_draftees[level.pam_draftees.size] = self;
+        PAM_DraftUpdateUI();
     }
+
     
     PAM_CheckRoster(self);
 
@@ -2117,12 +2011,17 @@ PAM_PlayerDisconnect()
     if(level.pam_dropweapon)
        self maps\mp\uox\_uox_inputs::removeHoldUse("drop weapon");
 
-    //add to draft pool if drafting
-    if(level.pam_draft >= 2)
+    //captain left mid-draft -> start without draft; otherwise drop them from the pool
+    if(level.pam_draft != -1 && isDefined(level.pam_draft_picking)
+        && (self == level.pam_draft_picking || self == level.pam_draft_waiting))
     {
-        level.pam_draftees = maps\mp\uox\_uox_arrays::arraySlice(level.pam_draftees, maps\mp\uox\_uox_arrays::arrayFind(level.pam_draftees, self));
-        PAM_DraftRotateDraftees("none", 0); //update list
+        level thread PAM_DraftAbort(self);
     }
+    else if(level.pam_draft >= 2)
+    {
+        PAM_DraftRemoveDraftee(self);
+    }
+
 
 }
 
