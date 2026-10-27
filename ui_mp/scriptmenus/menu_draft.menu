@@ -112,7 +112,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "0" "4" }
+			showCvar		{ "0" ; "4" }
 			action
 			{
 				play "mouse_click";
@@ -138,7 +138,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "0" "4" }
+			showCvar		{ "0" ; "4" }
 			action
 			{
 				play "mouse_click";
@@ -195,7 +195,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "1" "2" "3" }
+			showCvar		{ "1" ; "2" ; "3" }
 			action
 			{
 				play "mouse_click";
@@ -334,7 +334,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "1" "2" "3" }
+			showCvar		{ "1" ; "2" ; "3" }
 			action
 			{
 				play "mouse_click";
@@ -473,7 +473,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "1" "2" "3" }
+			showCvar		{ "1" ; "2" ; "3" }
 			action
 			{
 				play "mouse_click";
@@ -612,7 +612,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "1" "2" "3" }
+			showCvar		{ "1" ; "2" ; "3" }
 			action
 			{
 				play "mouse_click";
@@ -751,7 +751,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "1" "2" "3" }
+			showCvar		{ "1" ; "2" ; "3" }
 			action
 			{
 				play "mouse_click";
@@ -890,7 +890,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "1" "2" "3" }
+			showCvar		{ "1" ; "2" ; "3" }
 			action
 			{
 				play "mouse_click";
@@ -1029,7 +1029,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "1" "2" "3" }
+			showCvar		{ "1" ; "2" ; "3" }
 			action
 			{
 				play "mouse_click";
@@ -1168,7 +1168,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "1" "2" "3" }
+			showCvar		{ "1" ; "2" ; "3" }
 			action
 			{
 				play "mouse_click";
@@ -1307,7 +1307,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "1" "2" "3" }
+			showCvar		{ "1" ; "2" ; "3" }
 			action
 			{
 				play "mouse_click";
@@ -1446,7 +1446,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "1" "2" "3" }
+			showCvar		{ "1" ; "2" ; "3" }
 			action
 			{
 				play "mouse_click";
@@ -1663,7 +1663,7 @@
 			textalignx		10
 			textaligny		20
 			cvartest		"ui_draftphase"
-			showCvar		{ "1" "2" }
+			showCvar		{ "1" ; "2" }
 			action
 			{
 				play "mouse_click";
