@@ -424,6 +424,26 @@ PAM_DefineMenus()
     }
 
     PAM_SetupMenuHandlers();
+
+    team1name = getcvar("pam_team1_name");
+    team2name = getcvar("pam_team2_name");
+
+    if(team1name != "")
+    {
+        if(game["team1"] == "allies" && getcvar("g_TeamName_Allies") != team1name)
+            setcvar("g_TeamName_Allies", team1name);
+        else if(game["team1"] == "axis" && getcvar("g_TeamName_Axis") != team1name)
+            setcvar("g_TeamName_Axis", team1name);
+    }
+    if(team2name != "")
+    {
+        if(game["team2"] == "allies" && getcvar("g_TeamName_Allies") != team2name)
+            setcvar("g_TeamName_Allies", team2name);
+        else if(game["team2"] == "axis" && getcvar("g_TeamName_Axis") != team2name)
+            setcvar("g_TeamName_Axis", team2name);
+        self setClientCvar("ui_scoreboard_team2_name", team2name);
+    }
+
 }
 
 PAM_SetupMenuHandlers()
@@ -462,6 +482,9 @@ PAM_StartGameType()
 {
     PAM_Vars();
     level.pam_draft = -1;
+    //drafted teams stay locked for the whole match
+    if(isDefined(game["drafted"]) && game["drafted"])
+        level.lockteams = true;
     PAM_Rules();
     PAM_FixExploits();
 
@@ -594,7 +617,7 @@ PAM_CheckRoster(player)
     team1find = maps\mp\uox\_uox_utils::findStr(";" + pid, ";" + team1, "anywhere");
     team2find = maps\mp\uox\_uox_utils::findStr(";" + pid, ";" + team2, "anywhere");
 
-    if(team1find != -1 && team2find == -1)
+    if(team1find != -1 && team2find == -1 && player.pers["team"] != game["team1"])
     {
         player.pers["team"] = game["team1"];
         player.pers["teamTime"] = (gettime() / 1000);
@@ -606,7 +629,7 @@ PAM_CheckRoster(player)
         if(level.uox_teamplay) // update spectator permissions immediately on change of team
             player maps\mp\gametypes\_teams::SetSpectatePermissions();
     }
-    else if(team1find == -1 && team2find != -1)
+    else if(team1find == -1 && team2find != -1 && player.pers["team"] != game["team2"])
     {
         player.pers["team"] = game["team2"];
         player.pers["teamTime"] = (gettime() / 1000);
