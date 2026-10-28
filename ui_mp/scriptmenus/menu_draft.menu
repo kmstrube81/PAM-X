@@ -541,7 +541,7 @@
 			style			WINDOW_STYLE_SHADER
 			background		"gfx/hud/headicon@us_rank1.dds"
 			cvartest		"ui_scoreboard2_c"
-			showCvar		{ "2" }
+			showCvar		{ "spectator" }
 			decoration
 		}
 		itemDef
