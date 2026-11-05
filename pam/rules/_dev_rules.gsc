@@ -15,6 +15,7 @@ Rules()
     maps\mp\uox\_uox_vars::updateCvar("scr","autoreadytime", "60");
     maps\mp\uox\_uox_vars::updateCvar("scr","halftime", "1");
     maps\mp\uox\_uox_vars::updateCvar("scr","overtime", "0");
+    maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "0");
 	
     // *****************************************************
     // *********** Stock Match Config Cvars ****************
