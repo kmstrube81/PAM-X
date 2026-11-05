@@ -176,11 +176,11 @@ Rules()
             maps\mp\uox\_uox_vars::updateCvar("scr", "objcarrierkillbonuspoints", "0", "re");
             break;
         case "dom":
+            maps\mp\uox\_uox_vars::updateCvar("scr","roundlength", "0", "dom");
+            maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "0", "dom");
             maps\mp\uox\_uox_vars::updateCvar("scr","scorelimit", "300", "dom");
             maps\mp\uox\_uox_vars::updateCvar("scr","ot_scorelimit", maps\mp\uox\_uox::getTeam1Score() + 15, "dom");
             maps\mp\uox\_uox_vars::updateCvar("scr","roundlimit", "2", "dom");
-            maps\mp\uox\_uox_vars::updateCvar("scr","roundlength", "0", "dom");
-            maps\mp\uox\_uox_vars::updateCvar("scr","score_rounds", "0", "dom");
             maps\mp\uox\_uox_vars::updateCvar("scr","timelimit", "0", "dom");
             maps\mp\uox\_uox_vars::updateCvar("scr", "respawn_mode", "dm", "dom");
             maps\mp\uox\_uox_vars::updateCvar("scr", "spawn_type", "near_team", "dom");

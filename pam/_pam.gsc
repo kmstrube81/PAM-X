@@ -628,6 +628,11 @@ PAM_CheckRoster(player)
         player.pers["savedmodel"] = undefined;
         if(level.uox_teamplay) // update spectator permissions immediately on change of team
             player maps\mp\gametypes\_teams::SetSpectatePermissions();
+        //spawn spectator, set player icon to dead, and tell them they were move
+        player maps\mp\uox\_uox_respawns::spawnSpectator();
+        player.statusicon = "gfx/hud/hud@status_dead.tga";
+        player iprintlnbold("You were moved teams");
+
     }
     else if(team1find == -1 && team2find != -1 && player.pers["team"] != game["team2"])
     {
@@ -640,6 +645,9 @@ PAM_CheckRoster(player)
         player.pers["savedmodel"] = undefined;
         if(level.uox_teamplay) // update spectator permissions immediately on change of team
             player maps\mp\gametypes\_teams::SetSpectatePermissions();
+        player maps\mp\uox\_uox_respawns::spawnSpectator();
+        player.statusicon = "gfx/hud/hud@status_dead.tga";
+        player iprintlnbold("You were moved teams");
     }
 }
 
