@@ -1077,7 +1077,7 @@ PAM_CasterHUD()
     {
         if(!isDefined(self.casterMenuPending))
         {
-            self openMenuNoMouse(game["menu_caster"]);
+            self openMenu(game["menu_caster"]);//self openMenuNoMouse(game["menu_caster"]);
             self.casterMenuPending = true;
         }
         return;   // wait for "openCaster"
