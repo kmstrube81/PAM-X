@@ -65,7 +65,7 @@ Rules()
     //Fix Exploits
     maps\mp\uox\_uox_vars::updateCvar("pam","exploitblocker", true);
     //Allow Casters
-    maps\mp\uox\_uox_vars::updateCvar("pam","allow_casters", false);
+    maps\mp\uox\_uox_vars::updateCvar("pam","allow_casters", true);
     //Draft Teams
     maps\mp\uox\_uox_vars::updateCvar("pam","draft_teams", false);
 
