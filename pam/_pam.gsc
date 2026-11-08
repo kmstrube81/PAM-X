@@ -600,7 +600,10 @@ PAM_UpdateGameString()
         player = players[i];
 
         if(player.pers["casterHud"])
+        {
+            player PAM_CasterUpdate();
             player PAM_CasterUpdateScoreboard();
+        }
     }
 }
 
@@ -1451,12 +1454,24 @@ PAM_KillfeedAdd(victim, attacker, iDamage, sMeansOfDeath, sWeapon, sHitLoc)
         return;
 
     victimName = PAM_KillfeedName(victim);
+    if(isPlayer(attacker))
+    {
+        if(attacker.pers["team"] == game["team1"])
+            attackerColor = "^1";
+        else
+            attackerColor = "^4";
+    }
+    if(victim.pers["team"] == game["team1"])
+            victimColor = "^1";
+        else
+            victimColor = "^4";
+            
     if(isPlayer(attacker) && attacker != victim)
-        line = PAM_KillfeedName(attacker) + " killed " + victimName;
+        line = attackerColor + PAM_KillfeedName(attacker) + " ^7killed " + victimColor + victimName;
     else if(isPlayer(attacker))
-        line = victimName + " killed himself";
+        line = victimColor + victimName + " ^7killed himself";
     else
-        line = victimName + " died";
+        line = victimColor + victimName + " ^7died";
 
     details = PAM_KillfeedWeaponName(sWeapon, sMeansOfDeath) + ", " + iDamage + "DMG";
     hitloc = PAM_HitLoc(sHitLoc);
