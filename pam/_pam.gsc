@@ -1477,7 +1477,7 @@ PAM_KillfeedAdd(victim, attacker, iDamage, sMeansOfDeath, sWeapon, sHitLoc)
     hitloc = PAM_HitLoc(sHitLoc);
     if(hitloc != "")
         details = details + ", " + hitloc;
-    line = line + " (" + details + ")";
+    line = line + " ^7(" + details + ")";
 
     for(i = 0; i < 3; i++)
         level.pam_killfeed[i] = level.pam_killfeed[i + 1];
