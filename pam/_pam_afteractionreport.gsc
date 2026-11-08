@@ -155,29 +155,6 @@ print()
 	self endon("disconnect");
 	
 	//logprint(self.name + " print dmg ingress\n");
-
-	hitLocTexts["head"] = "Head";
-	hitLocTexts["neck"] = "Neck";
-
-	hitLocTexts["torso_upper"] = "Torso Upper";
-	hitLocTexts["torso_lower"] = "Torso Lower";
-
-	hitLocTexts["left_arm_upper"] = "Shoulder";
-	hitLocTexts["left_arm_lower"] = "Arm";
-	hitLocTexts["left_hand"] = "Hand";
-
-	hitLocTexts["right_arm_upper"] = "Shoulder";
-	hitLocTexts["right_arm_lower"] = "Arm";
-	hitLocTexts["right_hand"] = "Hand";
-
-	hitLocTexts["left_leg_upper"] = "Leg";
-	hitLocTexts["left_leg_lower"] = "Leg";
-	hitLocTexts["left_foot"] = "Foot";
-
-	hitLocTexts["right_leg_upper"] = "Leg";
-	hitLocTexts["right_leg_lower"] = "Leg";
-	hitLocTexts["right_foot"] = "Foot";
-
 	wait 1 * 1;
 
 	//self thread sendDebugInfo();
@@ -236,8 +213,8 @@ print()
 						string += " to " + log.hitLoc;
 				}*/
 				
-				if (isDefined(hitLocTexts[log.hitLoc]))
-					string += " to " + hitLocTexts[log.hitLoc];
+				if (isDefined(pam\_pam::PAM_HitLoc(log.hitLoc)))
+					string += " to " + pam\_pam::PAM_HitLoc(log.hitLoc);
 				else if (log.hitLoc != "none")
 					string += " to " + log.hitLoc;
 
@@ -286,8 +263,8 @@ print()
 
 				if (log.sFirstWeapon != "shotgun_mp")
 				{
-					if (isDefined(hitLocTexts[log.firstHitLoc]))
-						string += " to " + hitLocTexts[log.firstHitLoc];
+					if (isDefined(pam\_pam::PAM_HitLoc(log.hitLoc)))
+						string += " to " + pam\_pam::PAM_HitLoc(log.hitLoc);
 					else if (log.firstHitLoc != "none")
 						string += " to " + log.firstHitLoc;
 				}
@@ -321,8 +298,8 @@ print()
 	{
 		string = getObjectiveShort(self.round_report_myKill.objectiveStatus) + log.time +  "^1killed"; //getTimeString(self.round_report_myKill.time, self.round_report_myKill.objectiveStatus) + " ^1killed";
 
-		if (isDefined(hitLocTexts[self.round_report_myKill.hitLoc]))
-			string += " to " + hitLocTexts[self.round_report_myKill.hitLoc];
+		if (isDefined(pam\_pam::PAM_HitLoc(self.round_report_myKill.hitLoc)))
+			string += " to " + pam\_pam::PAM_HitLoc(self.round_report_myKill.hitLoc);
 		else if (self.round_report_myKill.hitLoc != "none")
 			string += " to " + self.round_report_myKill.hitLoc;
 

@@ -494,6 +494,11 @@ PAM_StartGameType()
     thread PAM_AfterActionReport();
     thread pam\_pam_draft::PAM_DraftTeams();
     thread PAM_UpdateGameString();
+
+    //caster kill feed, cleared every round (level vars reset on map_restart)
+    level.pam_killfeed = [];
+    for(i = 0; i < 4; i++)
+        level.pam_killfeed[i] = "";
     thread PAM_Postgame();
 }
 
@@ -666,7 +671,7 @@ PAM_CasterUpdate()
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::superArray();
         //player0_weapon
         options = [];
-        options["x"] = 106;
+        options["x"] = 116;
         options["y"] = 106;
         options["width"] = 20;
         options["height"] = 10;
@@ -740,7 +745,7 @@ PAM_CasterUpdate()
         hudElem["entNo"] = -1;
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::arrayPush(level.casterHudUpdates, hudElem, "player4");
         //player5_weapon
-        options["x"] = 510;
+        options["x"] = 500;
         options["y"] = 106;
         hudElem["options"] = options;
         hudElem["type"] = "shader";
@@ -966,7 +971,7 @@ PAM_CasterUpdate()
             continue;
         // set name, set health, set frag, set smoke, set current weapon
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "name", player.pers["pam_shortname"]);
-        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "kd", player.score + " / " + player.deaths);
+        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "kd", player.score + " - " + player.deaths);
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "health", player.health);
         if(player getWeaponSlotAmmo("smokegrenade") > 0)
             hasSmoke = "1";
@@ -1009,7 +1014,7 @@ PAM_CasterUpdate()
             continue;
         // set name, set health, set frag, set smoke, set current weapon
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "name", player.pers["pam_shortname"]);
-        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "kd", player.score + " / " + player.deaths);
+        level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "kd", player.score + " - " + player.deaths);
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "health", 0);
         hasSmoke = "";
         level.casterHudUpdates = maps\mp\uox\_uox_arrays::updateProperty(level.casterHudUpdates, "player" + index, "hasSmoke", hasSmoke);
@@ -1069,6 +1074,7 @@ PAM_CasterHUD()
             self closeMenu(game["menu_caster"]);
             self.casterHud = undefined;
             self.casterMenuPending = undefined;
+            self.casterFeed = undefined;
         }
         return;
     }
@@ -1077,13 +1083,28 @@ PAM_CasterHUD()
     {
         if(!isDefined(self.casterMenuPending))
         {
-            self openMenu(game["menu_caster"]);//self openMenuNoMouse(game["menu_caster"]);
+            self openMenuNoMouse(game["menu_caster"]);
             self.casterMenuPending = true;
         }
         return;   // wait for "openCaster"
     }
 
     self.casterBudget = 8;
+
+    //kill feed first so new kills show up promptly
+    if(isDefined(level.pam_killfeed) && isDefined(self.casterFeed))
+    {
+        for(i = 0; i < 4; i++)
+        {
+            if(self.casterBudget <= 0)
+                break;
+            if(self.casterFeed[i] == level.pam_killfeed[i])
+                continue;
+            self setClientCvar("ui_killfeed" + i, level.pam_killfeed[i]);
+            self.casterFeed[i] = level.pam_killfeed[i];
+            self.casterBudget--;
+        }
+    }
 
     //update ui cvar and draw current weapon
     for(index = 0; index < 10; index ++)
@@ -1233,7 +1254,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 self.casterHud = maps\mp\uox\_uox_arrays::superArray();
                 //player0_weapon
                 options = [];
-                options["x"] = 106;
+                options["x"] = 116;
                 options["y"] = 106;
                 options["width"] = 20;
                 options["height"] = 10;
@@ -1278,7 +1299,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 hudElem["entNo"] = -1;
                 self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player2");
                  //player3_weapon
-                options["y"] = 176;
+                options["y"] = 178;
                 hudElem = [];
                 hudElem["options"] = options;
                 hudElem["type"] = "shader";
@@ -1307,7 +1328,7 @@ PAM_CasterHandleMenuResponse(response, optional)
                 self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player4");
                 //player5_weapon
                 options = [];
-                options["x"] = 510;
+                options["x"] = 500;
                 options["y"] = 106;
                 hudElem["options"] = options;
                 hudElem["type"] = "shader";
@@ -1377,6 +1398,10 @@ PAM_CasterHandleMenuResponse(response, optional)
                 hudElem["entNo"] = -1;
                 self.casterHud = maps\mp\uox\_uox_arrays::arrayPush(self.casterHud, hudElem, "player9");
 
+                //sentinel so the first pass sends (or clears) every kill feed line
+                self.casterFeed = [];
+                for(i = 0; i < 4; i++)
+                    self.casterFeed[i] = "init";
                 self PAM_CasterUpdateScoreboard();
             }
             return;
@@ -1408,7 +1433,91 @@ PAM_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sH
         self thread pam\_pam_afteractionreport::onPlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc);
 
 	self pam\_pam_checksnipers::NoDropWeapon();
+
+    PAM_KillfeedAdd(self, attacker, iDamage, sMeansOfDeath, sWeapon, sHitLoc);
 }
+
+/* *************************************************************************************************
+**** Caster kill feed
+**** 4 lines in ui_killfeed0-3, newest at the bottom (ui_killfeed3). Each kill shifts the older lines
+**** up and drops the oldest. level.pam_killfeed is rebuilt in PAM_StartGameType so it clears
+**** every round; PAM_CasterHUD syncs it to casters with the shared per-tick budget.
+************************************************************************************************* */
+PAM_KillfeedAdd(victim, attacker, iDamage, sMeansOfDeath, sWeapon, sHitLoc)
+{
+    if(!isDefined(level.pam_killfeed))
+        return;
+
+    victimName = PAM_KillfeedName(victim);
+    if(isPlayer(attacker) && attacker != victim)
+        line = PAM_KillfeedName(attacker) + " killed " + victimName;
+    else if(isPlayer(attacker))
+        line = victimName + " killed himself";
+    else
+        line = victimName + " died";
+
+    details = PAM_KillfeedWeaponName(sWeapon, sMeansOfDeath) + ", " + iDamage + "DMG";
+    hitloc = PAM_HitLoc(sHitLoc);
+    if(hitloc != "")
+        details = details + ", " + hitloc;
+    line = line + " (" + details + ")";
+
+    for(i = 0; i < 3; i++)
+        level.pam_killfeed[i] = level.pam_killfeed[i + 1];
+    level.pam_killfeed[3] = line;
+}
+
+PAM_KillfeedName(player)
+{
+    //userinfo names can't contain double quotes, so no escaping is needed for setClientCvar
+    if(isDefined(player.pers["pam_shortname"]))
+        return player.pers["pam_shortname"];
+    return player.name;
+}
+
+PAM_HitLoc(sHitLoc)
+{
+    if(!isDefined(sHitLoc))
+        return "";
+    switch(sHitLoc)
+    {
+        case "none":            return "";
+        case "head":            return "Head";
+        case "helmet":          return "Helmet";
+        case "neck":            return "Neck";
+        case "torso_upper":     return "Upper Torso";
+        case "torso_lower":     return "Lower Torso";
+        case "right_arm_upper": return "R Upper Arm";
+        case "right_arm_lower": return "R Lower Arm";
+        case "right_hand":      return "R Hand";
+        case "left_arm_upper":  return "L Upper Arm";
+        case "left_arm_lower":  return "L Lower Arm";
+        case "left_hand":       return "L Hand";
+        case "right_leg_upper": return "R Upper Leg";
+        case "right_leg_lower": return "R Lower Leg";
+        case "right_foot":      return "R Foot";
+        case "left_leg_upper":  return "L Upper Leg";
+        case "left_leg_lower":  return "L Lower Leg";
+        case "left_foot":       return "L Foot";
+        default:                return sHitLoc;
+    }
+}
+
+PAM_KillfeedWeaponName(sWeapon, sMeansOfDeath)
+{
+    if(!isDefined(sWeapon) || sWeapon == "none")
+    {
+        if(isDefined(sMeansOfDeath) && sMeansOfDeath == "MOD_FALLING")
+            return "Falling";
+        return "World";
+    }
+    if(isDefined(sMeansOfDeath) && sMeansOfDeath == "MOD_MELEE")
+        return "Melee";
+
+    //unknown weapons come back as their internal name from the default case
+    return maps\mp\uox\_uox::getWeaponProperty(sWeapon, "name");
+}
+
 
 PAM_PlayerConnect()
 {
