@@ -1417,6 +1417,8 @@ PAM_CasterHandleMenuResponse(response, optional)
         case "9":
             index = response;
             self.spectatorclient = maps\mp\uox\_uox_arrays::getValue(level.casterHudUpdates, "player" + index)["entNo"];
+            wait level.frametime;
+            self.spectatorclient = -1;
             return;
     }
 }
