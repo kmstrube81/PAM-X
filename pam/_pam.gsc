@@ -291,7 +291,7 @@ PAM_Rules()
 PAM_GetStockPK3()
 {
 	// List all Allowed PK3 file names HERE separated by a space.  DO NOT include '.pk3'
-	stockPK3 = "uomappack00 pakuo07 pakuo06 pakuo05 pakuo04 pakuo03 pakuo02 pakuo01 pakuo00 pakb paka pak9 pak8 pak6 pak5 pak4 pak3 pak2 pak1 pak0 z_svr_pamx_20260901 z_svr_modtypes z_svr_uox";
+	stockPK3 = "uomappack00 pakuo07 pakuo06 pakuo05 pakuo04 pakuo03 pakuo02 pakuo01 pakuo00 pakb paka pak9 pak8 pak6 pak5 pak4 pak3 pak2 pak1 pak0 z_svr_pamx_20261001 z_svr_modtypes z_svr_uox";
 
     return stockPK3;
 }
